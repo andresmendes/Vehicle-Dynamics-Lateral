@@ -1,0 +1,291 @@
+\documentclass[sublist]{fei}
+\usepackage[utf8]{inputenc}
+%\usepackage[absolute,overlay]{textpos} % posicionar texto em qualquer lugar
+
+\author{André de Souza Mendes}
+\title{Documentação - Modelos de veículos simples}
+%\subtitulo{subtítulo}
+%\cidade{cidade}
+%\instituicao{Instituição de Ensino}
+
+%\include{simbolos}
+
+\makeindex
+\makeglossaries
+
+\begin{document}
+
+\maketitle
+
+% \begin{folhaderosto}
+% Dissertação de Mestrado apresentada ao Centro Universitário da FEI para obtenção do título de Mestre em Engenharia Mecânica, orientado pelo Prof. Dr. Agenor de Toledo Fleury.
+% \end{folhaderosto}
+
+% \fichacatalografica % procura o arquivo "ficha.pdf"
+% \folhadeaprovacao % procura o arquivo "ata.pdf"
+% \dedicatoria{A quem eu quero dedicar o texto.}
+
+% \begin{agradecimentos}
+% Obrigado
+% \end{agradecimentos}
+
+% \epigrafe{Science is more than a body of knowledge, it’s a way of thinking. A way of skeptically interrogating the universe with a fine understanding of human fallibility.}{Carl Sagan}
+
+%\nocite{dyson_disturbing_1979}
+
+\begin{resumo}
+Modelos de veículos simples em Matlab
+\palavraschave{Modelo. Veículo. Matlab.}
+\end{resumo}
+
+\begin{abstract}
+Abstract
+\keywords{Keywords. Go. Here.}
+\end{abstract}
+
+{
+	\pagestyle{empty}
+	\listoffigures
+	\listoftables
+%	\listofalgorithms
+%	\glsaddall
+%    \printglossaries
+    \tableofcontents
+}
+
+\chapter{INTRODUÇÃO} 
+
+=================================================
+
+PROXIMAS IMPLEMENTAÇÕES
+
+\begin{itemize}
+\item formatar os códigos: - passagem de parametros pros integradores - pastas com cada tipo de analise
+\item Implementar a regiao de estabilidade para o pacejka linear
+\item implementar a comparacao da regiao de estabilidade
+\item implementar o codigo do veiculo totalmente nao linear porem com velocidade prescrita
+\end{itemize}
+
+PROXIMAS SIMULAÇÕES
+
+\begin{itemize}
+\item linearsadrilyapunovregiao.m com a e b trocados (veículo sobre esterçante)
+\item linearpacejkalyapunovregiao.m com a e b certos. Limitar pelo ALPHAT<90graus para que haja uma região
+\item linearpacejkalyapunovregiao.m com a e b trocados! Sem 
+\end{itemize}
+
+
+=================================================
+
+Esta documentação visa dar base para os estudos e simulações realizados para avaliar a aplicação dos modelos de veículos em situações dinâmicas extremadas e em estudos de estabilidade através dos expoentes de lyapunov.
+
+Os modelos usados nesta documentação estão listados na tabela \ref{modelos}.
+
+	\begin{table}[ht!] 
+	\caption{Modelos bicicleta}
+	\label{modelos}
+	\begin{center}
+	\begin{tabular}{lrr} 
+	\hline
+	Modelo		       	& Veículo			  	& Pneu	 				   	\\
+	\hline
+	linearlinear    	& linear		        & linear			       	\\
+	linearsadri 		& linear		        & não linear (sadri) 		\\
+	linearpacejka		& linear             	& não linear (pacejka)		\\
+	naolinearpacejka	& não linear 			& não linear (pacejka)		\\
+	\hline
+	\end{tabular}
+	\caption*{Fonte: Autor}
+	\end{center}
+	\end{table}
+
+OBS: Todos os modelos possuem o módulo do vetor velocidade do centro de massa constante.
+
+Nos próximos capítulos é descrito o desenvolvimento de cada modelo.
+
+Os parâmetros de veículos e pneus utilizados como base de todas as análises são retirados do artigo de sadri.
+
+\chapter{Pneu}
+
+Modelos de pneus utilizados nas simulações
+
+\section{linear}
+
+Modelo linear 
+
+\section{Sadri}
+
+Mostra a forma geral da curva característica utilizada por sadri.
+
+Script: pneusadri.m
+
+Mostrar as limitações para ângulos grandes. Falta de representatividade.
+
+\section{Pacejka}
+
+Como o modelo de pneu apresentado por sadri apresenta diferenças com relação à representação da realidade, vamos verificar o modelo de pacejka.
+
+Mostra a forma geral da curva característica apresentada por pacejka.
+
+Script: pneupacejka.m
+
+Os efeitos da distribuição de carga nos eixos podem ser levados em consideração no modelo. 
+
+Script: pneupacejkaeixos.m
+
+O ajusto dos parâmetros experimentais de pacejka são ajustados para apresentar a equivalência com relação ao modelo de sadri.
+
+Script: pneusadriXpacejka.m
+
+\chapter{Animação}
+
+Os scripts animacao.m e vetor.m descrevem a movimentação do veículo no plano horizontal com os vetores velocidade (F, T e R) ao longo do tempo.
+
+
+\chapter{linearlinear} 
+
+PROXIMAS IMPLEMENTAÇÕES
+
+\begin{itemize}
+\item integrador para retirar outras variáveis dos resultados
+\item utilizar a animação nos resultados
+\end{itemize}
+
+
+
+Script: linearlinear.m
+
+Basta este script para simular pois o sistema é modelado a partir das matrizes dinâmicas A, B, C e D. A integração é feita dentro do próprio script através do comando lsim.
+
+\chapter{Veiculo linear. Pneu sadri} 
+
+pasta: linearsadri
+
+PROXIMAS IMPLEMENTAÇÕES:
+
+\begin{itemize}
+\item Alterar o algoritmo para ele ser genérico e não com a função do sistema ja definida
+\item Melhorar o código que chama a animação
+\end{itemize}
+
+\section{Equações de movimento}
+
+Desenvolvimento das equações de movimento e matriz jacobiana (simbolico).
+
+Script: linearsadrimovimento.m
+
+\section{Pontos fixos}
+
+Obtenção dos pontos fixos do sistema:
+
+Script: linearsadripontofixo.m
+
+\section{Integração}
+
+O script principal é dado por:
+
+Script: linearsadri.m (Principal)
+
+Nele são definidas as constantes do veículo e pneu. Além disso é feita a integração. Por fim, os resultados são apresentados em gráficos. Com autovalor em função do tempo.
+
+A função de integração se encontra em:
+
+Script: linearsadrifun.m (Função)
+
+Um script extra para o cálculo dos autovalores:
+
+Script: linearsadriautovalor.m (Calculadora de autovalores)
+
+\section{Cálculo dos expoentes}
+
+Um script principal para a chamada do algoritmo
+
+Script: linearsadrilyapunov.m (Principal)
+
+A função que é chamada pelo algoritmo
+
+Script: linearsadrilyapunovext.m (Função extendida com a equação variacional)
+
+Algoritmo de wolf aplicado a um sistema de dois graus de liberdade já com a função de veículo definida dentro do algoritmo.
+
+Script: lyapunov2linearsadri.m
+
+Região de estabilidade:
+
+Script: linearsadrilyapunovregiao.m
+
+Depois de gerado o resultado. O script para carregar as variaveis e plotar os resultados.
+
+Script: linearsadrilyapunovregiaoresultados.m
+
+\chapter{Veículo linear. Pneu pacejka} 
+
+pasta: linearpacejka
+
+PROXIMAS IMPLEMENTAÇÕES
+
+\begin{itemize}
+\item Estender o script linearpacejka para plotar a variação da parte real do autovalor
+\item 
+\end{itemize}
+
+
+A comparação deste modelo pode ser feita integrando o anterior primeiro. Em seguida deve-se integrar esse aqui sem fechar as figuras criadas.
+
+Script que mostra o desenvolvimento das equações de movimento e a obtenção da matriz jacobiana. 
+
+Script: linearpacejkamovimento.m
+
+O script principal define os parâmetros do veículo e do pneu utilizado e por fim integra o sistema para uma condição inicial e esterçamento constante. Como parte do resultado tem a evolucao do autovalor.
+
+	Script: linearpacejka.m
+
+A função com o modelo é dada por:
+
+	Script: linearpacejkafun.m
+
+Calculador a de autovalor do sistema com pneu pacejka
+
+	Script: linearpacejkaautovalor.m
+
+Cálculo dos expoentes de lyapunov são realisados por meio de um script de definição, modelo extendido com equação variacional e algoritmo de wolf.
+
+Definição das variáveis e chamada para o calculo dos expoentes
+
+	Script: linearpacejkalyapunov.m
+
+Equação extendida para calculo dos expoentes:
+
+	Script: linearpacejkalyapunovext.m
+
+O algoritmo implementado se encontra em:
+
+Script: lyapunov2linearpacejka.m
+
+Região de estabilidade é calculada através de;
+
+	Script: linearpacejkalyapunovregiao.m
+
+
+
+
+
+
+
+
+\chapter{naolinearpacejka} 
+
+
+
+
+
+
+
+%\bibliography{referencias}
+%\bibliographystyle{plain}
+
+%\printindex % Índice remissivo
+
+
+\end{document}
+
