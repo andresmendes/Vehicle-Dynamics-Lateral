@@ -1,4 +1,8 @@
-# octave-vehicle-dynamics
-Vehicle dynamics simulation in octave
+# Dinamica-Veicular
+Simulações dinâmicas de veículos.
 
-2 DOF yaw dynamics model
+- Veículo simples. 
+- Modelo do tipo biclicleta.
+
+Documentação em:
+VeiculoSimples/documentacao/documentacao.pdf
