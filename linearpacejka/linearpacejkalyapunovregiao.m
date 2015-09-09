@@ -63,8 +63,10 @@ PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 
 rr = 160; % refino do grid de r
 vv = 500; % refino do grid de vy
-rr = 10; % refino do grid de r
+rr = 8; % refino do grid de r
 vv = 10; % refino do grid de vy
+rr = 80;
+vv = 240;
 
 rgrid = linspace(-4,4,rr);
 vygrid = linspace(-12,12,vv);
@@ -75,11 +77,11 @@ vygrid = linspace(-12,12,vv);
 % Varredura do grid calculando os expoentes
 
 % Dados para o algoritmo
-time = 10; % tempo de simulaçao
+time = 20; % tempo de simulaçao
 step = 0.1; % passo da iteraçao
 
-for i=1:length(vygrid)
-   for j=1:length(rgrid)
+for i=1:length(rgrid)
+   for j=1:length(vygrid)
        [T,Res]=lyapunov2linearpacejka(2,VEICULO,PNEU,0,step,time,[rgrid(i) vygrid(j)/v],1);
        L1lp(i,j) = Res(end,1);
        L2lp(i,j) = Res(end,2);
@@ -90,8 +92,8 @@ end
 % OBS: A condiçao inicial e manipulada pois o modelo foi desenvolvido para
 % ALPHAT como estado, e nao vy
 
-for i=1:length(vygrid)
-   for j=1:length(rgrid)
+for i=1:length(rgrid)
+   for j=1:length(vygrid)
        %n=isnan(L1(i,j));
        
        if L1lp(i,j)<0 & L2lp(i,j)<0
@@ -102,14 +104,21 @@ for i=1:length(vygrid)
    end
 end
 
-save('regiaoresultadoslp','Zlp','Xlp','Ylp','L1lp','L2lp')
+save('regiaoresultadoslp','Zlp','Xlp','Ylp','L1lp','L2lp','VEICULO','PNEU','time','step')
 
 %% Resultados
 
 figure(1)
 hold on
-%contour(X',Y',Z,0.5)
 surface(Xlp,Ylp,Zlp)
+title('Regiao de estabilidade')
+xlabel('Velocidade lateral [m/s]')
+ylabel('Velocidade angular [rad/s]')
+legend('Pacejka')
+
+figure(2)
+hold on
+contour(Xlp,Ylp,Zlp,0.5)
 title('Regiao de estabilidade')
 xlabel('Velocidade lateral [m/s]')
 ylabel('Velocidade angular [rad/s]')
