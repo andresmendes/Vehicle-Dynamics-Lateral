@@ -71,7 +71,7 @@ for i=1:length(rgrid)
    end
 end
 
-save('regiaoresultadosls','Zls','Xls','Yls','L1ls','L2ls','VEICULO','PNEU','time','step')
+save('regiaoresultadosls')
 
 %% Resultados
 

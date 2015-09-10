@@ -7,8 +7,8 @@ clear,clc,close all
 % Mesmos dados apresentados por SADRI E WU 2013
 m = 2527;   % massa do veiculo [kg]
 I = 6550;   % momento de inercia [kg]
-b = 1.37;   % distancia do eixo dianteiro ao centro de massa [m]
-a = 1.86;   % distancia do eixo dianteiro ao centro de massa [m]
+a = 1.37;   % distancia do eixo dianteiro ao centro de massa [m]
+b = 1.86;   % distancia do eixo dianteiro ao centro de massa [m]
 v = 20;     % módulo da velocidade do centro de massa [m/s]
 
 DELTA = 0*pi/180; % esterçamento do eixo dianteiro [grau]
@@ -51,13 +51,13 @@ FzR = Fz0;
 
 PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 
-%% Integração do sistema
-T = 50; % Tempo de simulação
+%% Interação do sistema
+T = 3; % Tempo de simulação
 TSPAN = 0:0.1:T;
 
-r0 = 10; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
-ALPHAT0 = vy0/v;
+r0 = 0; % velocidade angular [rad/s]
+vy0 = 20; % velocidade lateral [m/s]
+ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
 x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados
 x0 = [x0 ; 0]; % Condição da orientacao
 x0 = [x0 ; 0 ; 0]; % Condição inicial da trajetória

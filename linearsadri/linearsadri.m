@@ -7,8 +7,8 @@ clear,clc
 
 m = 2527; % [kg]
 I = 6550; % [kgm2]
-a = 1.37; % [m]
-b = 1.86; % [m]
+b = 1.37; % [m]
+a = 1.86; % [m]
 v = 20; % [m/s]
 DELTA = 0*pi/180;
 
@@ -32,8 +32,8 @@ TEMPO = 2 ;
 tspan = [0 TEMPO];
 
 % Condição inicial do SADRI
-r0 = 2; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
+r0 = 1.3; % velocidade angular [rad/s]
+vy0 = 9.7; % velocidade lateral [m/s]
 
 x0 = [r0;vy0;0;0;0]; % condições iniciais
 

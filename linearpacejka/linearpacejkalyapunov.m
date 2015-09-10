@@ -63,7 +63,7 @@ step = 0.1; % passo da iteração
 
 r0 = 3; % Velocidade angular inical [rad/s]
 vy = 0; % Velocidade lateral [m/s]
-ALPHAT0 = vy/v; % Ângulo de deriva do centro de massa inicial [rad]
+ALPHAT0 = asin(vy/v); % Ângulo de deriva do centro de massa inicial [rad]
 x0 = [r0 ALPHAT0]; % Condição inicial dos estados
 
 [T,Res]=lyapunov2linearpacejka(2,VEICULO,PNEU,0,step,time,x0,1);
