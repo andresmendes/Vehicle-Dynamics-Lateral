@@ -32,8 +32,8 @@ TEMPO = 2 ;
 tspan = [0 TEMPO];
 
 % Condição inicial do SADRI
-r0 = 1.5; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
+r0 = 1.3; % velocidade angular [rad/s]
+vy0 = 9.7; % velocidade lateral [m/s]
 
 x0 = [r0;vy0;0;0;0]; % condições iniciais
 
@@ -53,12 +53,18 @@ estados(:,2) = estados(:,2)/v;
 alphaf = (vy+lf*r)/vx-deltaf;
 alphar = (vy-lr*r)/vx;
 
-ALPHAT = asin(vy/v); % Angulo de deriva para o cálculo das velocidades
+% Módulo dos vetores velocidade
+VF = sqrt((vy+lf*r).^2 + (vx)^2);
+VR = sqrt((vy-lr*r).^2 + (vx)^2);
+VT = ones(length(VF),1)*vx; % Centro de massa T
+
+ALPHAT = 
 
 % Modulo do vetor velocidade
 VF = sqrt((v*sin(ALPHAT) + a*r).^2 + (v*cos(ALPHAT)).^2); % Dianteiro
 VR = sqrt((v*sin(ALPHAT) - b*r).^2 + (v*cos(ALPHAT)).^2); % Traseiro
 VT = ones(length(VF),1)*v; % Centro de massa T
+
 
 %% Autovalores da matriz jacobiana
 % Para verificar a evolução dos autovalores ao longo do tempo

@@ -55,8 +55,8 @@ PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 T = 3; % Tempo de simulação
 TSPAN = 0:0.1:T;
 
-r0 = 3; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
+r0 = 0; % velocidade angular [rad/s]
+vy0 = 20; % velocidade lateral [m/s]
 ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
 x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados
 x0 = [x0 ; 0]; % Condição da orientacao
@@ -65,17 +65,19 @@ x0 = [x0 ; 0 ; 0]; % Condição inicial da trajetória
 % Função ja inclui o cálculo da trajetória
 [TOUT,XOUT] = ode45(@(t,x) linearpacejkafun(t,x,VEICULO,PNEU),TSPAN,x0); 
 
+save('resultados','XOUT','TOUT')
+
 %% Estruturação das saídas
 dPSI = XOUT(:,1);
 ALPHAT = XOUT(:,2); 
 
-% Ângulos de deriva
-ALPHAF = ALPHAT + a*dPSI/v - DELTA; % Dianteiro
-ALPHAR = ALPHAT - b*dPSI/v;         % Traseiro
+% Angulos de deriva não linear
+ALPHAF = atan((v*sin(ALPHAT) + a*dPSI)/(v*cos(ALPHAT))) - DELTA; % Dianteiro
+ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)/(v*cos(ALPHAT)));         % Traseiro
 
 % Modulo do vetor velocidade
-VF = sqrt((v*sin(ALPHAT) + a*dPSI).^2 + (v*cos(ALPHAT)).^2); % Dianteiro
-VR = sqrt((v*sin(ALPHAT) - b*dPSI).^2 + (v*cos(ALPHAT)).^2); % Traseiro
+VF = sqrt((v*sin(ALPHAT) + a*dPSI).^2 + (v*cos(ALPHAT))^2); % Dianteiro
+VR = sqrt(atan((v*sin(ALPHAT) - b*dPSI)).^2 + (v*cos(ALPHAT))^2);         % Traseiro
 VT = ones(length(VF),1)*v; % Centro de massa T
 
 % numF = (v.*sin(ALPHAT) + a*dPSI);
