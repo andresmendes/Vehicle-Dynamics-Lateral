@@ -52,10 +52,10 @@ FzR = Fz0;
 PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 
 %% Interação do sistema
-T = 3; % Tempo de simulação
+T = 20; % Tempo de simulação
 TSPAN = 0:0.1:T;
 
-r0 = 3; % velocidade angular [rad/s]
+r0 = 10; % velocidade angular [rad/s]
 vy0 = 0; % velocidade lateral [m/s]
 ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
 x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados

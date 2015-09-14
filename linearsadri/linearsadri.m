@@ -28,12 +28,12 @@ kr = 4.87;
 PNEU = [Caf Car kf kr];
 
 %% Integração do sistema
-TEMPO = 2 ;
+TEMPO = 5;
 tspan = [0 TEMPO];
 
 % Condição inicial do SADRI
 r0 = 1.5; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
+vy0 = 10; % velocidade lateral [m/s]
 
 x0 = [r0;vy0;0;0;0]; % condições iniciais
 

@@ -1,5 +1,5 @@
 function [ dx ] = naolinearandrefun(t,x,VEICULODADOS,PNEUDADOS)
-% Dadosdo veículo
+% Dados o veículo
 m = VEICULODADOS(1);   % massa do veiculo [kg]
 I = VEICULODADOS(2);   % momento de inercia [kg]
 a = VEICULODADOS(3);   % distancia do eixo dianteiro ao centro de massa [m]

@@ -27,5 +27,5 @@ contour(Xlp,Ylp,Zlp,0.5,'r') % Contorno da primeira região
 title('Regiao de estabilidade - PACEJKA')
 xlabel('Velocidade lateral [m/s]')
 ylabel('Velocidade angular [rad/s]')
-l=legend('a=1.37 b=1.86','a=1.86 b=1.37','Location','NorthWest')
+legend('a=1.37 b=1.86','a=1.86 b=1.37','Location','NorthWest')
 

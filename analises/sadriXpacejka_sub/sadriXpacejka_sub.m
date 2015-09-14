@@ -27,5 +27,5 @@ contour(Xls,Yls,Zls,0.5,'r') % Contorno da primeira região
 title('Regiao de estabilidade - SADRI x PACEJKA')
 xlabel('Velocidade lateral [m/s]')
 ylabel('Velocidade angular [rad/s]')
-l=legend('Sadri','Pacejka','Location','NorthWest')
+legend('Sadri','Pacejka','Location','NorthWest')
 

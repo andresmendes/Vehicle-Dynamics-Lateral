@@ -61,7 +61,7 @@ PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 time = 100; % tempo de implementação do algoritmo
 step = 0.1; % passo da iteração
 
-r0 = 3; % Velocidade angular inical [rad/s]
+r0 = 1; % Velocidade angular inical [rad/s]
 vy = 0; % Velocidade lateral [m/s]
 ALPHAT0 = asin(vy/v); % Ângulo de deriva do centro de massa inicial [rad]
 x0 = [r0 ALPHAT0]; % Condição inicial dos estados
@@ -72,3 +72,5 @@ figure(1)
 plot(T,Res)
 legend('1','2')
 % Para  step = 0.001 e tempo = 100 => L1 = -6.616 e L2 = 6.616
+ %-6.650064  -6.627789
+ %-2.307346 -10.970507

@@ -1,4 +1,4 @@
-function [Texp,Lexp]=lyapunov2linearpacejka(n,VEICULODADOS,PNEUDADOS,tstart,stept,tend,ystart,ioutp);
+function [Texp,Lexp]=lyapunov2naolinearandre(n,VEICULODADOS,PNEUDADOS,tstart,stept,tend,ystart,ioutp);
 %
 %    Lyapunov exponent calcullation for ODE-system.
 %
@@ -107,7 +107,7 @@ for ITERLYAP=1:nit
 % Solutuion of extended ODE system 
 
 %rhs_ext_fcn
-  [T,Y] = ode45(@(t,x) linearpacejkalyapunovext(t,x,VEICULODADOS,PNEUDADOS),[t t+stept],y);  
+  [T,Y] = ode45(@(t,x) naolinearandrelyapunovext(t,x,VEICULODADOS,PNEUDADOS),[t t+stept],y);  
 
 % atualização para a próxima iteração  
   t=t+stept;

@@ -73,20 +73,21 @@ vygrid = linspace(-20,20,vv);
 
 total = num2str(length(rgrid)); % Valor total do grid usado para estimar o estágio da simulação
 
-[Xlp,Ylp] = meshgrid(vygrid,rgrid); % lp = linearpacejka
+[Xnla,Ynla] = meshgrid(vygrid,rgrid); % lp = linearpacejka
 
 %% Loop principal
 % Varredura do grid calculando os expoentes
 
-% Dados para o algoritmo
-time = 20; % tempo de simulaçao
-step = 0.1; % passo da iteraçao
-
+%%%%%%%%%%%%%%%%%%%%%%% SUB %%%%%%%%%%%%%%%%%%%%%%% 
+% % Dados para o algoritmo
+% time = 20; % tempo de simulaçao
+% step = 0.1; % passo da iteraçao
+% 
 % for i=1:length(rgrid)
 %    for j=1:length(vygrid)
 %        [T,Res]=lyapunov2linearpacejka(2,VEICULO,PNEU,0,step,time,[rgrid(i) asin(vygrid(j)/v)],1);
-%        L1lp(i,j) = Res(end,1);
-%        L2lp(i,j) = Res(end,2);
+%        L1nla(i,j) = Res(end,1);
+%        L2nla(i,j) = Res(end,2);
 %    end
 % end
 % 
@@ -97,30 +98,32 @@ step = 0.1; % passo da iteraçao
 %    for j=1:length(vygrid)
 %        %n=isnan(L1(i,j));
 %        
-%        if L1lp(i,j)<0 & L2lp(i,j)<0
-%            Zlp(i,j) = 1;
+%        if L1nla(i,j)<0 & L2nla(i,j)<0
+%            Znla(i,j) = 1;
 %        else
-%            Zlp(i,j) = 0;
+%            Znla(i,j) = 0;
 %        end
 %    end
 % end
 
+
+%%%%%%%%%%%%%%%%%%%%%%% SOBRE %%%%%%%%%%%%%%%%%%%%%%% 
 T = 20; % Tempo de simulação
 TSPAN = 0:0.1:T;
 
 for i=1:length(rgrid)
     for j=1:length(vygrid)
         % As condições iniciais tem três zeros devido a PSI X e Y
-        [TOUT,XOUT] = ode45(@(t,x) linearpacejkafun(t,x,VEICULO,PNEU),TSPAN,[rgrid(i) asin(vygrid(j)/v) 0 0 0]);
+        [TOUT,XOUT] = ode45(@(t,x) naolinearandrefun(t,x,VEICULO,PNEU),TSPAN,[rgrid(i) asin(vygrid(j)/v) 0 0 0]);
 
         ALPHATmax = max(abs(XOUT(:,2)));
         if ALPHATmax < (pi/2)
-            Zlp(i,j) = 1;
+            Znla(i,j) = 1;
         else
-            Zlp(i,j) = 0;
+            Znla(i,j) = 0;
         end
 
-        if rem(i,8)==0
+        if rem(i,8)==0 & j==1
             clc
             estagio = num2str(i);
             strcat(estagio,'/',total)
@@ -135,8 +138,8 @@ save('regiaoresultadoslp')
 
 figure(1)
 hold on
-contour(Xlp,Ylp,Zlp,0.5)
+contour(Xnla,Ynla,Znla,0.5)
 title('Regiao de estabilidade')
 xlabel('Velocidade lateral [m/s]')
 ylabel('Velocidade angular [rad/s]')
-legend('Pacejka')
+legend('Andre')

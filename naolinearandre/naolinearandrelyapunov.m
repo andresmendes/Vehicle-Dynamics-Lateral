@@ -58,7 +58,7 @@ PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
 % Cálculo utilizando o algoritmo de Wolf 1985
 
 % Dados para o algoritmo
-time = 100; % tempo de implementação do algoritmo
+time = 10; % tempo de implementação do algoritmo
 step = 0.1; % passo da iteração
 
 r0 = 3; % Velocidade angular inical [rad/s]
@@ -66,7 +66,7 @@ vy = 0; % Velocidade lateral [m/s]
 ALPHAT0 = asin(vy/v); % Ângulo de deriva do centro de massa inicial [rad]
 x0 = [r0 ALPHAT0]; % Condição inicial dos estados
 
-[T,Res]=lyapunov2linearpacejka(2,VEICULO,PNEU,0,step,time,x0,1);
+[T,Res]=lyapunov2naolinearandre(2,VEICULO,PNEU,0,step,time,x0,1);
 
 figure(1)
 plot(T,Res)

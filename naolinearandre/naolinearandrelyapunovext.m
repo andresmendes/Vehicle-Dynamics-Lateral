@@ -1,164 +1,109 @@
-clear,clc,close all
-%% Descrição				
-% Script para simulação de veículo simples para condições iniciais e
-% esterçamento constante.
+function [ dx ] = naolinearandrelyapunovext(t,x,VEICULODADOS,PNEUDADOS)
+% Dadosdo veículo
+m = VEICULODADOS(1);   % massa do veiculo [kg]
+I = VEICULODADOS(2);   % momento de inercia [kg]
+a = VEICULODADOS(3);   % distancia do eixo dianteiro ao centro de massa [m]
+b = VEICULODADOS(4);   % distancia do eixo dianteiro ao centro de massa [m]
+v = VEICULODADOS(5);     % módulo da velocidade do centro de massa [m/s]
+DELTA = VEICULODADOS(6); % Esterçamento
 
-%% Dados do veiculo
-% Mesmos dados apresentados por SADRI E WU 2013
-m = 2527;   % massa do veiculo [kg]
-I = 6550;   % momento de inercia [kg]
-a = 1.37;   % distancia do eixo dianteiro ao centro de massa [m]
-b = 1.86;   % distancia do eixo dianteiro ao centro de massa [m]
-v = 20;     % módulo da velocidade do centro de massa [m/s]
+g = 9.81;   % Aceleração da gravidade [m/s2]
 
-DELTA = 0*pi/180; % esterçamento do eixo dianteiro [grau]
+% Estados
+dPSI = x(1);
+ALPHAT = x(2);
+w11 = x(3);
+w21 = x(4);
+w12 = x(5);
+w22 = x(6);
 
-VEICULO = [m I a b v DELTA]; 
+W = [w11 w12;...
+     w21 w22];
 
-%% Dados do pneu
-% Os parâmetros dos eixos dianteiros e trasieros visam ser equivalentes ao
-% modelo simplificado usado por SADRI E WU 2013. Isso é feito da seguinte
-% utilizando as seguintes equivalencias:
-% * Mesmo coeficiente de rigidez de curva para angulos de deriva pequenos
-% * Mesma força lateral máxima
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Dados retirados do script de pneus (pneusadriXpacejka.m) comparando os dois modelos    
-    % muy0 = 0.8;
-    % Fz0 = 2.4985e+04;
-    % muy = muy0;
-    % FzF = Fz0;
-    % Cy = 1.5;
-    % Ey = -2;
-    % c1 = 3.5899;
-    % c2 = 1.33;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Fz0 = 2.4985e+04; % Carga vertical nominal
-muy0 = 0.8; % Coeficiente de atrito nominal
-% Coeficientes experimentais do pneu dianteiro
-CyF = 1.5;
-EyF = -2;
-c1F = 3.5899;
-c2F = 1.33;
-% Coeficientes experimentaisdo pneu traseiro
-CyR = 1.5;
-EyR = -2;
-c1R = 3.5899;
-c2R = 1.33;
-% Condições de operação
-muy = muy0;
-FzF = Fz0; 
-FzR = Fz0;
-
-PNEU = [Fz0 muy0 CyF EyF c1F c2F CyR EyR c1R c2R muy FzF FzR];
-
-%% Interação do sistema
-T = 5; % Tempo de simulação
-TSPAN = 0:0.1:T;
-
-r0 = 5; % velocidade angular [rad/s]
-vy0 = 0; % velocidade lateral [m/s]
-ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
-x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados
-x0 = [x0 ; 0]; % Condição da orientacao
-x0 = [x0 ; 0 ; 0]; % Condição inicial da trajetória
-
-% Função ja inclui o cálculo da trajetória
-[TOUT,XOUT] = ode45(@(t,x) naolinearandrefun(t,x,VEICULO,PNEU),TSPAN,x0); 
-
-save('resultados','XOUT','TOUT')
-
-%% Estruturação das saídas
-dPSI = XOUT(:,1);
-ALPHAT = XOUT(:,2); 
-
-% Angulos de deriva não linear
-ALPHAF = atan((v*sin(ALPHAT) + a*dPSI)./(v*cos(ALPHAT))) - DELTA; % Dianteiro
-ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)./(v*cos(ALPHAT)));         % Traseiro
-
-% Modulo do vetor velocidade
-VF = sqrt((v*sin(ALPHAT) + a*dPSI).^2 + (v*cos(ALPHAT)).^2); % Dianteiro
-VR = sqrt((v*sin(ALPHAT) - b*dPSI).^2 + (v*cos(ALPHAT)).^2); % Traseiro
-VT = ones(length(VF),1)*v; % Centro de massa T
-
-% numF = (v.*sin(ALPHAT) + a*dPSI);
-% numR = (v.*sin(ALPHAT) - b*dPSI);
-% den = (v.*cos(ALPHAT));
-%  
-% 
-% for i=1:length(ALPHAT)
-%  
-% ALPHAF(i) = atan(numF(i)/den(i)) - DELTA ;
-% ALPHAR(i) = atan(numR(i)/den(i));
-%     
-%     
-%     if den(i)<=0%ALPHAT(i)>=pi/2 & ALPHAT(i)<3/2*pi
-%         ALPHAF(i) = -atan(numF(i)/den(i)) - DELTA;
-%         ALPHAR(i) = -atan(numR(i)/den(i));
-%     end
+% Conversao do angulo para que fique so entre -180 e 180
+% met = sin(ALPHAT); % verifica se o angulo esta no plano esquerdo ou direito do carro FOLHA 15
+% if met > 0
+%     ANGULO = ALPHAT - floor(ALPHAT/(pi))*(pi);
+% else
+%     ANGULO = ALPHAT - floor(ALPHAT/(pi))*(pi) - pi;
 % end
-%% Autovalores da matriz jacobiana
-% Para verificar a evolução dos autovalores ao longo do tempo
+% ALPHAT = ANGULO; 
+ 
+% Angulos de deriva não linear
+ALPHAF = atan((v*sin(ALPHAT) + a*dPSI)/(v*cos(ALPHAT))) - DELTA; % Dianteiro
+ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)/(v*cos(ALPHAT)));         % Traseiro
 
-for i=1:length(XOUT)
-dPSI = XOUT(i,1);
-ALPHAT = XOUT(i,2);
-% Componentes
+
+% ALPHAF = atan((v*sin(ALPHAT) + a*dPSI)/(v*cos(ALPHAT))) - DELTA;
+% ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)/(v*cos(ALPHAT)));
+% 
+%     
+%     if (v*cos(ALPHAT))<=0
+%         ALPHAF = -atan((v*sin(ALPHAT) + a*dPSI)/(v*cos(ALPHAT))) - DELTA;
+%         ALPHAR = -atan((v*sin(ALPHAT) - b*dPSI)/(v*cos(ALPHAT)));
+%     end
+
+% Força lateral do modelo de Pacejka
+Fz0 = PNEUDADOS(1);
+muy0 = PNEUDADOS(2);
+
+% Parâmetros do pneu frente
+CyF = PNEUDADOS(3);
+EyF = PNEUDADOS(4);
+c1F = PNEUDADOS(5);
+c2F = PNEUDADOS(6);
+
+% Parâmetros do pneu tras
+CyR = PNEUDADOS(7);
+EyR = PNEUDADOS(8);
+c1R = PNEUDADOS(9);
+c2R = PNEUDADOS(10);
+
+% Condições de operação
+muy = PNEUDADOS(11);
+FzF = PNEUDADOS(12); 
+FzR = PNEUDADOS(13);
+
+
+CfaF = c1F*c2F*Fz0*sin(2*atan(FzF/(c2F*Fz0))); % Cfa em função de Fz
+CfaR = c1R*c2R*Fz0*sin(2*atan(FzR/(c2R*Fz0))); % Cfa em função de Fz
+
+Cfa0F = c1F*c2F*Fz0*sin(2*atan(Fz0/(c2F*Fz0))); % Cfa para Fz0
+Cfa0R = c1R*c2R*Fz0*sin(2*atan(Fz0/(c2R*Fz0))); % Cfa para Fz0
+
+alphaeqF = CfaF/Cfa0F*muy0/muy*Fz0/FzF*ALPHAF; % alpha equivalente
+alphaeqR = CfaR/Cfa0R*muy0/muy*Fz0/FzR*ALPHAR; % alpha equivalente
+
+Dy0F = muy0*Fz0;
+Dy0R = muy0*Fz0;
+
+By0F = Cfa0F/(CyF*Dy0F); % Stiffness factor
+By0R = Cfa0R/(CyR*Dy0R); % Stiffness factor
+
+Fy0F = Dy0F*sin(CyF*atan(By0F*alphaeqF-EyF*(By0F*alphaeqF-atan(By0F*alphaeqF))));
+Fy0R = Dy0R*sin(CyR*atan(By0R*alphaeqR-EyR*(By0R*alphaeqR-atan(By0R*alphaeqR))));
+
+FyF = -muy/muy0*FzF/Fz0*Fy0F;
+FyR = -muy/muy0*FzR/Fz0*Fy0R;
+
+% Equações de estado
+dx(1,1) = (FyF*cos(DELTA)*a - FyR*b)/I; % ddPSI
+dx(2,1) = (FyF*cos(DELTA) + FyR - m*v*cos(ALPHAT)*dPSI)/(m*v*cos(ALPHAT)); % dALPHAT
+
+% Matriz jacobiana
 J11 = ((CyR*FzR*b*muy*cos(CyR*atan(EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)))*(EyR*((Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1R^2*c2R^2*sin(2*atan(FzR/(Fz0*c2R)))^2*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT)))^2)/(CyR^2*FzR^2*muy^2) + 1))) - (Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy))^2 + 1) + (CyF*FzF*a*muy*cos(CyF*atan(EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)))*cos(DELTA)*(EyF*((Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1F^2*c2F^2*sin(2*atan(FzF/(Fz0*c2F)))^2*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT))))^2)/(CyF^2*FzF^2*muy^2) + 1))) - (Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy))^2 + 1))/I;
 J12 = ((CyR*FzR*b*muy*cos(CyR*atan(EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)))*(EyR*((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1R^2*c2R^2*sin(2*atan(FzR/(Fz0*c2R)))^2*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT)))^2)/(CyR^2*FzR^2*muy^2) + 1))) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy))^2 + 1) + (CyF*FzF*a*muy*cos(CyF*atan(EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)))*cos(DELTA)*(EyF*((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1F^2*c2F^2*sin(2*atan(FzF/(Fz0*c2F)))^2*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT))))^2)/(CyF^2*FzF^2*muy^2) + 1))) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy))^2 + 1))/I;
 J21 = -(m*v*cos(ALPHAT) + (CyR*FzR*muy*cos(CyR*atan(EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)))*(EyR*((Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1R^2*c2R^2*sin(2*atan(FzR/(Fz0*c2R)))^2*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT)))^2)/(CyR^2*FzR^2*muy^2) + 1))) - (Fz0*b*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R))))/(CyR*FzR*muy*v*cos(ALPHAT)*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy))^2 + 1) - (CyF*FzF*muy*cos(CyF*atan(EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)))*cos(DELTA)*(EyF*((Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1F^2*c2F^2*sin(2*atan(FzF/(Fz0*c2F)))^2*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT))))^2)/(CyF^2*FzF^2*muy^2) + 1))) - (Fz0*a*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F))))/(CyF*FzF*muy*v*cos(ALPHAT)*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy))^2 + 1))/(m*v*cos(ALPHAT));
 J22 = (dPSI*m*v*sin(ALPHAT) - (CyR*FzR*muy*cos(CyR*atan(EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)))*(EyR*((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1R^2*c2R^2*sin(2*atan(FzR/(Fz0*c2R)))^2*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT)))^2)/(CyR^2*FzR^2*muy^2) + 1))) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*((sin(ALPHAT)*(b*dPSI - v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) - 1))/(CyR*FzR*muy*((b*dPSI - v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy))^2 + 1) + (CyF*FzF*muy*cos(CyF*atan(EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)))*cos(DELTA)*(EyF*((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1)*((Fz0^2*c1F^2*c2F^2*sin(2*atan(FzF/(Fz0*c2F)))^2*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT))))^2)/(CyF^2*FzF^2*muy^2) + 1))) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*((sin(ALPHAT)*(a*dPSI + v*sin(ALPHAT)))/(v*cos(ALPHAT)^2) + 1))/(CyF*FzF*muy*((a*dPSI + v*sin(ALPHAT))^2/(v^2*cos(ALPHAT)^2) + 1))))/((EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy))^2 + 1))/(m*v*cos(ALPHAT)) + (sin(ALPHAT)*(FzR*muy*sin(CyR*atan(EyR*(atan((Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) - (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy)) + (Fz0*c1R*c2R*sin(2*atan(FzR/(Fz0*c2R)))*atan((b*dPSI - v*sin(ALPHAT))/(v*cos(ALPHAT))))/(CyR*FzR*muy))) + FzF*muy*sin(CyF*atan(EyF*(atan((Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) - (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)) + (Fz0*c1F*c2F*sin(2*atan(FzF/(Fz0*c2F)))*(DELTA - atan((a*dPSI + v*sin(ALPHAT))/(v*cos(ALPHAT)))))/(CyF*FzF*muy)))*cos(DELTA) - dPSI*m*v*cos(ALPHAT)))/(m*v*cos(ALPHAT)^2);
-% Matriz      
+      
 J =[J11 J12;...
     J21 J22];
 
-valor(i,1:2) = eig(J)';
+dW = J*W;
+
+dx(3) = dW(1,1);
+dx(4) = dW(2,1);
+dx(5) = dW(1,2);
+dx(6) = dW(2,2);
+
 end
-
-%% Resultados
-figure(1)
-hold on
-plot(TOUT,XOUT(:,1),'r')
-plot(TOUT,XOUT(:,2)*180/pi,'g')
-title('Estados X Tempo')
-xlabel('Tempo [s]')
-ylabel('[rad] ou [rad/s]')
-legend('dPSI','ALPHAT')
-
-figure(2)
-hold on
-plot(TOUT,XOUT(:,3)*180/pi,'r')
-title('Orientacao X Tempo')
-xlabel('tempo [s]')
-ylabel('Orientacao [grau]')
-
-figure(3)
-hold on
-plot(XOUT(:,4),XOUT(:,5),'r')
-title('Trajetoria')
-xlabel('Distancia [m]')
-ylabel('Distancia [m]')
-
-figure(4)
-hold on
-plot(TOUT,ALPHAF*180/pi,'r')
-plot(TOUT,ALPHAR*180/pi,'g')
-title('Angulo de deriva')
-xlabel('tempo [s]')
-ylabel('angulo [grau]')
-legend('F','R')
-
-figure(5)
-hold on
-plot(TOUT,real(valor(:,1)),'r')
-plot(TOUT,real(valor(:,2)),'g')
-title('Parte real dos autovalores')
-xlabel('Tempo [s]')
-xlabel('Autovalor')
-legend('1','2')
-
-%% Animação
-cd ..   % Voltando uma pasta
-cd animacao % Entrando na pasta de animação
-animacao(XOUT,TOUT,ALPHAF,ALPHAR,VF,VR,VT,VEICULO); % Executando o script de animação
-cd .. % Saindo da pasta de animação
-cd naolinearandre % voltando para a pasta original
