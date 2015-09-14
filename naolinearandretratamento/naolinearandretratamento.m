@@ -1,13 +1,14 @@
-clear,clc,close all 
-%% Descrição                 
-% Script para simulação de veículo simples para condições iniciais e % esterçamento constante.
+clear,clc,close all
+%% Descrição				
+% Script para simulação de veículo simples para condições iniciais e
+% esterçamento constante.
 
 %% Dados do veiculo
 % Mesmos dados apresentados por SADRI E WU 2013
 m = 2527;   % massa do veiculo [kg]
 I = 6550;   % momento de inercia [kg]
-b = 1.37;   % distancia do eixo dianteiro ao centro de massa [m]
-a = 1.86;   % distancia do eixo dianteiro ao centro de massa [m]
+a = 1.37;   % distancia do eixo dianteiro ao centro de massa [m]
+b = 1.86;   % distancia do eixo dianteiro ao centro de massa [m]
 v = 20;     % módulo da velocidade do centro de massa [m/s]
 
 DELTA = 0*pi/180; % esterçamento do eixo dianteiro [grau]
@@ -62,7 +63,7 @@ x0 = [x0 ; 0]; % Condição da orientacao
 x0 = [x0 ; 0 ; 0]; % Condição inicial da trajetória
 
 % Função ja inclui o cálculo da trajetória
-[TOUT,XOUT] = ode45(@(t,x) naolinearandrefun(t,x,VEICULO,PNEU),TSPAN,x0); 
+[TOUT,XOUT] = ode45(@(t,x) naolinearandretratamentofun(t,x,VEICULO,PNEU),TSPAN,x0); 
 
 save('resultados','XOUT','TOUT')
 
@@ -79,22 +80,23 @@ VF = sqrt((v*sin(ALPHAT) + a*dPSI).^2 + (v*cos(ALPHAT)).^2); % Dianteiro
 VR = sqrt((v*sin(ALPHAT) - b*dPSI).^2 + (v*cos(ALPHAT)).^2); % Traseiro
 VT = ones(length(VF),1)*v; % Centro de massa T
 
-% numF = (v.*sin(ALPHAT) + a*dPSI);
-% numR = (v.*sin(ALPHAT) - b*dPSI);
-% den = (v.*cos(ALPHAT));
-%  
-% 
-% for i=1:length(ALPHAT)
-%  
-% ALPHAF(i) = atan(numF(i)/den(i)) - DELTA ;
-% ALPHAR(i) = atan(numR(i)/den(i));
-%     
-%     
-%     if den(i)<=0%ALPHAT(i)>=pi/2 & ALPHAT(i)<3/2*pi
-%         ALPHAF(i) = -atan(numF(i)/den(i)) - DELTA;
-%         ALPHAR(i) = -atan(numR(i)/den(i));
-%     end
-% end
+% Obtendo os ângulos de deriva
+numF = (v.*sin(ALPHAT) + a*dPSI);
+numR = (v.*sin(ALPHAT) - b*dPSI);
+den = (v.*cos(ALPHAT));
+
+for i=1:length(ALPHAT)
+ 
+ALPHAF(i) = atan(numF(i)/den(i)) - DELTA ;
+ALPHAR(i) = atan(numR(i)/den(i));
+    
+    
+    if den(i)<=0
+        ALPHAF(i) = -atan(numF(i)/den(i)) - DELTA;
+        ALPHAR(i) = -atan(numR(i)/den(i));
+    end
+end
+
 %% Autovalores da matriz jacobiana
 % Para verificar a evolução dos autovalores ao longo do tempo
 

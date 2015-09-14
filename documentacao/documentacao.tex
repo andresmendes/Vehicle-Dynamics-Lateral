@@ -137,6 +137,21 @@ O ajusto dos parâmetros experimentais de pacejka são ajustados para apresentar
 
 Script: pneusadriXpacejka.m
 
+\section{Linearização}
+
+Os scripts na pasta angulodederiva calculam os erros de linearização no plano de fase.
+
+\Chapter{Discussões}
+
+\section{Ângulo de deriva de T}
+
+Esse ângulo deve ir de -180 à 180 graus. Condicional reajustando resolve.
+
+Porém, isso gera uma descontinuidade no cálculo do ângulo de deriva F e R devido ao cos(ALPHAT) no denominador do arctan.
+
+O ângulo de deriva em F e T acompanha o quadrante de ALPHAT
+
+
 \chapter{Animação}
 
 Os scripts animacao.m e vetor.m descrevem a movimentação do veículo no plano horizontal com os vetores velocidade (F, T e R) ao longo do tempo.

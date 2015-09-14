@@ -20,4 +20,4 @@ ALPHAFlin = ALPHAT + a*dPSI/v - DELTA % Dianteiro linear
 
 %% Erro
 
-erro = abs(ALPHAFlin-ALPHAFnaolin) / ALPHAFnaolin % Erro [rad]
+erro = abs(ALPHAFlin-ALPHAFnaolin) % Erro [rad]
