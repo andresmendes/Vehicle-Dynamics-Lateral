@@ -1,8 +1,8 @@
 %clear,clc
-%% ForÃ§a lateral do modelo de Pacejka
-% ParÃ¢metros do pneu
+%% Força lateral do modelo de Pacejka
+% Parâmetros do pneu
 
-% CondiÃ§Ãµes nominais
+% Condições nominais
 Fz0 = 25000; % Carga vertical nominal
 muy0 = 0.8; % Coeficiente de atrito nominal
 
@@ -12,14 +12,14 @@ Ey = -1;
 c1 = 3.8;
 c2 = 1.33;
 
-% CondiÃ§Ãµes de operaÃ§Ã£o
+% Condições de operação
 muy = 0.8;
 FzF = 25000;
 
-% Ã‚ngulo
+% Ângulo
 ALPHA = (0:0.1:25)*pi/180;
 
-Cfa = c1*c2*Fz0*sin(2*atan(FzF/(c2*Fz0))); % Cfa em funÃ§Ã£o de Fz
+Cfa = c1*c2*Fz0*sin(2*atan(FzF/(c2*Fz0))); % Cfa em função de Fz
 
 Cfa0 = c1*c2*Fz0*sin(2*atan(Fz0/(c2*Fz0))); % Cfa para Fz0
 
@@ -38,6 +38,6 @@ FyF = muy/muy0*FzF/Fz0*Fy0;
 figure(1)
 hold on
 plot(ALPHA*180/pi,FyF)
-title('Curva caracterÃ­stica')
+title('Curva característica')
 xlabel('angulo de deriva [grau]')
 ylabel('Forca lateral [N]')

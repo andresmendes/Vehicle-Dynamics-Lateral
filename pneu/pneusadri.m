@@ -1,12 +1,12 @@
 clear,clc
 %% Pneu Sadri e Wu 2013
-alpha = (0:0.1:25)*pi/180; % Ã‚ngulo de deriva
+alpha = (0:0.1:25)*pi/180; % Ângulo de deriva
 
-% ParÃ¢metros do pneu
-Caf = 57300; % ParÃ¢metro do pneu [N/rad]
-kf = 4.87; % ParÃ¢metro do pneu
+% Parâmetros do pneu
+Caf = 57300; % Parâmetro do pneu [N/rad]
+kf = 4.87; % Parâmetro do pneu
 
-% ForÃ§a lateral do modelo de Sadri
+% Força lateral do modelo de Sadri
 Fy = 2*Caf*(alpha-kf*alpha.^3);
 
 % Forca do modelo linear equivalente
@@ -17,7 +17,7 @@ Fylin = 2*Caf*alpha;
 alphamax = alpha(i)*180/pi; % angulo [grau]
 
 %% Resultados
-% GrÃ¡ficos dos resultados:
+% Gráficos dos resultados:
 
 figure(1)
 hold on

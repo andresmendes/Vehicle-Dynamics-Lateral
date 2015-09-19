@@ -1,19 +1,19 @@
 clear,clc,close all
-%% DescriÃ§Ã£o
-% O objetivo deste script Ã© obter uma curva caracteristica atraves do modelo de pacejka porem equivalente ao usado por sadri.
-% A equivalencia Ã© obtida mantendo:
+%% Descrição
+% O objetivo deste script é obter uma curva caracteristica atraves do modelo de pacejka porem equivalente ao usado por sadri.
+% A equivalencia é obtida mantendo:
 %     * Coeficiente de rigidez de curva para pequenos angulos
 %     * Forca lateral maxima
 
 %% Dados gerais
-alpha = (0:0.1:25)*pi/180; % Ã‚ngulo de deriva
+alpha = (0:0.1:25)*pi/180; % Ângulo de deriva
 
 %% Pneu Sadri e Wu 2013
-% ParÃ¢metros do pneu
-Caf = 57300; % ParÃ¢metro do pneu [N/rad]
-kf = 4.87; % ParÃ¢metro do pneu
+% Parâmetros do pneu
+Caf = 57300; % Parâmetro do pneu [N/rad]
+kf = 4.87; % Parâmetro do pneu
 
-% ForÃ§a lateral do modelo de Sadri
+% Força lateral do modelo de Sadri
 Fy = 2*Caf*(alpha-kf*alpha.^3);
 
 % Forca do modelo linear equivalente
@@ -21,23 +21,23 @@ Fylin = 2*Caf*alpha;
 
 Fymax = max(Fy);
 
-%% ForÃ§a lateral do modelo de Pacejka
+%% Força lateral do modelo de Pacejka
 
-% CondiÃ§Ãµes nominais
+% Condições nominais
 muy0 = 0.8;
 Fz0 = Fymax/muy0; % Carga vertical inicial
 
-% CondiÃ§Ãµes de operaÃ§Ã£o
+% Condições de operação
 muy = muy0;
 FzF = Fz0;
 
-% ParÃ¢metros do pneu
+% Parâmetros do pneu
 Cy = 1.3;
 Ey = -1;
 %c1 = 3.8;
 
 c2 = 1.33;
-% c1 calculado de maneira que a inclinaÃ§Ã£o para pequenos angulos seja a
+% c1 calculado de maneira que a inclinação para pequenos angulos seja a
 % mesma
 c1 = 2*Caf/(c2*Fz0*sin(2*atan(FzF/(c2*Fz0))));
 
@@ -51,10 +51,10 @@ Ey = -2;
 c1 = 3.5899;
 c2 = 1.33;
 
-% Ã‚ngulo
+% Ângulo
 ALPHAF = alpha;
 
-CfaF = c1*c2*Fz0*sin(2*atan(FzF/(c2*Fz0))); % Cfa em funÃ§Ã£o de Fz
+CfaF = c1*c2*Fz0*sin(2*atan(FzF/(c2*Fz0))); % Cfa em função de Fz
 
 Cfa0 = c1*c2*Fz0*sin(2*atan(Fz0/(c2*Fz0))); % Cfa para Fz0
 
@@ -75,7 +75,7 @@ hold on
 plot(ALPHAF*180/pi,FyF,'r')
 plot(alpha*180/pi,Fy,'g')
 plot(alpha*180/pi,Fylin,'--g')
-title('Curva caracterÃ­stica')
+title('Curva característica')
 xlabel('angulo de deriva [grau]')
 ylabel('Forca lateral [N]')
 legend('Pacejka','Sadri','Sadri linear')

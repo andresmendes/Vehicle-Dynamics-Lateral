@@ -83,7 +83,7 @@ velt(i,1:2) = interp1(TOUT,VT,TEMPO(i));
 
 end
 
-f=figure(6);
+f=figure(9);
 set(f,'Units','centimeters')
 set(f,'Position',[1 1 34 17])
 

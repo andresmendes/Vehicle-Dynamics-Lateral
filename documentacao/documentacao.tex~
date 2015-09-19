@@ -101,7 +101,7 @@ Nos próximos capítulos é descrito o desenvolvimento de cada modelo.
 
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=12cm]{/home/andre/Copy/FEI/Mestrado/Codigos/Dinamica-Veicular/resultadosSimulacao/estados.pdf}
+		\includegraphics{/home/andre/Copy/FEI/Mestrado/Codigos/Dinamica-Veicular/resultadosSimulacao/estados.pdf}
 		\caption{Título}
 	\end{figure}
 
