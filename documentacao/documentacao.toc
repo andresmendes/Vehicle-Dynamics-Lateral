@@ -1,0 +1,22 @@
+\select@language {portuges}
+\select@language {portuges}
+\select@language {english}
+\select@language {portuges}
+\select@language {english}
+\select@language {portuges}
+\contentsline {chapter}{\numberline {1}INTRODU\IeC {\c C}\IeC {\~A}O}{7}{chapter.1}
+\contentsline {chapter}{\numberline {2}Pneu}{9}{chapter.2}
+\contentsline {section}{\numberline {2.1}linear}{9}{section.2.1}
+\contentsline {section}{\numberline {2.2}Sadri}{9}{section.2.2}
+\contentsline {section}{\numberline {2.3}Pacejka}{9}{section.2.3}
+\contentsline {section}{\numberline {2.4}Lineariza\IeC {\c c}\IeC {\~a}o}{10}{section.2.4}
+\contentsline {section}{\numberline {2.5}\IeC {\^A}ngulo de deriva de T}{10}{section.2.5}
+\contentsline {chapter}{\numberline {3}Anima\IeC {\c c}\IeC {\~a}o}{11}{chapter.3}
+\contentsline {chapter}{\numberline {4}linearlinear}{12}{chapter.4}
+\contentsline {chapter}{\numberline {5}Veiculo linear. Pneu sadri}{13}{chapter.5}
+\contentsline {section}{\numberline {5.1}Equa\IeC {\c c}\IeC {\~o}es de movimento}{13}{section.5.1}
+\contentsline {section}{\numberline {5.2}Pontos fixos}{13}{section.5.2}
+\contentsline {section}{\numberline {5.3}Integra\IeC {\c c}\IeC {\~a}o}{13}{section.5.3}
+\contentsline {section}{\numberline {5.4}C\IeC {\'a}lculo dos expoentes}{14}{section.5.4}
+\contentsline {chapter}{\numberline {6}Ve\IeC {\'\i }culo linear. Pneu pacejka}{15}{chapter.6}
+\contentsline {chapter}{\numberline {7}Ve\IeC {\'\i }culo n\IeC {\~a}o linear. Pneu Pacejka}{16}{chapter.7}

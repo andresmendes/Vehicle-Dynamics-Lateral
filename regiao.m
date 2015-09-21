@@ -10,26 +10,28 @@ clear,clc,close all
 % Ver Opções de simulacao.m
 
 % Seleção
-pneuModelo = 3; % Escolha do modelo de pneu
-pneuDados = 3; % Escolha dos dados do pneu
+pneuModelo = 2; % Escolha do modelo de pneu
+pneuDados = 2; % Escolha dos dados do pneu
 
-veiculoModelo = 3; % Escolha do modelo de veículo
+veiculoModelo = 1; % Escolha do modelo de veículo
 veiculoDados = 1; % Escolha dos dados do veículo
 
 %% Seletor
 % Definindo as variáveis necessárias para a integração
-[pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDados pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
+[pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
 
 %% Variação das condições iniciais
 %% Definindo o grid
 
-rr = 8*15; % refino do grid de r
-vv = 40*15; % refino do grid de vy
+rr = 8*1; % refino do grid de r
+vv = 40*1; % refino do grid de vy
+
+
 
 total = num2str(rr); % String usado para a descrição do progresso
 
 rgrid = linspace(-4,4,rr);
-vygrid = linspace(-20,20,vv);
+vygrid = linspace(-12,12,vv);
 
 % Valor total do grid usado para estimar o estágio da simulação
 total = num2str(length(rgrid)); 
@@ -39,7 +41,7 @@ total = num2str(length(rgrid));
 for i=1:length(rgrid)
     for j=1:length(vygrid)
     	
-    	T = 3; % Tempo total de simulação
+    	T = 5; % Tempo total de simulação
 		TSPAN = 0:T/30:T; % Vetor de tempo de análise
 
     	% Condições iniciais
@@ -59,7 +61,7 @@ for i=1:length(rgrid)
 
         % As condições iniciais tem três zeros devido a PSI X e Y
         [TOUT,XOUT] = ode45(@(t,x) veiculoFun(t,x,pneuFun,pneuDadosFrente,...
-                    pneuDadosTras,veiculoDados),TSPAN,x0); 
+                    pneuDadosTras,veiculoDadosVet),TSPAN,x0); 
 
         % Verificação do maior valor de ALPHAT
         ALPHATmax = max(abs(XOUT(:,2)));
@@ -73,11 +75,11 @@ for i=1:length(rgrid)
         end
 
         % Progresso da simulação
-        if rem(i,100)==0 & j == 1
-            clc
-            estagio = num2str(i);
-            strcat(estagio,'/',total)
-        end
+        % if rem(i,100)==0 & j == 1
+        %     clc
+        %     estagio = num2str(i);
+        %     strcat(estagio,'/',total)
+        % end
 	end
 end
 

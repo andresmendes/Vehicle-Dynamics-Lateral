@@ -1,4 +1,4 @@
-function [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDados pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
+function [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
 %% Descrição
 % Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
 
@@ -54,15 +54,18 @@ cd veiculo
 
 % Selecionando os dados do pneu
 if veiculoDados == 1
-	veiculoLinear2gdlDados
+	veiculoDadosScript
+	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
 if veiculoDados == 2
-	veiculoNaoLinear2gdlDados
+	veiculoDadosScript14
+	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
 if veiculoDados == 3
-	veiculoNaoLinear3gdlDados
+	veiculoDadosScript45
+	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
 % if veiculoDados == 4

@@ -11,11 +11,20 @@ clear all,clc,close all
 % 	* Os gráficos ficam direito.
 
 %% Descrição
-% Este sript tem como objetivo simular o comportamento dinâmico de um
-% veículo simples escolhendo o modelo de pneu e o modelo bicicleta.
-% Dependendo da aplicação este script pode ser usado como função em que os
-% parâmetros de entrada são justamente as escolhas de modelos tanto de pneu
-% quanto de veículo.
+% Este script é um caso particular do script simulacao.m 
+% Com a seguinte escolha dos modelos e dados:
+% Modelos de pneu:
+% 	1 - pneuLinearFun
+% Dados do pneu escolhido:
+%	1 - pneuLinearDados
+% Modelos de veículo:
+% 	1 - veiculoLinear2gdl
+% Dados do modelo de veículo escolhido:
+% 	1 - veiculoLinear2gdlDados
+
+% E com a seguinte escolha de esterçamento e condições iniciais:
+% Esterçamento 30 grau
+
 
 %% Opções:
 % Este script possibilita a escolha do modelo de pneu e o modelo de veículo
@@ -38,21 +47,21 @@ clear all,clc,close all
 % 	3 - veiculoDadosScript45
 
 % Seleção
-pneuModelo = 2; % Escolha do modelo de pneu
-pneuDados = 2; % Escolha dos dados do pneu
+pneuModelo = 1; % Escolha do modelo de pneu
+pneuDados = 1; % Escolha dos dados do pneu
 
 veiculoModelo = 1; % Escolha do modelo de veículo
-veiculoDados = 1; % Escolha dos dados do veículo
+veiculoDados = 2; % Escolha dos dados do veículo
 
 % OBS: para os dados se é uma simulação sem variação de parâmetro os dados são vetores. Se houver variação os parâmetros vem em matrizes onde as colunas são os parâmetros e as linhas o valor deles na variação
 
 %% Dados básicos da integração (integrador é chamado mais abaixo)
 % 
-T = 3; % Tempo total de simulação
+T = 2; % Tempo total de simulação
 TSPAN = 0:T/30:T; % Vetor de tempo de análise
 
-r0 = -4; % velocidade angular [rad/s]
-vy0 = -12; % velocidade lateral [m/s]
+r0 = 0; % velocidade angular [rad/s]
+vy0 = 0; % velocidade lateral [m/s]
 v = 20; % velocidade longitudinal [m/s] -> ATENÇÃO: Tem que estar de acordo com os dados dos veículos com 2 gdl
 ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
 x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados
@@ -179,10 +188,10 @@ end
 
 
 %% Salvando as figuras
-print(f1,'resultados/simulacao/estados.pdf','-dpdf')
-print(f2,'resultados/simulacao/orientacao.pdf','-dpdf')
-print(f3,'resultados/simulacao/Trajetoria.pdf','-dpdf')
-print(f4,'resultados/simulacao/deriva.pdf','-dpdf')
+print(f1,'resultados/simulacao1112/estados.pdf','-dpdf')
+print(f2,'resultados/simulacao1112/orientacao.pdf','-dpdf')
+print(f3,'resultados/simulacao1112/Trajetoria.pdf','-dpdf')
+print(f4,'resultados/simulacao1112/deriva.pdf','-dpdf')
 
 %% Animação
 cd animacao % Entrando na pasta de animação
