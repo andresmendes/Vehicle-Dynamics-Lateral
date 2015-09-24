@@ -1,0 +1,26 @@
+
+Adequação de um modelo para análise de estabilidade em guinada de veículos.
+
+O modelo de pneu apresenta um comportamento não linear típico dado pela figura de Gillespie. Alguns modelos simplificados podem utilizados. 
+
+O primeiro deles é o modelo linear, que apresenta como principal hipotese simplificadora ângulos pequenos. 
+
+O segudo modelo é o utilizado por Sadri que é valido até o pico de saturação do pneu porém apresenta uma boa aproximação da região não linear.
+
+O terceiro modelo é a Magic Formula (Pacejka) que representa o modelo de pneu para uma região muito maior do ângulo de deriva. Até 90 graus, quando nenhum tratamento dos ângulos de deriva é feito.
+
+% Modelos de pneu:
+% 	1 - pneuLinearFun
+% 	2 - pneuSadriFun
+% 	3 - pneuPacejkaFun
+
+
+Os modelos de veículo também podem variar.
+
+Linear com 2 gdl
+
+% Modelos de veículo:
+% 	1 - veiculoLinear2gdl
+% 	2 - veiculoNaoLinear2gdl
+% 	3 - veiculoNaoLinear3gdl
+% 	4 - veiculoNaoLinear3gdlExt

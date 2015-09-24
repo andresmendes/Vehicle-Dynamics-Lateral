@@ -56,7 +56,7 @@ for i = 1:length(veiculoModeloVet)
 		H1 = plot(TOUT,XOUT(:,1)*180/pi,pneuModeloCor(j));
 		set(H1,'Marker',pneuModeloMarcador(j),'MarkerFaceColor',pneuModeloCor(j),'MarkerSize',7)
 		title('Velocidade angular X Tempo')
-		title(strcat('Vel. angular - Esterçamento: 45 graus - Veículo: ',veiculoModeloTxt(i,:)));
+		title(strcat('Vel. angular - Esterçamento: 14 graus - Veículo: ',veiculoModeloTxt(i,:)));
 		ylabel('dPSI [grau/s]')
 		xlabel('Tempo [s]')
 		if j == length(pneuModeloVet)
@@ -68,7 +68,7 @@ for i = 1:length(veiculoModeloVet)
 		axis equal
 		H1 = plot(XOUT(:,4),XOUT(:,5),pneuModeloCor(j));
 		set(H1,'Marker',pneuModeloMarcador(j),'MarkerFaceColor',pneuModeloCor(j),'MarkerSize',7)
-		title(strcat('Trajetória - Esterçamento: 45 graus - Veículo: ',veiculoModeloTxt(i,:)));
+		title(strcat('Trajetória - Esterçamento: 14 graus - Veículo: ',veiculoModeloTxt(i,:)));
 		ylabel('Distância [m]')
 		if j == length(pneuModeloVet)
 		legend(pneuModeloTxt(1,:),pneuModeloTxt(2,:),pneuModeloTxt(3,:),'Location','SouthEast')

@@ -18,26 +18,19 @@ veiculoModeloTxtSave = char('L2GDL','NL2GDL','NL3GDL'); % Texto para o arquivo d
 veiculoDados = 1; 
 
 % Vai ser o número de curvas em cada figura
-pneuModeloVet = [1 3]; % Modelos 1-Linear; 2-Sadri; 3-Pacejka
+pneuModeloVet = [1 2 3]; % Modelos 1-Linear; 2-Sadri; 3-Pacejka
 pneuModeloTxt = char(' Linar',' Sadri',' Pacejka');
 pneuModeloTxtSave = char('Linar','Sadri','Pacejka');
 pneuModeloCor = char('r','g','b');
 pneuModeloMarcador = char('o','s','d');
-pneuDadosVet = [1 3];
+pneuDadosVet = [1 2 3];
 
-for p = 1:length(veiculoModeloVet)
-    for q = 1:length(pneuModeloVet)
-        
-        veiculoModelo = veiculoModeloVet(p);
 
-        pneuModelo = pneuModeloVet(q);
-        pneuDados = pneuDadosVet(q);
+        % Variação das condições iniciais
+        % Definindo o grid
 
-        %% Variação das condições iniciais
-        %% Definindo o grid
-
-        rr = 8*1; % refino do grid de r
-        vv = 40*1; % refino do grid de vy
+        rr = 8*3; % refino do grid de r
+        vv = 40*3; % refino do grid de vy
 
         total = num2str(rr); % String usado para a descrição do progresso
 
@@ -48,6 +41,15 @@ for p = 1:length(veiculoModeloVet)
         total = num2str(length(rgrid)); 
 
         [X,Y] = meshgrid(vygrid,rgrid); % lp = linearpacejka
+        
+        
+for p = 1:length(veiculoModeloVet)
+    for q = 1:length(pneuModeloVet)
+        
+        veiculoModelo = veiculoModeloVet(p);
+
+        pneuModelo = pneuModeloVet(q);
+        pneuDados = pneuDadosVet(q);
 
         for i=1:length(rgrid)
             for j=1:length(vygrid)
@@ -86,6 +88,11 @@ for p = 1:length(veiculoModeloVet)
                     Z(i,j) = 0;
                 end
 
+                % Caso o integrador falhe - Comum com o pneu sadri
+                if length(TOUT) < length(TSPAN)
+                    Z(i,j) = 0;
+                end
+                
                 % Progresso da simulação
                 % if rem(i,100)==0 & j == 1
                 %     clc
@@ -96,13 +103,12 @@ for p = 1:length(veiculoModeloVet)
         end
         % Salvando os dados do workspace para comparação de regiões posteriores
         save(strcat('resultados/regiaoResultados',veiculoModeloTxtSave(p,:),pneuModeloTxtSave(q,:)))
-
     end
 end
 
 %% Geração dos gráficos
 
-vetor = [0.1 0.5 0.9]
+style = char('-','--',':');
 
 for p = 1:length(veiculoModeloVet)
     for q = 1:length(pneuModeloVet)
@@ -111,13 +117,14 @@ for p = 1:length(veiculoModeloVet)
 
     figure(p);
     hold on
-    contour(X,Y,Z,vetor(q))
+    [C,h] = contour(X,Y,Z,0.5);
+    set(h,'LineWidth',5,'LineStyle',style(q,:))
     title(strcat('Região de Estabilidade - Pneu: ',pneuModeloTxt(q,:),';',' Veículo: ',veiculoModeloTxt(p,:)));
     ylabel('dPSI [rad/s]')
     xlabel('Velocidade lateral [m/s]')
-    if q == length(pneuModeloVet)
-    legend(pneuModeloTxt(1,:),pneuModeloTxt(2,:),pneuModeloTxt(3,:),'Location','SouthEast')
-    end
+%     if q == length(pneuModeloVet)
+%     legend(pneuModeloTxt(1,:),pneuModeloTxt(2,:),pneuModeloTxt(3,:),'Location','SouthEast')
+%     end
 
     % title(strcat('Região de estabilidade - Pneu: ',pneuTxt,';',' Veículo: ',veiculoTxt))
     % xlabel('Velocidade lateral [m/s]')

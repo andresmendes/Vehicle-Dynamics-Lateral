@@ -31,17 +31,17 @@ clear all,clc,close all
 % 	1 - veiculoLinear2gdl
 % 	2 - veiculoNaoLinear2gdl
 % 	3 - veiculoNaoLinear3gdl
-% 	4 - veiculoNaoLinear3gdlExtendido
+% 	4 - veiculoNaoLinear3gdlExt
 % Dados do modelo de veículo escolhido:
 % 	1 - veiculoDadosScript
 % 	2 - veiculoDadosScript14
 % 	3 - veiculoDadosScript45
 
 % Seleção
-pneuModelo = 2; % Escolha do modelo de pneu
-pneuDados = 2; % Escolha dos dados do pneu
+pneuModelo = 3; % Escolha do modelo de pneu
+pneuDados = 3; % Escolha dos dados do pneu
 
-veiculoModelo = 1; % Escolha do modelo de veículo
+veiculoModelo = 4; % Escolha do modelo de veículo
 veiculoDados = 1; % Escolha dos dados do veículo
 
 % OBS: para os dados se é uma simulação sem variação de parâmetro os dados são vetores. Se houver variação os parâmetros vem em matrizes onde as colunas são os parâmetros e as linhas o valor deles na variação
@@ -51,10 +51,13 @@ veiculoDados = 1; % Escolha dos dados do veículo
 T = 3; % Tempo total de simulação
 TSPAN = 0:T/30:T; % Vetor de tempo de análise
 
-r0 = -4; % velocidade angular [rad/s]
-vy0 = -12; % velocidade lateral [m/s]
+r0 = 4; % velocidade angular [rad/s]
+vy0 = 0; % velocidade lateral [m/s]
 v = 20; % velocidade longitudinal [m/s] -> ATENÇÃO: Tem que estar de acordo com os dados dos veículos com 2 gdl
 ALPHAT0 = asin(vy0/v); % conversão de vy0 para ALPHAT
+
+ALPHAT0 = -3;
+
 x0 = [r0 ; ALPHAT0]; % Condição inicial dos estados
 x0 = [x0 ; 0]; % Condição da orientacao
 x0 = [x0 ; 0 ; 0]; % Condição inicial da trajetória
@@ -64,6 +67,14 @@ if veiculoModelo == 3
 	% Ou seja, a velocidade que era prescrita antes agora é condição inicial
 	x0 = [x0 ; v]; % Condição inicial da velocidade
 end
+
+if veiculoModelo == 4
+	% Para que o integrador consiga rodar no modelo com 3 gdl é necessário acrescentar uma
+	% condição inicial referente ao estado velocidade "v".
+	% Ou seja, a velocidade que era prescrita antes agora é condição inicial
+	x0 = [x0 ; v]; % Condição inicial da velocidade
+end
+
 
 %% Seletor
 % Definindo as variáveis necessárias para a integração
@@ -90,6 +101,11 @@ if veiculoModelo == 1
 	ALPHAR = ALPHAT - b*dPSI/v;         % Traseiro
 	% Módulo dos vetores velocidade
 	VT = ones(length(dPSI),1)*v; % Centro de massa T
+
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; % Tem que somar o delta por que é o ângulo do vetor vel F em relação ao plano longitudinal
+	ALPHARA = ALPHAR; 
 end
 
 if veiculoModelo == 2
@@ -98,15 +114,57 @@ if veiculoModelo == 2
 	ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)./(v*cos(ALPHAT)));         % Traseiro
 	% Vetor velocidade do centro de massa
 	VT = ones(length(dPSI),1)*v; % Centro de massa T
+
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; 
+	ALPHARA = ALPHAR; 
 end
 
 if veiculoModelo == 3
-	% Angulos de deriva não linear
-	ALPHAF = atan((v*sin(ALPHAT) + a*dPSI)./(v*cos(ALPHAT))) - DELTA; % Dianteiro
-	ALPHAR = atan((v*sin(ALPHAT) - b*dPSI)./(v*cos(ALPHAT)));         % Traseiro
 	% Vetor velocidade do centro de massa
 	VT = XOUT(:,6);
+	v = VT;
+	% Angulos de deriva não linear
+	ALPHAF = atan((v.*sin(ALPHAT) + a*dPSI)./(v.*cos(ALPHAT))) - DELTA; % Dianteiro
+	ALPHAR = atan((v.*sin(ALPHAT) - b*dPSI)./(v.*cos(ALPHAT)));         % Traseiro
+
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; 
+	ALPHARA = ALPHAR; 
 end
+
+if veiculoModelo == 4
+	% Vetor velocidade do centro de massa
+	VT = XOUT(:,6);
+	v = VT;
+
+	numF = (v.*sin(ALPHAT) + a*dPSI);
+	numR = (v.*sin(ALPHAT) - b*dPSI);
+	den = (v.*cos(ALPHAT));
+	
+	for i=1:length(ALPHAT)
+
+		% Angulos de deriva não linear para plot em função do tempo
+		ALPHAF(i) = atan(numF(i)/den(i)) - DELTA ;
+		ALPHAR(i) = atan(numR(i)/den(i));
+		if den(i)<=0%ALPHAT(i)>=pi/2 & ALPHAT(i)<3/2*pi
+	        ALPHAF(i) = -atan(numF(i)/den(i)) - DELTA;
+	        ALPHAR(i) = -atan(numR(i)/den(i));
+	    end
+	
+		% Ângulo de deriva para animação
+		% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+		ALPHAFA(i) = atan((v(i)*sin(ALPHAT(i)) + a*dPSI(i))/(v(i)*cos(ALPHAT(i))));
+		ALPHARA(i) = atan((v(i)*sin(ALPHAT(i)) - b*dPSI(i))/(v(i)*cos(ALPHAT(i))));
+	    if den(i)<=0%ALPHAT(i)>=pi/2 & ALPHAT(i)<3/2*pi
+		    ALPHAFA(i) = atan((v(i)*sin(ALPHAT(i)) + a*dPSI(i))/(v(i)*cos(ALPHAT(i)))) - pi;
+    		ALPHARA(i) = atan((v(i)*sin(ALPHAT(i)) - b*dPSI(i))/(v(i)*cos(ALPHAT(i)))) - pi;
+	    end
+	end
+end
+
 
 % if veiculoModelo == 4
 
@@ -153,10 +211,25 @@ H1 = plot(TOUT,ALPHAF*180/pi,'r');
 H2 = plot(TOUT,ALPHAR*180/pi,'g');
 set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
 set(H2,'Color',[0 1 0],'Marker','s','MarkerFaceColor',[0 1 0],'MarkerSize',7)
-title('Ângulos de deriva X Tempo ')
+title('Ângulos de deriva X Tempo')
 ylabel('Ângulo [grau]')
 xlabel('Tempo [s]')
 legend('Frente','Tras')
+
+f5 = figure(5);
+hold on
+H1 = plot(XOUT(:,2),XOUT(:,1));
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+plot(0,0,'k+')
+plot(0,180,'k+')
+plot(0,360,'k+')
+plot(0,-180,'k+')
+plot(0,-360,'k+')
+title('Plano de fase')
+xlabel('dPSI [grau/s]')
+ylabel('ALPHAT [grau]')
+legend('Trajetória','Ponto fixo')
+
 
 % % figure(5)
 % % hold on
@@ -178,14 +251,14 @@ if veiculoModelo == 3
 end
 
 
-%% Salvando as figuras
-print(f1,'resultados/simulacao/estados.pdf','-dpdf')
-print(f2,'resultados/simulacao/orientacao.pdf','-dpdf')
-print(f3,'resultados/simulacao/Trajetoria.pdf','-dpdf')
-print(f4,'resultados/simulacao/deriva.pdf','-dpdf')
+% %% Salvando as figuras
+% print(f1,'resultados/simulacao/estados.pdf','-dpdf')
+% print(f2,'resultados/simulacao/orientacao.pdf','-dpdf')
+% print(f3,'resultados/simulacao/Trajetoria.pdf','-dpdf')
+% print(f4,'resultados/simulacao/deriva.pdf','-dpdf')
 
-%% Animação
-cd animacao % Entrando na pasta de animação
-% Executando o script de animação
-animacao(XOUT,TOUT,ALPHAF,ALPHAR,VF,VR,VT,veiculoDadosVet);
-cd .. % Saindo da pasta de animação
+% %% Animação
+% cd animacao % Entrando na pasta de animação
+% % Executando o script de animação
+% animacao(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet);
+% cd .. % Saindo da pasta de animação

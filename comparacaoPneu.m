@@ -48,9 +48,9 @@ for i = 1:length(veiculoModeloVet)
 			x0 = [x0 ; v]; % Condição inicial da velocidade
 		end
 
-		[pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDados pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
+		[pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
 
-		[TOUT,XOUT] = ode45(@(t,x) veiculoFun(t,x,pneuFun,pneuDadosFrente,pneuDadosTras,veiculoDados),TSPAN,x0); 
+		[TOUT,XOUT] = ode45(@(t,x) veiculoFun(t,x,pneuFun,pneuDadosFrente,pneuDadosTras,veiculoDadosVet),TSPAN,x0); 
 
 		figure(i)
 		hold on

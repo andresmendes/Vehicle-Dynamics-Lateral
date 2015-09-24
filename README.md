@@ -5,4 +5,4 @@ Simulações dinâmicas de veículos.
 - Modelo do tipo biclicleta.
 
 Documentação em:
-VeiculoSimples/documentacao/documentacao.pdf
+/documentacao/documentacao.pdf

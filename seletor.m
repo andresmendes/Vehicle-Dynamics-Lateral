@@ -1,9 +1,9 @@
 function [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
-%% DescriÃ§Ã£o
-% Esta funÃ§Ã£o tem como objetivo fazer a seleÃ§Ã£o dos dados e modelos de pneu e veÃ­culo
+%% Descrição
+% Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
 
 %% Pneu
-% Os dados do pneu sÃ£o definidos de acordo com o modelo de pneu escolhido
+% Os dados do pneu são definidos de acordo com o modelo de pneu escolhido
 
 cd pneu % Entrando na pasta com os modelos de pneu
 
@@ -23,31 +23,31 @@ end
 %--------------------------------------------------------------------------
 % Selecionando o modelo de pneu
 if pneuModelo == 1
-	pneuFun = @pneuLinearFun; % Definindo a funÃ§Ã£o de pneu como a linear
+	pneuFun = @pneuLinearFun; % Definindo a função de pneu como a linear
 
-	% Texto sobre o modelo de pneu para uso em descriÃ§Ã£o de grÃ¡ficos 
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
 	pneuTxt = ' linear'; 
 end
 %--------------------------------------------------------------------------
 if pneuModelo == 2
-	pneuFun = @pneuSadriFun; % Definindo a funÃ§Ã£o de pneu como Sadri
+	pneuFun = @pneuSadriFun; % Definindo a função de pneu como Sadri
 
-	% Texto sobre o modelo de pneu para uso em descriÃ§Ã£o de grÃ¡ficos 
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
 	pneuTxt = ' Sadri'; 
 end
 %--------------------------------------------------------------------------
 if pneuModelo == 3
-	pneuFun = @pneuPacejkaFun; % Definindo a funÃ§Ã£o de pneu como Pacejka
+	pneuFun = @pneuPacejkaFun; % Definindo a função de pneu como Pacejka
 
-	% Texto sobre o modelo de pneu para uso em descriÃ§Ã£o de grÃ¡ficos 
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
 	pneuTxt = ' Pacejka'; 
 
 end
 
-cd .. % SaÃ­ndo da pasta com os modelos de pneu
+cd .. % Saíndo da pasta com os modelos de pneu
 
-%% VeÃ­culo
-% Os dados do veÃ­culo sÃ£o definidos de acordo com o modelo de pneu
+%% Veículo
+% Os dados do veículo são definidos de acordo com o modelo de pneu
 % escolhido
 
 cd veiculo
@@ -68,39 +68,34 @@ if veiculoDados == 3
 	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
-% if veiculoDados == 4
-% 	% Fazer dados 4
-% end
 %--------------------------------------------------------------------------
-%--------------------------------------------------------------------------
-% Modelo de veÃ­culo
+% Modelo de veículo
 if veiculoModelo == 1
-	veiculoFun = @veiculoLinear2gdl; % Definindo a funÃ§Ã£o de veÃ­culo
+	veiculoFun = @veiculoLinear2gdl; % Definindo a função de veículo
 	
-	% Texto sobre o modelo de veiculo para uso em descriÃ§Ã£o de grÃ¡ficos 
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
     veiculoTxt = ' linear 2 GDL';
 end
 
 if veiculoModelo == 2
-	veiculoFun = @veiculoNaoLinear2gdl; % Definindo a funÃ§Ã£o de veÃ­culo
+	veiculoFun = @veiculoNaoLinear2gdl; % Definindo a função de veículo
 	
-	% Texto sobre o modelo de veiculo para uso em descriÃ§Ã£o de grÃ¡ficos 
-    veiculoTxt = ' nÃ£o linear 2 GDL'; 
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+    veiculoTxt = ' não linear 2 GDL'; 
 end
 
 if veiculoModelo == 3
-	veiculoFun = @veiculoNaoLinear3gdl; % Definindo a funÃ§Ã£o de veÃ­culo
+	veiculoFun = @veiculoNaoLinear3gdl; % Definindo a função de veículo
 
-	% Texto sobre o modelo de veiculo para uso em descriÃ§Ã£o de grÃ¡ficos 
-    veiculoTxt = ' nÃ£o linear 3 GDL'; 
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+    veiculoTxt = ' não linear 3 GDL'; 
 end
 
-% if veiculoModelo == 4
-% 	% Definindo a funÃ§Ã£o de veÃ­culo
-%     veiculoFun = @veiculoNaoLinear3gdlExtendido; 
-
-%     % Texto sobre o modelo de veiculo para uso em descriÃ§Ã£o de grÃ¡ficos 
-% 	veiculoTxt = ' nÃ£o linear 3 GDL Extendido'; 
-% end
+if veiculoModelo == 4
+	% Definindo a função de veículo
+    veiculoFun = @veiculoNaoLinear3gdlEst; 
+    % Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+	veiculoTxt = ' não linear 3 GDL Estendido'; 
+end
 
 cd ..
