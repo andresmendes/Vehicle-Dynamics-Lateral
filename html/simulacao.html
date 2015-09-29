@@ -1,0 +1,476 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Simula&ccedil;&atilde;o</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-29"><meta name="DC.source" content="simulacao.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Simula&ccedil;&atilde;o</h1><!--introduction--><p>Este sript tem como objetivo simular o comportamento din&acirc;mico de um ve&iacute;culo simples escolhendo o modelo de pneu e o modelo bicicleta.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Op&ccedil;&otilde;es:</a></li><li><a href="#2">Sele&ccedil;&atilde;o dos modelos e dados</a></li><li><a href="#3">Seletor</a></li><li><a href="#4">Dados b&aacute;sicos da integra&ccedil;&atilde;o (integrador &eacute; chamado mais abaixo)</a></li><li><a href="#5">Integrando</a></li><li><a href="#6">Reconstru&ccedil;&atilde;o dos dados importantes</a></li><li><a href="#7">Resultados</a></li><li><a href="#8">Anima&ccedil;&atilde;o</a></li><li><a href="#9">Ver tamb&eacute;m</a></li></ul></div><h2>Op&ccedil;&otilde;es:<a name="1"></a></h2><p>Este script possibilita a escolha do modelo de pneu e o modelo de ve&iacute;culo. As op&ccedil;&otilde;es e o valor associado para escolha seguem abaixo:</p><p><a href="pneuDoc.html">Modelo de pneu</a>:</p><div><ol><li><a href="pneuLinearFun.html">Pneu linear</a></li><li><a href="pneuSadriFun.html">Pneu sadri</a></li><li><a href="pneuPacejkaFun.html">Pneu Pacejka</a></li><li><a href="pneuPacejkaEstFun.html">Pneu Pacejka Estendido</a></li></ol></div><p>Dados do pneu escolhido:</p><div><ol><li><a href="pneuLinearDados.html">Dados para o pneu linear</a></li><li><a href="pneuSadriDados.html">Dados para o pneu sadri</a></li><li><a href="pneuPacejkaDados.html">Dados para o pneu pacejka</a></li></ol></div><p><a href="veiculoDoc.html">Modelo de ve&iacute;culo</a>:</p><div><ol><li><a href="veiculoLinear2gdl.html">Linear com 2 GDL</a></li><li><a href="veiculoNaoLinear2gdl.html">N&atilde;o linear com 2 GDL</a></li><li><a href="veiculoNaoLinear3gdl.html">N&atilde;o linear com 3 GDL</a></li></ol></div><p>Dados do modelo de ve&iacute;culo escolhido:</p><div><ol><li><a href="veiculoDadosScript.html">Dados para o ve&iacute;culo 1</a></li><li><a href="veiculoDadosScript14.html">Dados para o ve&iacute;culo 2</a></li><li><a href="veiculoDadosScript45.html">Dados para o ve&iacute;culo 3</a></li></ol></div><h2>Sele&ccedil;&atilde;o dos modelos e dados<a name="2"></a></h2><p>A sele&ccedil;&atilde;o dos modelos e dados &eacute; feita atribuindo o valor de escolha. Neste caso, o pneu escolhido foi o modelo de pacejka (3) e o ve&iacute;culo com 3 GDL e tratamento do &acirc;ngulo de deriva (4).</p><pre class="codeinput">clear <span class="string">all</span>
+
+pneuModelo = 4; <span class="comment">% Escolha do modelo de pneu</span>
+pneuDados = 3; <span class="comment">% Escolha dos dados do pneu</span>
+
+veiculoModelo = 3; <span class="comment">% Escolha do modelo de ve&iacute;culo</span>
+veiculoDados = 1; <span class="comment">% Escolha dos dados do ve&iacute;culo</span>
+</pre><h2>Seletor<a name="3"></a></h2><p>Definindo as vari&aacute;veis necess&aacute;rias para a integra&ccedil;&atilde;o. Ver <a href="seletor.html">Seletor</a></p><pre class="codeinput">[pneuFun,veiculoFun,pneuDadosFrente,pneuDadosTras,veiculoDadosVet,pneuTxt,veiculoTxt]<span class="keyword">...</span>
+    = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
+</pre><h2>Dados b&aacute;sicos da integra&ccedil;&atilde;o (integrador &eacute; chamado mais abaixo)<a name="4"></a></h2><p>Dados para a integra&ccedil;&atilde;o num&eacute;rica</p><pre class="codeinput">T = 5;              <span class="comment">% Tempo total de simula&ccedil;&atilde;o</span>
+TSPAN = 0:T/35:T;   <span class="comment">% Vetor de tempo de an&aacute;lise</span>
+
+<span class="comment">% M&oacute;dulo do vetor velocidade. Quando o modelo tem 2gdl &eacute; a velocidade</span>
+<span class="comment">% prescrita. Quando o modelo tem 3gdl &eacute; a condi&ccedil;&atilde;o inicial.</span>
+v = veiculoDadosVet(5);
+
+r0 = 3;         <span class="comment">% velocidade angular inicial [rad/s]</span>
+ALPHAT0 = 0;    <span class="comment">% &acirc;ngulo de deriva inicical [rad]</span>
+
+x0 = [r0 ; ALPHAT0];    <span class="comment">% Condi&ccedil;&atilde;o inicial dos estados</span>
+x0 = [x0 ; 0];          <span class="comment">% Condi&ccedil;&atilde;o da orientacao</span>
+x0 = [x0 ; 0 ; 0];      <span class="comment">% Condi&ccedil;&atilde;o inicial da trajet&oacute;ria</span>
+
+<span class="keyword">if</span> veiculoModelo == 3 | 4
+	<span class="comment">% Para que o integrador consiga rodar no modelo com 3 gdl &eacute; necess&aacute;rio</span>
+	<span class="comment">% acrescentar uma condi&ccedil;&atilde;o inicial referente ao estado velocidade "v".</span>
+	<span class="comment">% Ou seja, a velocidade que era prescrita antes agora &eacute; condi&ccedil;&atilde;o</span>
+	<span class="comment">% inicial.</span>
+	x0 = [x0 ; v]; <span class="comment">% Condi&ccedil;&atilde;o inicial da velocidade</span>
+<span class="keyword">end</span>
+</pre><h2>Integrando<a name="5"></a></h2><p>Utilizando a ode45:</p><pre class="codeinput">[TOUT,XOUT] = ode45(@(t,x) veiculoFun(t,x,pneuFun,pneuDadosFrente,<span class="keyword">...</span>
+                    pneuDadosTras,veiculoDadosVet),TSPAN,x0);
+</pre><h2>Reconstru&ccedil;&atilde;o dos dados importantes<a name="6"></a></h2><pre class="codeinput">dPSI = XOUT(:,1);
+ALPHAT = XOUT(:,2);
+
+a = veiculoDadosVet(3);
+b = veiculoDadosVet(4);
+DELTA = veiculoDadosVet(6);
+
+<span class="keyword">if</span> veiculoModelo == 1
+	<span class="comment">% &Acirc;ngulos de deriva</span>
+	ALPHAF = ALPHAT + a*dPSI/v - DELTA; <span class="comment">% Dianteiro</span>
+	ALPHAR = ALPHAT - b*dPSI/v;         <span class="comment">% Traseiro</span>
+	<span class="comment">% M&oacute;dulo dos vetores velocidade</span>
+	VT = ones(length(dPSI),1)*v; <span class="comment">% Centro de massa T</span>
+
+	<span class="comment">% &Acirc;ngulo de deriva para anima&ccedil;&atilde;o</span>
+	<span class="comment">% Isso &eacute; feito pq para os modelos 3 e 4 a contagem do angulo &eacute; diferente da orienta&ccedil;&atilde;o do vetor para anima&ccedil;&atilde;o</span>
+	ALPHAFA = ALPHAF + DELTA; <span class="comment">% Tem que somar o delta por que &eacute; o &acirc;ngulo do vetor vel F em rela&ccedil;&atilde;o ao plano longitudinal</span>
+	ALPHARA = ALPHAR;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> veiculoModelo == 2
+	<span class="comment">% Angulos de deriva n&atilde;o linear</span>
+	ALPHAF = atan2((v*sin(ALPHAT) + a*dPSI),(v*cos(ALPHAT))) - DELTA; <span class="comment">% Dianteiro</span>
+	ALPHAR = atan2((v*sin(ALPHAT) - b*dPSI),(v*cos(ALPHAT)));         <span class="comment">% Traseiro</span>
+	<span class="comment">% Vetor velocidade do centro de massa</span>
+	VT = ones(length(dPSI),1)*v; <span class="comment">% Centro de massa T</span>
+
+	<span class="comment">% &Acirc;ngulo de deriva para anima&ccedil;&atilde;o</span>
+	<span class="comment">% Isso &eacute; feito pq para os modelos 3 e 4 a contagem do angulo &eacute; diferente da orienta&ccedil;&atilde;o do vetor para anima&ccedil;&atilde;o</span>
+	ALPHAFA = ALPHAF + DELTA;
+	ALPHARA = ALPHAR;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> veiculoModelo == 3
+	<span class="comment">% Vetor velocidade do centro de massa</span>
+	VT = XOUT(:,6);
+	v = VT;
+	<span class="comment">% Angulos de deriva n&atilde;o linear</span>
+	ALPHAF = atan2((v.*sin(ALPHAT) + a*dPSI),(v.*cos(ALPHAT))) - DELTA; <span class="comment">% Dianteiro</span>
+	ALPHAR = atan2((v.*sin(ALPHAT) - b*dPSI),(v.*cos(ALPHAT)));         <span class="comment">% Traseiro</span>
+
+	<span class="comment">% &Acirc;ngulo de deriva para anima&ccedil;&atilde;o</span>
+	<span class="comment">% Isso &eacute; feito pq para os modelos 3 e 4 a contagem do angulo &eacute; diferente da orienta&ccedil;&atilde;o do vetor para anima&ccedil;&atilde;o</span>
+	ALPHAFA = ALPHAF + DELTA;
+	ALPHARA = ALPHAR;
+<span class="keyword">end</span>
+
+<span class="comment">% Modulo do vetor velocidade</span>
+VF = sqrt((VT.*sin(ALPHAT) + a*dPSI).^2 + (VT.*cos(ALPHAT)).^2); <span class="comment">% Dianteiro</span>
+VR = sqrt((VT.*sin(ALPHAT) - b*dPSI).^2 + (VT.*cos(ALPHAT)).^2); <span class="comment">% Traseiro</span>
+</pre><h2>Resultados<a name="7"></a></h2><pre class="codeinput">f1 = figure(1);
+box <span class="string">on</span>
+<span class="comment">% Plotar o gr&aacute;fico com eixo vertical na esquerda e direita</span>
+[AX,H1,H2] = plotyy(TOUT,XOUT(:,1)*180/pi,TOUT,XOUT(:,2)*180/pi);
+<span class="comment">% Mudando as cores dos eixos (Padr&atilde;o vem com cores iguais aos eixos)</span>
+set(AX(1),<span class="string">'YColor'</span>,[0 0 0]);
+set(AX(2),<span class="string">'YColor'</span>,[0 0 0]);
+set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+set(H2,<span class="string">'Color'</span>,[0 1 0],<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerFaceColor'</span>,[0 1 0],<span class="string">'MarkerSize'</span>,7)
+title(strcat(<span class="string">'Estados X Tempo - Pneu: '</span>,pneuTxt,<span class="string">';'</span>,<span class="string">' Ve&iacute;culo: '</span>,veiculoTxt));
+ylabel(AX(1),<span class="string">'dPSI [grau/s]'</span>)
+ylabel(AX(2),<span class="string">'ALPHAT [grau]'</span>)
+xlabel(<span class="string">'Tempo [s]'</span>)
+legend(<span class="string">'dPSI'</span>,<span class="string">'ALPHAT'</span>);
+
+f2 = figure(2);
+box <span class="string">on</span>
+H1 = plot(TOUT,XOUT(:,3)*180/pi,<span class="string">'r'</span>);
+set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+title(<span class="string">'Orienta&ccedil;&atilde;o X Tempo'</span>)
+ylabel(<span class="string">'PSI [grau]'</span>)
+xlabel(<span class="string">'Tempo [s]'</span>)
+
+f4 = figure(4);
+hold <span class="string">on</span>
+box <span class="string">on</span>
+H1 = plot(TOUT,ALPHAF*180/pi,<span class="string">'r'</span>);
+H2 = plot(TOUT,ALPHAR*180/pi,<span class="string">'g'</span>);
+set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+set(H2,<span class="string">'Color'</span>,[0 1 0],<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerFaceColor'</span>,[0 1 0],<span class="string">'MarkerSize'</span>,7)
+title(<span class="string">'&Acirc;ngulos de deriva X Tempo'</span>)
+ylabel(<span class="string">'&Acirc;ngulo [grau]'</span>)
+xlabel(<span class="string">'Tempo [s]'</span>)
+legend(<span class="string">'Frente'</span>,<span class="string">'Tras'</span>)
+
+<span class="comment">% % figure(5)</span>
+<span class="comment">% % hold on</span>
+<span class="comment">% % plot(TOUT,real(valor(:,1)),'r')</span>
+<span class="comment">% % plot(TOUT,real(valor(:,2)),'g')</span>
+<span class="comment">% % title('Parte real dos autovalores')</span>
+<span class="comment">% % xlabel('Tempo [s]')</span>
+<span class="comment">% % xlabel('Autovalor')</span>
+<span class="comment">% % legend('1','2')</span>
+
+<span class="keyword">if</span> veiculoModelo == 3
+	f6 = figure(6);
+	hold <span class="string">on</span>
+    box <span class="string">on</span>
+	H1 = plot(TOUT,VT,<span class="string">'r'</span>);
+	set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+	title(<span class="string">'Velocidade longitudinal X Tempo '</span>)
+	ylabel(<span class="string">'Velocidade [m/s]'</span>)
+	xlabel(<span class="string">'Tempo [s]'</span>)
+<span class="keyword">end</span>
+
+f5 = figure(5);
+hold <span class="string">on</span>
+box <span class="string">on</span>
+axis <span class="string">equal</span>
+H1 = plot(XOUT(:,2),XOUT(:,1));
+set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+plot(0,0,<span class="string">'k+'</span>)
+plot(pi,0,<span class="string">'k+'</span>)
+plot(-pi,0,<span class="string">'k+'</span>)
+title(<span class="string">'Plano de fase'</span>)
+ylabel(<span class="string">'dPSI [grau/s]'</span>)
+xlabel(<span class="string">'ALPHAT [grau]'</span>)
+legend(<span class="string">'Trajet&oacute;ria'</span>,<span class="string">'Ponto fixo'</span>)
+
+f3 = figure(3);
+box <span class="string">on</span>
+axis <span class="string">equal</span>
+H1 = plot(XOUT(:,4),XOUT(:,5),<span class="string">'r'</span>);
+set(H1,<span class="string">'Color'</span>,[1 0 0],<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,[1 0 0],<span class="string">'MarkerSize'</span>,7)
+title(<span class="string">'Trajet&oacute;ria'</span>)
+ylabel(<span class="string">'Dist&acirc;ncia [m]'</span>)
+xlabel(<span class="string">'Dist&acirc;ncia [m]'</span>)
+
+
+<span class="comment">% %% Salvando as figuras</span>
+<span class="comment">% print(f1,'resultados/simulacao/estados.pdf','-dpdf')</span>
+<span class="comment">% print(f2,'resultados/simulacao/orientacao.pdf','-dpdf')</span>
+<span class="comment">% print(f3,'resultados/simulacao/Trajetoria.pdf','-dpdf')</span>
+<span class="comment">% print(f4,'resultados/simulacao/deriva.pdf','-dpdf')</span>
+
+frame(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet,<span class="string">'r'</span>); <span class="comment">% Cor vermelha do carro</span>
+</pre><img vspace="5" hspace="5" src="simulacao_01.png" alt=""> <img vspace="5" hspace="5" src="simulacao_02.png" alt=""> <img vspace="5" hspace="5" src="simulacao_03.png" alt=""> <img vspace="5" hspace="5" src="simulacao_04.png" alt=""> <img vspace="5" hspace="5" src="simulacao_05.png" alt=""> <img vspace="5" hspace="5" src="simulacao_06.png" alt=""> <img vspace="5" hspace="5" src="simulacao_07.png" alt=""> <h2>Anima&ccedil;&atilde;o<a name="8"></a></h2><p>Executando o script de anima&ccedil;&atilde;o</p><pre class="codeinput"><span class="comment">% animacao(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet);</span>
+</pre><h2>Ver tamb&eacute;m<a name="9"></a></h2><p><a href="inicio.html">In&iacute;cio</a> | <a href="veiculoDoc.html">Modelo ve&iacute;culo</a> | <a href="frame.html">Frame</a> | <a href="seletor.html">seletor</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Simulação
+% Este sript tem como objetivo simular o comportamento dinâmico de um
+% veículo simples escolhendo o modelo de pneu e o modelo bicicleta.
+%
+%% Opções:
+% Este script possibilita a escolha do modelo de pneu e o modelo de
+% veículo. As opções e o valor associado para escolha seguem abaixo:
+%
+% <pneuDoc.html Modelo de pneu>:
+%
+% # <pneuLinearFun.html Pneu linear>
+% # <pneuSadriFun.html Pneu sadri>
+% # <pneuPacejkaFun.html Pneu Pacejka>
+% # <pneuPacejkaEstFun.html Pneu Pacejka Estendido>
+%
+% Dados do pneu escolhido:
+%
+% # <pneuLinearDados.html Dados para o pneu linear>
+% # <pneuSadriDados.html Dados para o pneu sadri>
+% # <pneuPacejkaDados.html Dados para o pneu pacejka>
+%
+% <veiculoDoc.html Modelo de veículo>:
+%
+% # <veiculoLinear2gdl.html Linear com 2 GDL>
+% # <veiculoNaoLinear2gdl.html Não linear com 2 GDL>
+% # <veiculoNaoLinear3gdl.html Não linear com 3 GDL>
+%
+% Dados do modelo de veículo escolhido:
+%
+% # <veiculoDadosScript.html Dados para o veículo 1>
+% # <veiculoDadosScript14.html Dados para o veículo 2>
+% # <veiculoDadosScript45.html Dados para o veículo 3>
+%
+%% Seleção dos modelos e dados
+% A seleção dos modelos e dados é feita atribuindo o valor de escolha.
+% Neste caso, o pneu escolhido foi o modelo de pacejka (3) e o veículo com 3
+% GDL e tratamento do ângulo de deriva (4). 
+
+clear all
+
+pneuModelo = 4; % Escolha do modelo de pneu
+pneuDados = 3; % Escolha dos dados do pneu
+
+veiculoModelo = 3; % Escolha do modelo de veículo
+veiculoDados = 1; % Escolha dos dados do veículo
+
+%% Seletor
+% Definindo as variáveis necessárias para a integração. Ver <seletor.html
+% Seletor>
+
+[pneuFun,veiculoFun,pneuDadosFrente,pneuDadosTras,veiculoDadosVet,pneuTxt,veiculoTxt]...
+    = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados);
+
+%% Dados básicos da integração (integrador é chamado mais abaixo)
+% Dados para a integração numérica
+
+T = 5;              % Tempo total de simulação
+TSPAN = 0:T/35:T;   % Vetor de tempo de análise
+
+% Módulo do vetor velocidade. Quando o modelo tem 2gdl é a velocidade
+% prescrita. Quando o modelo tem 3gdl é a condição inicial.
+v = veiculoDadosVet(5);
+
+r0 = 3;         % velocidade angular inicial [rad/s]
+ALPHAT0 = 0;    % ângulo de deriva inicical [rad]
+
+x0 = [r0 ; ALPHAT0];    % Condição inicial dos estados
+x0 = [x0 ; 0];          % Condição da orientacao
+x0 = [x0 ; 0 ; 0];      % Condição inicial da trajetória
+
+if veiculoModelo == 3 | 4
+	% Para que o integrador consiga rodar no modelo com 3 gdl é necessário
+	% acrescentar uma condição inicial referente ao estado velocidade "v".
+	% Ou seja, a velocidade que era prescrita antes agora é condição
+	% inicial.
+	x0 = [x0 ; v]; % Condição inicial da velocidade
+end
+
+%% Integrando
+% Utilizando a ode45:
+
+[TOUT,XOUT] = ode45(@(t,x) veiculoFun(t,x,pneuFun,pneuDadosFrente,...
+                    pneuDadosTras,veiculoDadosVet),TSPAN,x0); 
+
+%% Reconstrução dos dados importantes
+
+dPSI = XOUT(:,1);
+ALPHAT = XOUT(:,2);
+
+a = veiculoDadosVet(3);
+b = veiculoDadosVet(4);
+DELTA = veiculoDadosVet(6);
+
+if veiculoModelo == 1
+	% Ângulos de deriva	
+	ALPHAF = ALPHAT + a*dPSI/v - DELTA; % Dianteiro
+	ALPHAR = ALPHAT - b*dPSI/v;         % Traseiro
+	% Módulo dos vetores velocidade
+	VT = ones(length(dPSI),1)*v; % Centro de massa T
+
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; % Tem que somar o delta por que é o ângulo do vetor vel F em relação ao plano longitudinal
+	ALPHARA = ALPHAR; 
+end
+
+if veiculoModelo == 2
+	% Angulos de deriva não linear
+	ALPHAF = atan2((v*sin(ALPHAT) + a*dPSI),(v*cos(ALPHAT))) - DELTA; % Dianteiro
+	ALPHAR = atan2((v*sin(ALPHAT) - b*dPSI),(v*cos(ALPHAT)));         % Traseiro
+	% Vetor velocidade do centro de massa
+	VT = ones(length(dPSI),1)*v; % Centro de massa T
+
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; 
+	ALPHARA = ALPHAR; 
+end
+
+if veiculoModelo == 3
+	% Vetor velocidade do centro de massa
+	VT = XOUT(:,6);
+	v = VT;
+	% Angulos de deriva não linear
+	ALPHAF = atan2((v.*sin(ALPHAT) + a*dPSI),(v.*cos(ALPHAT))) - DELTA; % Dianteiro
+	ALPHAR = atan2((v.*sin(ALPHAT) - b*dPSI),(v.*cos(ALPHAT)));         % Traseiro
+    
+	% Ângulo de deriva para animação
+	% Isso é feito pq para os modelos 3 e 4 a contagem do angulo é diferente da orientação do vetor para animação
+	ALPHAFA = ALPHAF + DELTA; 
+	ALPHARA = ALPHAR; 
+end
+
+% Modulo do vetor velocidade
+VF = sqrt((VT.*sin(ALPHAT) + a*dPSI).^2 + (VT.*cos(ALPHAT)).^2); % Dianteiro
+VR = sqrt((VT.*sin(ALPHAT) - b*dPSI).^2 + (VT.*cos(ALPHAT)).^2); % Traseiro
+
+%% Resultados
+
+f1 = figure(1);
+box on
+% Plotar o gráfico com eixo vertical na esquerda e direita
+[AX,H1,H2] = plotyy(TOUT,XOUT(:,1)*180/pi,TOUT,XOUT(:,2)*180/pi); 
+% Mudando as cores dos eixos (Padrão vem com cores iguais aos eixos)
+set(AX(1),'YColor',[0 0 0]);
+set(AX(2),'YColor',[0 0 0]);
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+set(H2,'Color',[0 1 0],'Marker','s','MarkerFaceColor',[0 1 0],'MarkerSize',7)
+title(strcat('Estados X Tempo - Pneu: ',pneuTxt,';',' Veículo: ',veiculoTxt));
+ylabel(AX(1),'dPSI [grau/s]')
+ylabel(AX(2),'ALPHAT [grau]')
+xlabel('Tempo [s]')
+legend('dPSI','ALPHAT');
+
+f2 = figure(2);
+box on
+H1 = plot(TOUT,XOUT(:,3)*180/pi,'r');
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+title('Orientação X Tempo')
+ylabel('PSI [grau]')
+xlabel('Tempo [s]')
+
+f4 = figure(4);
+hold on
+box on
+H1 = plot(TOUT,ALPHAF*180/pi,'r');
+H2 = plot(TOUT,ALPHAR*180/pi,'g');
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+set(H2,'Color',[0 1 0],'Marker','s','MarkerFaceColor',[0 1 0],'MarkerSize',7)
+title('Ângulos de deriva X Tempo')
+ylabel('Ângulo [grau]')
+xlabel('Tempo [s]')
+legend('Frente','Tras')
+
+% % figure(5)
+% % hold on
+% % plot(TOUT,real(valor(:,1)),'r')
+% % plot(TOUT,real(valor(:,2)),'g')
+% % title('Parte real dos autovalores')
+% % xlabel('Tempo [s]')
+% % xlabel('Autovalor')
+% % legend('1','2')
+
+if veiculoModelo == 3
+	f6 = figure(6);
+	hold on
+    box on
+	H1 = plot(TOUT,VT,'r');
+	set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+	title('Velocidade longitudinal X Tempo ')
+	ylabel('Velocidade [m/s]')
+	xlabel('Tempo [s]')
+end
+
+f5 = figure(5);
+hold on
+box on
+axis equal
+H1 = plot(XOUT(:,2),XOUT(:,1));
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+plot(0,0,'k+')
+plot(pi,0,'k+')
+plot(-pi,0,'k+')
+title('Plano de fase')
+ylabel('dPSI [grau/s]')
+xlabel('ALPHAT [grau]')
+legend('Trajetória','Ponto fixo')
+
+f3 = figure(3);
+box on
+axis equal
+H1 = plot(XOUT(:,4),XOUT(:,5),'r');
+set(H1,'Color',[1 0 0],'Marker','o','MarkerFaceColor',[1 0 0],'MarkerSize',7)
+title('Trajetória')
+ylabel('Distância [m]')
+xlabel('Distância [m]')
+
+
+% %% Salvando as figuras
+% print(f1,'resultados/simulacao/estados.pdf','-dpdf')
+% print(f2,'resultados/simulacao/orientacao.pdf','-dpdf')
+% print(f3,'resultados/simulacao/Trajetoria.pdf','-dpdf')
+% print(f4,'resultados/simulacao/deriva.pdf','-dpdf')
+
+frame(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet,'r'); % Cor vermelha do carro
+
+%% Animação
+% Executando o script de animação
+
+% animacao(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet);
+
+%% Ver também
+%
+% <inicio.html Início> | <veiculoDoc.html Modelo veículo> | <frame.html
+% Frame> | <seletor.html seletor>
+%
+##### SOURCE END #####
+--></body></html>

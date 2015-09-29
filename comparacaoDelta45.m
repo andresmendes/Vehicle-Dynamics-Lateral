@@ -1,12 +1,8 @@
-clear all,clc,close all
-%% Info
-% IMPORTANTE!: Ver Info de simulacao.m!
-
-%% Descrição
-% Este script tem como objetivo comparar o resultado das combinações de modelos de pneu e veículos.
-% Neste script o ângulo de esterçamento do pneu dianteiro é de 45 graus e as condições iniciais nulas
-
-% Vai ser o número de figuras
+%% Comparação - DELTA = 45 graus
+% Este script mostra o desempenho dos veículos para um ângulo de
+% esterçamento de 45 graus e condições iniciais nulas.
+%
+%% Vai ser o número de figuras
 veiculoModeloVet = [1 2 3];
 veiculoModeloTxt = char(' Linear 2 GDL',' Não linear 2 GDL',' Não linear 3 GDL');
 %veiculoModeloTitulo4 = 'veiculoNaoLinear3gdlExtendido';
@@ -82,3 +78,8 @@ for i = 1:length(veiculoModeloVet)
 
 	end
 end
+
+%% Ver também
+%
+% <inicio.html Início> | <veiculoDoc.html Modelo veículo>
+%

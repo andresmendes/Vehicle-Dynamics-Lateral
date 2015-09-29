@@ -1,0 +1,277 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Seletor</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-28"><meta name="DC.source" content="seletor.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Seletor</h1><!--introduction--><p>Este script define as vari&aacute;veis necess&aacute;rias para as simula&ccedil;&otilde;es de acordo com os modelos e dados escolhidos.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">C&oacute;digo</a></li><li><a href="#2">Descri&ccedil;&atilde;o</a></li><li><a href="#3">Pneu</a></li><li><a href="#4">Ve&iacute;culo</a></li><li><a href="#6">Ver tamb&eacute;m</a></li></ul></div><h2>C&oacute;digo<a name="1"></a></h2><p>C&oacute;digo da fun&ccedil;&atilde;o:</p><pre class="codeinput"><span class="keyword">function</span> [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
+</pre><h2>Descri&ccedil;&atilde;o<a name="2"></a></h2><p>Esta fun&ccedil;&atilde;o tem como objetivo fazer a sele&ccedil;&atilde;o dos dados e modelos de pneu e ve&iacute;culo</p><h2>Pneu<a name="3"></a></h2><p>Os dados do pneu s&atilde;o definidos de acordo com o modelo de pneu escolhido</p><pre class="codeinput"><span class="comment">% Selecionando os dados do pneu</span>
+<span class="keyword">if</span> pneuDados == 1
+	pneuLinearDados
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> pneuDados == 2
+	pneuSadriDados
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> pneuDados == 3
+	pneuPacejkaDados
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Selecionando o modelo de pneu</span>
+<span class="keyword">if</span> pneuModelo == 1
+	pneuFun = @pneuLinearFun; <span class="comment">% Definindo a fun&ccedil;&atilde;o de pneu como a linear</span>
+
+	<span class="comment">% Texto sobre o modelo de pneu para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+	pneuTxt = <span class="string">' linear'</span>;
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> pneuModelo == 2
+	pneuFun = @pneuSadriFun; <span class="comment">% Definindo a fun&ccedil;&atilde;o de pneu como Sadri</span>
+
+	<span class="comment">% Texto sobre o modelo de pneu para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+	pneuTxt = <span class="string">' Sadri'</span>;
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> pneuModelo == 3
+	pneuFun = @pneuPacejkaFun; <span class="comment">% Definindo a fun&ccedil;&atilde;o de pneu como Pacejka</span>
+
+	<span class="comment">% Texto sobre o modelo de pneu para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+	pneuTxt = <span class="string">' Pacejka'</span>;
+
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> pneuModelo == 4
+	pneuFun = @pneuPacejkaEstFun; <span class="comment">% Definindo a fun&ccedil;&atilde;o de pneu como Pacejka</span>
+
+	<span class="comment">% Texto sobre o modelo de pneu para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+	pneuTxt = <span class="string">' Pacejka Estendido'</span>;
+
+<span class="keyword">end</span>
+</pre><h2>Ve&iacute;culo<a name="4"></a></h2><p>Os dados do ve&iacute;culo s&atilde;o definidos de acordo com o modelo de pneu escolhido</p><pre class="codeinput"><span class="comment">% Selecionando os dados do pneu</span>
+<span class="keyword">if</span> veiculoDados == 1
+	veiculoDadosScript
+	veiculoDadosVet = veiculoDadosVetor;
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> veiculoDados == 2
+	veiculoDadosScript14
+	veiculoDadosVet = veiculoDadosVetor;
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="keyword">if</span> veiculoDados == 3
+	veiculoDadosScript45
+	veiculoDadosVet = veiculoDadosVetor;
+<span class="keyword">end</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">%--------------------------------------------------------------------------</span>
+<span class="comment">% Modelo de ve&iacute;culo</span>
+<span class="keyword">if</span> veiculoModelo == 1
+	veiculoFun = @veiculoLinear2gdl; <span class="comment">% Definindo a fun&ccedil;&atilde;o de ve&iacute;culo</span>
+
+	<span class="comment">% Texto sobre o modelo de veiculo para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+    veiculoTxt = <span class="string">' linear 2 GDL'</span>;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> veiculoModelo == 2
+	veiculoFun = @veiculoNaoLinear2gdl; <span class="comment">% Definindo a fun&ccedil;&atilde;o de ve&iacute;culo</span>
+
+	<span class="comment">% Texto sobre o modelo de veiculo para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+    veiculoTxt = <span class="string">' n&atilde;o linear 2 GDL'</span>;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> veiculoModelo == 3
+	veiculoFun = @veiculoNaoLinear3gdl; <span class="comment">% Definindo a fun&ccedil;&atilde;o de ve&iacute;culo</span>
+
+	<span class="comment">% Texto sobre o modelo de veiculo para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+    veiculoTxt = <span class="string">' n&atilde;o linear 3 GDL'</span>;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> veiculoModelo == 4
+	<span class="comment">% Definindo a fun&ccedil;&atilde;o de ve&iacute;culo</span>
+    veiculoFun = @veiculoNaoLinear3gdlEst;
+    <span class="comment">% Texto sobre o modelo de veiculo para uso em descri&ccedil;&atilde;o de gr&aacute;ficos</span>
+	veiculoTxt = <span class="string">' n&atilde;o linear 3 GDL Estendido'</span>;
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>Ver tamb&eacute;m<a name="6"></a></h2><p><a href="inicio.html">In&iacute;cio</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Seletor
+% Este script define as variáveis necessárias para as simulações de acordo
+% com os modelos e dados escolhidos.
+%
+%% Código
+% Código da função:
+
+function [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
+%% Descrição
+% Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
+
+%% Pneu
+% Os dados do pneu são definidos de acordo com o modelo de pneu escolhido
+
+% Selecionando os dados do pneu
+if pneuDados == 1
+	pneuLinearDados
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if pneuDados == 2
+	pneuSadriDados
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if pneuDados == 3
+	pneuPacejkaDados
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Selecionando o modelo de pneu
+if pneuModelo == 1
+	pneuFun = @pneuLinearFun; % Definindo a função de pneu como a linear
+
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
+	pneuTxt = ' linear'; 
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if pneuModelo == 2
+	pneuFun = @pneuSadriFun; % Definindo a função de pneu como Sadri
+
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
+	pneuTxt = ' Sadri'; 
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if pneuModelo == 3
+	pneuFun = @pneuPacejkaFun; % Definindo a função de pneu como Pacejka
+
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
+	pneuTxt = ' Pacejka'; 
+
+end
+
+if pneuModelo == 4
+	pneuFun = @pneuPacejkaEstFun; % Definindo a função de pneu como Pacejka
+
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
+	pneuTxt = ' Pacejka Estendido'; 
+
+end
+
+%% Veículo
+% Os dados do veículo são definidos de acordo com o modelo de pneu
+% escolhido
+
+% Selecionando os dados do pneu
+if veiculoDados == 1
+	veiculoDadosScript
+	veiculoDadosVet = veiculoDadosVetor;
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if veiculoDados == 2
+	veiculoDadosScript14
+	veiculoDadosVet = veiculoDadosVetor;
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+if veiculoDados == 3
+	veiculoDadosScript45
+	veiculoDadosVet = veiculoDadosVetor;
+end
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% Modelo de veículo
+if veiculoModelo == 1
+	veiculoFun = @veiculoLinear2gdl; % Definindo a função de veículo
+	
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+    veiculoTxt = ' linear 2 GDL';
+end
+
+if veiculoModelo == 2
+	veiculoFun = @veiculoNaoLinear2gdl; % Definindo a função de veículo
+	
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+    veiculoTxt = ' não linear 2 GDL'; 
+end
+
+if veiculoModelo == 3
+	veiculoFun = @veiculoNaoLinear3gdl; % Definindo a função de veículo
+
+	% Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+    veiculoTxt = ' não linear 3 GDL'; 
+end
+
+if veiculoModelo == 4
+	% Definindo a função de veículo
+    veiculoFun = @veiculoNaoLinear3gdlEst; 
+    % Texto sobre o modelo de veiculo para uso em descrição de gráficos 
+	veiculoTxt = ' não linear 3 GDL Estendido'; 
+end
+
+end
+
+%% Ver também
+%
+% <inicio.html Início> 
+%
+##### SOURCE END #####
+--></body></html>

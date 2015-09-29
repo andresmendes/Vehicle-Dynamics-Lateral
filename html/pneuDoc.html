@@ -1,0 +1,413 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Modelo de pneu</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-29"><meta name="DC.source" content="pneuDoc.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Modelo de pneu</h1><!--introduction--><p>Rela&ccedil;&atilde;o entre a for&ccedil;a lateral e o &acirc;ngulo de deriva.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Sintaxe</a></li><li><a href="#2">Argumentos</a></li><li><a href="#3">Fun&ccedil;&otilde;es de pneu - pneuFun</a></li><li><a href="#4">Dados do pneu - pneuDados</a></li><li><a href="#5">Modelos</a></li><li><a href="#6">Exemplo - Linear</a></li><li><a href="#7">Exemplo - Sadri (S&eacute;rie de Taylor)</a></li><li><a href="#8">Exemplo - Sadri (Ajuste)</a></li><li><a href="#9">Exemplo - Pacejka</a></li><li><a href="#10">Exemplo - Compara&ccedil;&atilde;o</a></li><li><a href="#11">Exemplo - Compara&ccedil;&atilde;o (Grandes &acirc;ngulos)</a></li><li><a href="#13">Ver tamb&eacute;m</a></li></ul></div><h2>Sintaxe<a name="1"></a></h2><p><tt>Fy = <i>pneuFun</i>(deriva,pneuDados)</tt></p><h2>Argumentos<a name="2"></a></h2><p>Lista de entradas da fun&ccedil;&atilde;o:</p><p> <table border=1 width="97%"> <tr> <td
+width="30%"><tt>deriva</tt></td> <td width="70%">Ângulo de deriva do
+pneu. Ângulo formado entre o vetor velocidade e o plano longitudinal do
+pneu.</td> </tr> <tr> <td><tt>pneuDados</tt></td> <td>Vetor com os dados
+do pneu.</td> </tr> </table> </p><p>Lista de sa&iacute;das da fun&ccedil;&atilde;o:</p><p> <table border=1 width="97%"> <tr> <td width="30%"><tt>Fy</tt></td>
+<td width="70%">Força lateral do pneu.</td></tr></table> </p><h2>Fun&ccedil;&otilde;es de pneu - pneuFun<a name="3"></a></h2><p>As op&ccedil;&otilde;es de fun&ccedil;&otilde;es de pneu s&atilde;o aprentadas na tabela abaixo:</p><p> <table border=1 width="97%"> <tr><td width="30%"> <b> pneuFun
+</b></td><td width="35%"> <b>Modelo</b></td><td width="35%"><b>Argumentos
+de entrada</b></td></tr> <tr> <td> <a
+href="pneuLinearFun.html"><tt>pneuLinearFun</tt></a> </td> <td>Pneu
+linear</td><td> <tt>delta, pneuDados = [C]</tt> </td></tr><tr> <td> <a
+href="pneuSadriFun.html"><tt>pneuSadriFun</tt></a> </td> <td>Pneu
+Sadri</td><td> <tt>delta, pneuDados = [k1 k2]</tt> </td></tr><tr> <td> <a
+href="pneuPacejkaFun.html"><tt>pneuPacejkaFun</tt></a> </td> <td>Pneu
+pacejka</td><td> <tt>delta, pneuDados = [Fz0 muy0 Cy Ey c1 c2 Fz muy]</tt>
+</td></tr></table> </p><h2>Dados do pneu - pneuDados<a name="4"></a></h2><p>Os dados do pneu dependem do modelo adotado. Este reposit&oacute;rio possui os seguintes dados de pneu para cada modelo:</p><div><ul><li><a href="pneuLinearDados.html">pneuLinearDados</a> (Linear)</li><li><a href="pneuSadriDadosTaylor.html">pneuSadriDadosTaylor</a> (Sadri)</li><li><a href="pneuSadriDadosAjuste.html">pneuSadriDadosAjuste</a> (Sadri)</li><li><a href="pneuPacejkaDados.html">pneuPacejkaDados</a> (Pacejka)</li></ul></div><p>Estes modelos fornecem as informa&ccedil;&otilde;es dos par&acirc;metros dos pneus para a determina&ccedil;&atilde;o da for&ccedil;a lateral exercida em fun&ccedil;&atilde;o do &acirc;ngulo de deriva.</p><h2>Modelos<a name="5"></a></h2><p>O modelo de pneu relaciona a for&ccedil;a lateral com o &acirc;ngulo de deriva (&Acirc;ngulo formado entre o vetor velocidade do centro do pneu com o plano longitudinal do pneu). A rela&ccedil;&atilde;o t&iacute;pica entre essas duas grandezas pode ser observada na figura abaixo. Al&eacute;m disso &eacute; poss&iacute;vel verificar a defini&ccedil;&atilde;o do &acirc;ngulo de deriva.</p><p><img vspace="5" hspace="5" src="curvaCaracteristica.png" alt=""> </p><p><b>Modelo Linear</b></p><p>Para simula&ccedil;&otilde;es em que os &acirc;ngulos de deriva sejam pequenos &eacute; poss&iacute;vel aproximar a curva caracter&iacute;stica por uma rela&ccedil;&atilde;o linear dada por:</p><p><img src="pneuDoc_eq73516.png" alt="$$ F_y = C \alpha $$"></p><p>Onde <img src="pneuDoc_eq40767.png" alt="$F_y$"> &eacute; a for&ccedil;a lateral, <img src="pneuDoc_eq22407.png" alt="$C$"> &eacute; o coeficiente de rigidez de curva e <img src="pneuDoc_eq87919.png" alt="$\alpha$"> &eacute; o &acirc;ngulo de deriva.</p><p>Para maiores informa&ccedil;&otilde;es sobre o modelo linear ver: <a href="pneuLinearFun.html">pneuLinearFun</a></p><p>As op&ccedil;oes de dados para este modelo s&atilde;o: <a href="pneuLinearDados.html">pneuLinearDados</a></p><p><b>Modelo Sadri</b></p><p>Na tentativa de levar em considera&ccedil;&atilde;o a n&atilde;o linearidade da curva caracter&iacute;stica muitos autores adotam o modelo de terceira ordem dado por:</p><p><img src="pneuDoc_eq28957.png" alt="$$ F_y = k_1 \alpha  - k_2\alpha^3 $$"></p><p>Onde <img src="pneuDoc_eq27372.png" alt="$k_1$"> e <img src="pneuDoc_eq32346.png" alt="$k_2$"> s&atilde;o constantes do modelo.</p><p>Para maiores informa&ccedil;&otilde;es sobre o modelo sadri ver: <a href="pneuSadriFun.html">pneuSadriFun</a></p><p>As op&ccedil;oes de dados para este modelo s&atilde;o: <a href="pneuSadriDadosTaylor.html">pneuSadriDadosTaylor</a> e <a href="pneuSadriDadosAjuste.html">pneuSadriDadosAjuste</a></p><p><b>Modelo Pacejka</b></p><p>Uma outra alternativa para o modelar o pneu levando em considera&ccedil;&atilde;o o seu comportamento n&atilde;o linear &eacute; atrav&eacute;s da vers&atilde;o simplificada da Magic Formula apresentada por Pacejka.</p><p><img src="pneuDoc_eq28051.png" alt="$$ F_y = D \sin(C \arctan(B \alpha - E (B \alpha - \arctan(B \alpha))))$$"></p><p>Onde <img src="pneuDoc_eq73617.png" alt="$B$">, <img src="pneuDoc_eq22407.png" alt="$C$">, <img src="pneuDoc_eq35719.png" alt="$D$"> e <img src="pneuDoc_eq85525.png" alt="$E$"> s&atilde;o coeficientes obtidos experimentalmente.</p><p>Para maiores informa&ccedil;&otilde;es sobre o modelo Pacejka ver: <a href="pneuPacejkaFun.html">pneuPacejkaFun</a></p><p>As op&ccedil;oes de dados para este modelo s&atilde;o: <a href="pneuPacejkaDados.html">pneuPacejkaDados</a></p><h2>Exemplo - Linear<a name="6"></a></h2><p>Ilustrando a curva caracter&iacute;stica do pneu para um modelo linear.</p><pre class="codeinput">deriva = (0:0.7:25)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+pneuLinearDados <span class="comment">% Obtendo os dados do pneu linear (Dianteira e traseira)</span>
+
+pneuDados = pneuDadosFrente; <span class="comment">% Atribuindo aos dados usados na gera&ccedil;&atilde;o da curva</span>
+
+FyLinear = pneuLinearFun(deriva,pneuDados);
+
+figure(1)
+box <span class="string">on</span>
+plot(deriva*180/pi,-FyLinear,<span class="string">'Color'</span>,<span class="string">'r'</span>,<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+title(<span class="string">'Modelo de pneu - Linear'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_01.png" alt=""> <h2>Exemplo - Sadri (S&eacute;rie de Taylor)<a name="7"></a></h2><p>Ilustrando a curva caracter&iacute;stica do pneu para um modelo sadri.</p><pre class="codeinput">deriva = (0:0.7:25)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+<span class="comment">% Obtendo os dados do pneu Sadri a partir da expans&atilde;o da Magic Formula em</span>
+<span class="comment">% s&eacute;rie de Taylor (Dianteira e traseira)</span>
+pneuSadriDadosTaylor
+
+pneuDados = pneuDadosFrente; <span class="comment">% Atribuindo aos dados usados na gera&ccedil;&atilde;o da curva</span>
+
+FySadriST = pneuSadriFun(deriva,pneuDados);
+
+figure(2)
+box <span class="string">on</span>
+plot(deriva*180/pi,-FySadriST,<span class="string">'Color'</span>,<span class="string">'c'</span>,<span class="string">'Marker'</span>,<span class="string">'*'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>)
+title(<span class="string">'Modelo de pneu - Sadri (S&eacute;rie de Taylor)'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_02.png" alt=""> <h2>Exemplo - Sadri (Ajuste)<a name="8"></a></h2><p>Ilustrando a curva caracter&iacute;stica do pneu para um modelo sadri.</p><pre class="codeinput">deriva = (0:0.7:25)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+<span class="comment">% Obtendo os dados do pneu Sadri a partir dos ajustes de inclina&ccedil;&atilde;o e for&ccedil;a</span>
+<span class="comment">% lateral m&aacute;xima (Dianteira e traseira)</span>
+pneuSadriDadosAjuste
+
+pneuDados = pneuDadosFrente; <span class="comment">% Atribuindo aos dados usados na gera&ccedil;&atilde;o da curva</span>
+
+FySadriAj = pneuSadriFun(deriva,pneuDados);
+
+figure(3)
+box <span class="string">on</span>
+plot(deriva*180/pi,-FySadriAj,<span class="string">'Color'</span>,<span class="string">'g'</span>,<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'g'</span>)
+title(<span class="string">'Modelo de pneu - Sadri (Ajuste)'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_03.png" alt=""> <h2>Exemplo - Pacejka<a name="9"></a></h2><p>Ilustrando a curva caracter&iacute;stica do pneu para um modelo pacejka.</p><pre class="codeinput">deriva = (0:0.7:25)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+pneuPacejkaDados <span class="comment">% Obtendo os dados do pneu Pacejka (Dianteira e traseira)</span>
+
+pneuDados = pneuDadosFrente;
+
+FyPacejka = pneuPacejkaFun(deriva,pneuDados);
+
+figure(4)
+box <span class="string">on</span>
+plot(deriva*180/pi,-FyPacejka,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'Marker'</span>,<span class="string">'d'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'b'</span>)
+title(<span class="string">'Modelo de pneu - Pacejka'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_04.png" alt=""> <h2>Exemplo - Compara&ccedil;&atilde;o<a name="10"></a></h2><p>Compara&ccedil;&atilde;o dos modelos para par&acirc;metros equivalentes.</p><pre class="codeinput">figure(5)
+box <span class="string">on</span>
+hold <span class="string">on</span>
+plot(deriva*180/pi,-FyLinear,<span class="string">'Color'</span>,<span class="string">'r'</span>,<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+plot(deriva*180/pi,-FySadriST,<span class="string">'Color'</span>,<span class="string">'c'</span>,<span class="string">'Marker'</span>,<span class="string">'*'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>)
+plot(deriva*180/pi,-FySadriAj,<span class="string">'Color'</span>,<span class="string">'g'</span>,<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'g'</span>)
+plot(deriva*180/pi,-FyPacejka,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'Marker'</span>,<span class="string">'d'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'b'</span>)
+title(<span class="string">'Compara&ccedil;&atilde;o - Modelo de pneu'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+legend(<span class="string">'Linear'</span>,<span class="string">'Sadri - Taylor'</span>,<span class="string">'Sadri - Ajuste'</span>,<span class="string">'Pacejka'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_05.png" alt=""> <h2>Exemplo - Compara&ccedil;&atilde;o (Grandes &acirc;ngulos)<a name="11"></a></h2><p><b>Pacejka</b></p><pre class="codeinput">deriva = (0:3:180)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+pneuPacejkaDados <span class="comment">% Obtendo os dados do pneu Pacejka (Dianteira e traseira)</span>
+
+pneuDados = pneuDadosFrente;
+
+FyPacejka = pneuPacejkaFun(deriva,pneuDados);
+</pre><p><b>Pacejka estendido</b></p><pre class="codeinput">deriva = (0:3:180)*pi/180; <span class="comment">% &Acirc;ngulo de deriva [rad]</span>
+
+pneuPacejkaDados <span class="comment">% Obtendo os dados do pneu Pacejka (Dianteira e traseira)</span>
+
+pneuDados = pneuDadosFrente;
+
+FyPacejkaEst = pneuPacejkaEstFun(deriva,pneuDados);
+
+figure(6)
+box <span class="string">on</span>
+hold <span class="string">on</span>
+plot(deriva*180/pi,-FyPacejka,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'Marker'</span>,<span class="string">'d'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'b'</span>)
+plot(deriva*180/pi,-FyPacejkaEst,<span class="string">'Color'</span>,<span class="string">'m'</span>,<span class="string">'Marker'</span>,<span class="string">'+'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'m'</span>)
+title(<span class="string">'Compara&ccedil;&atilde;o - Grandes &acirc;ngulos'</span>)
+ylabel(<span class="string">'For&ccedil;a lateral [N]'</span>)
+xlabel(<span class="string">'&Acirc;ngulo de deriva [grau]'</span>)
+legend(<span class="string">'Pacejka'</span>,<span class="string">'Pacejka estendido'</span>,<span class="string">'Location'</span>,<span class="string">'South'</span>)
+</pre><img vspace="5" hspace="5" src="pneuDoc_06.png" alt=""> <h2>Ver tamb&eacute;m<a name="13"></a></h2><p><a href="index.html">In&iacute;cio</a> | <a href="pneuLinearFun.html">Pneu linear</a> | <a href="pneuSadriFun.html">Pneu sadri</a> | <a href="pneuPacejkaFun.html">Pneu pacejka</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Modelo de pneu
+% Relação entre a força lateral e o ângulo de deriva.
+%
+%% Sintaxe
+% |Fy = _pneuFun_(deriva,pneuDados)|
+%
+%% Argumentos
+% Lista de entradas da função:
+%
+% <html> <table border=1 width="97%"> <tr> <td
+% width="30%"><tt>deriva</tt></td> <td width="70%">Ângulo de deriva do
+% pneu. Ângulo formado entre o vetor velocidade e o plano longitudinal do
+% pneu.</td> </tr> <tr> <td><tt>pneuDados</tt></td> <td>Vetor com os dados
+% do pneu.</td> </tr> </table> </html>
+% 
+% Lista de saídas da função:
+%
+% <html> <table border=1 width="97%"> <tr> <td width="30%"><tt>Fy</tt></td>
+% <td width="70%">Força lateral do pneu.</td></tr></table> </html>
+% 
+%% Funções de pneu - pneuFun
+% As opções de funções de pneu são aprentadas na tabela abaixo:
+%
+% <html> <table border=1 width="97%"> <tr><td width="30%"> <b> pneuFun
+% </b></td><td width="35%"> <b>Modelo</b></td><td width="35%"><b>Argumentos
+% de entrada</b></td></tr> <tr> <td> <a
+% href="pneuLinearFun.html"><tt>pneuLinearFun</tt></a> </td> <td>Pneu
+% linear</td><td> <tt>delta, pneuDados = [C]</tt> </td></tr><tr> <td> <a
+% href="pneuSadriFun.html"><tt>pneuSadriFun</tt></a> </td> <td>Pneu
+% Sadri</td><td> <tt>delta, pneuDados = [k1 k2]</tt> </td></tr><tr> <td> <a
+% href="pneuPacejkaFun.html"><tt>pneuPacejkaFun</tt></a> </td> <td>Pneu
+% pacejka</td><td> <tt>delta, pneuDados = [Fz0 muy0 Cy Ey c1 c2 Fz muy]</tt>
+% </td></tr></table> </html>
+%
+%% Dados do pneu - pneuDados
+% Os dados do pneu dependem do modelo adotado. Este repositório possui os
+% seguintes dados de pneu para cada modelo:
+%
+% * <pneuLinearDados.html pneuLinearDados> (Linear)
+% * <pneuSadriDadosTaylor.html pneuSadriDadosTaylor> (Sadri)
+% * <pneuSadriDadosAjuste.html pneuSadriDadosAjuste> (Sadri)
+% * <pneuPacejkaDados.html pneuPacejkaDados> (Pacejka)
+%
+% Estes modelos fornecem as informações dos parâmetros dos pneus para a
+% determinação da força lateral exercida em função do ângulo de deriva.
+%
+%% Modelos
+% O modelo de pneu relaciona a força lateral com o ângulo de deriva (Ângulo
+% formado entre o vetor velocidade do centro do pneu com o plano
+% longitudinal do pneu). A relação típica entre essas duas grandezas pode
+% ser observada na figura abaixo. Além disso é possível verificar a
+% definição do ângulo de deriva.
+%
+% <<curvaCaracteristica.png>>
+%
+% *Modelo Linear*
+%
+% Para simulações em que os ângulos de deriva sejam pequenos é possível
+% aproximar a curva característica por uma relação linear dada por:
+%
+% $$ F_y = C \alpha $$
+%
+% Onde $F_y$ é a força lateral, $C$ é o coeficiente de rigidez de curva e
+% $\alpha$ é o ângulo de deriva.
+%
+% Para maiores informações sobre o modelo linear ver: <pneuLinearFun.html
+% pneuLinearFun>
+%
+% As opçoes de dados para este modelo são: <pneuLinearDados.html
+% pneuLinearDados>
+%
+% *Modelo Sadri*
+%
+% Na tentativa de levar em consideração a não linearidade da curva
+% característica muitos autores adotam o modelo de terceira ordem dado por:
+%
+% $$ F_y = k_1 \alpha  - k_2\alpha^3 $$
+%
+% Onde $k_1$ e $k_2$ são constantes do modelo.
+%
+% Para maiores informações sobre o modelo sadri ver: <pneuSadriFun.html
+% pneuSadriFun>
+%
+% As opçoes de dados para este modelo são: <pneuSadriDadosTaylor.html
+% pneuSadriDadosTaylor> e <pneuSadriDadosAjuste.html pneuSadriDadosAjuste>
+%
+% *Modelo Pacejka*
+% 
+% Uma outra alternativa para o modelar o pneu levando em consideração o seu
+% comportamento não linear é através da versão simplificada da Magic
+% Formula apresentada por Pacejka.
+%
+% $$ F_y = D \sin(C \arctan(B \alpha - E (B \alpha - \arctan(B \alpha))))$$
+%
+% Onde $B$, $C$, $D$ e $E$ são coeficientes obtidos experimentalmente.
+%
+% Para maiores informações sobre o modelo Pacejka ver: <pneuPacejkaFun.html
+% pneuPacejkaFun>
+%
+% As opçoes de dados para este modelo são: <pneuPacejkaDados.html
+% pneuPacejkaDados>
+%
+%% Exemplo - Linear
+% Ilustrando a curva característica do pneu para um modelo linear.
+
+deriva = (0:0.7:25)*pi/180; % Ângulo de deriva [rad]
+
+pneuLinearDados % Obtendo os dados do pneu linear (Dianteira e traseira)
+
+pneuDados = pneuDadosFrente; % Atribuindo aos dados usados na geração da curva
+
+FyLinear = pneuLinearFun(deriva,pneuDados);
+
+figure(1)
+box on
+plot(deriva*180/pi,-FyLinear,'Color','r','Marker','o','MarkerFaceColor','r')
+title('Modelo de pneu - Linear')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+
+%% Exemplo - Sadri (Série de Taylor)
+% Ilustrando a curva característica do pneu para um modelo sadri.
+
+deriva = (0:0.7:25)*pi/180; % Ângulo de deriva [rad]
+
+% Obtendo os dados do pneu Sadri a partir da expansão da Magic Formula em
+% série de Taylor (Dianteira e traseira)
+pneuSadriDadosTaylor 
+
+pneuDados = pneuDadosFrente; % Atribuindo aos dados usados na geração da curva
+
+FySadriST = pneuSadriFun(deriva,pneuDados);
+
+figure(2)
+box on
+plot(deriva*180/pi,-FySadriST,'Color','c','Marker','*','MarkerFaceColor','c')
+title('Modelo de pneu - Sadri (Série de Taylor)')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+
+%% Exemplo - Sadri (Ajuste)
+% Ilustrando a curva característica do pneu para um modelo sadri.
+
+deriva = (0:0.7:25)*pi/180; % Ângulo de deriva [rad]
+
+% Obtendo os dados do pneu Sadri a partir dos ajustes de inclinação e força
+% lateral máxima (Dianteira e traseira)
+pneuSadriDadosAjuste
+
+pneuDados = pneuDadosFrente; % Atribuindo aos dados usados na geração da curva
+
+FySadriAj = pneuSadriFun(deriva,pneuDados);
+
+figure(3)
+box on
+plot(deriva*180/pi,-FySadriAj,'Color','g','Marker','s','MarkerFaceColor','g')
+title('Modelo de pneu - Sadri (Ajuste)')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+
+%% Exemplo - Pacejka
+% Ilustrando a curva característica do pneu para um modelo pacejka.
+
+deriva = (0:0.7:25)*pi/180; % Ângulo de deriva [rad]
+
+pneuPacejkaDados % Obtendo os dados do pneu Pacejka (Dianteira e traseira)
+
+pneuDados = pneuDadosFrente;
+
+FyPacejka = pneuPacejkaFun(deriva,pneuDados);
+
+figure(4)
+box on
+plot(deriva*180/pi,-FyPacejka,'Color','b','Marker','d','MarkerFaceColor','b')
+title('Modelo de pneu - Pacejka')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+
+%% Exemplo - Comparação
+% Comparação dos modelos para parâmetros equivalentes.
+
+figure(5)
+box on
+hold on
+plot(deriva*180/pi,-FyLinear,'Color','r','Marker','o','MarkerFaceColor','r')
+plot(deriva*180/pi,-FySadriST,'Color','c','Marker','*','MarkerFaceColor','c')
+plot(deriva*180/pi,-FySadriAj,'Color','g','Marker','s','MarkerFaceColor','g')
+plot(deriva*180/pi,-FyPacejka,'Color','b','Marker','d','MarkerFaceColor','b')
+title('Comparação - Modelo de pneu')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+legend('Linear','Sadri - Taylor','Sadri - Ajuste','Pacejka','Location','NorthWest')
+
+%% Exemplo - Comparação (Grandes ângulos)
+% *Pacejka*
+%
+
+deriva = (0:3:180)*pi/180; % Ângulo de deriva [rad]
+
+pneuPacejkaDados % Obtendo os dados do pneu Pacejka (Dianteira e traseira)
+
+pneuDados = pneuDadosFrente;
+
+FyPacejka = pneuPacejkaFun(deriva,pneuDados);
+
+%%
+%
+% *Pacejka estendido*
+%
+deriva = (0:3:180)*pi/180; % Ângulo de deriva [rad]
+
+pneuPacejkaDados % Obtendo os dados do pneu Pacejka (Dianteira e traseira)
+
+pneuDados = pneuDadosFrente;
+
+FyPacejkaEst = pneuPacejkaEstFun(deriva,pneuDados);
+
+figure(6)
+box on
+hold on
+plot(deriva*180/pi,-FyPacejka,'Color','b','Marker','d','MarkerFaceColor','b')
+plot(deriva*180/pi,-FyPacejkaEst,'Color','m','Marker','+','MarkerFaceColor','m')
+title('Comparação - Grandes ângulos')
+ylabel('Força lateral [N]')
+xlabel('Ângulo de deriva [grau]')
+legend('Pacejka','Pacejka estendido','Location','South')
+
+
+%% Ver também
+%
+% <index.html Início> | <pneuLinearFun.html Pneu linear> |
+% <pneuSadriFun.html Pneu sadri> | <pneuPacejkaFun.html Pneu pacejka>
+%
+##### SOURCE END #####
+--></body></html>

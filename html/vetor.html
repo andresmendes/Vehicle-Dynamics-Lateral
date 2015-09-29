@@ -1,0 +1,136 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>vetor</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-28"><meta name="DC.source" content="vetor.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Vetor</a></li><li><a href="#2">Ver tamb&eacute;m</a></li></ul></div><h2>Vetor<a name="1"></a></h2><p>Exibe uma flecha de acordo com os par&acirc;metros. Este script &eacute; usado em <a href="animacao.html">animacao</a>.</p><pre class="codeinput"><span class="keyword">function</span> vetor(inicio,angulo,modulo,cor)
+coord1 = inicio; <span class="comment">% inicio do vetor</span>
+theta = angulo;
+mod = 0.7*modulo; <span class="comment">% modulo do vetor</span>
+coord2 = mod*[cos(theta) sin(theta)] + coord1; <span class="comment">% fim do vetor</span>
+
+<span class="comment">%theta = atan2((coord1(1)-coord2(1)),(coord1(2)-coord2(2))); % angulo de orienta&ccedil;&atilde;o do triangulo</span>
+esc = 1; <span class="comment">% Escala</span>
+l = 0.5; <span class="comment">% Largura relativa em rela&ccedil;&atilde;o ao comprimento do triangulo (0-1)</span>
+
+<span class="comment">% Forma e orienta&ccedil;&atilde;o do triangulo</span>
+c1 = esc*l*[-sin(theta) +cos(theta)]; <span class="comment">% canto 1 - inferior esquerdo</span>
+c2 = esc*l*[+sin(theta) -cos(theta)]; <span class="comment">% canto 2 - inferior direito</span>
+c3 = esc*[+cos(theta) +sin(theta)]; <span class="comment">% canto 3 - superior central</span>
+
+<span class="comment">% Escala e posicionamento</span>
+
+x = [c1(1)+coord2(1) c2(1)+coord2(1) c3(1)+coord2(1)];
+y = [c1(2)+coord2(2) c2(2)+coord2(2) c3(2)+coord2(2)];
+
+<span class="comment">% figure(1)</span>
+<span class="comment">% axis equal</span>
+hold <span class="string">on</span>
+fill(x,y,cor)
+p = plot([coord1(1) coord2(1)],[coord1(2) coord2(2)],cor);
+set(p,<span class="string">'LineWidth'</span>,2)
+
+<span class="keyword">end</span>
+</pre><h2>Ver tamb&eacute;m<a name="2"></a></h2><p><a href="inicio.html">In&iacute;cio</a> | <a href="animacao.html">Anima&ccedil;&atilde;o</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Vetor
+% Exibe uma flecha de acordo com os parâmetros. Este script é usado em
+% <animacao.html animacao>.
+
+function vetor(inicio,angulo,modulo,cor)
+coord1 = inicio; % inicio do vetor
+theta = angulo; 
+mod = 0.7*modulo; % modulo do vetor
+coord2 = mod*[cos(theta) sin(theta)] + coord1; % fim do vetor
+
+%theta = atan2((coord1(1)-coord2(1)),(coord1(2)-coord2(2))); % angulo de orientação do triangulo
+esc = 1; % Escala
+l = 0.5; % Largura relativa em relação ao comprimento do triangulo (0-1)
+
+% Forma e orientação do triangulo
+c1 = esc*l*[-sin(theta) +cos(theta)]; % canto 1 - inferior esquerdo
+c2 = esc*l*[+sin(theta) -cos(theta)]; % canto 2 - inferior direito
+c3 = esc*[+cos(theta) +sin(theta)]; % canto 3 - superior central
+
+% Escala e posicionamento
+
+x = [c1(1)+coord2(1) c2(1)+coord2(1) c3(1)+coord2(1)];
+y = [c1(2)+coord2(2) c2(2)+coord2(2) c3(2)+coord2(2)];
+
+% figure(1)
+% axis equal
+hold on
+fill(x,y,cor)
+p = plot([coord1(1) coord2(1)],[coord1(2) coord2(2)],cor);
+set(p,'LineWidth',2)
+
+end
+
+%% Ver também
+%
+% <inicio.html Início> | <animacao.html Animação>
+%
+##### SOURCE END #####
+--></body></html>

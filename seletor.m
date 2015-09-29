@@ -1,11 +1,18 @@
-function [pneuFun veiculoFun pneuDadosFrente pneuDadosTras veiculoDadosVet pneuTxt veiculoTxt] = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
+%% Seletor
+% Este script define as variáveis necessárias para as simulações de acordo
+% com os modelos e dados escolhidos.
+%
+%% Código
+% Código da função:
+
+function [pneuFun,veiculoFun,pneuDadosFrente,pneuDadosTras,veiculoDadosVet,pneuTxt,veiculoTxt]...
+    = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
+
 %% Descrição
 % Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
 
 %% Pneu
 % Os dados do pneu são definidos de acordo com o modelo de pneu escolhido
-
-cd pneu % Entrando na pasta com os modelos de pneu
 
 % Selecionando os dados do pneu
 if pneuDados == 1
@@ -13,10 +20,14 @@ if pneuDados == 1
 end
 %--------------------------------------------------------------------------
 if pneuDados == 2
-	pneuSadriDados
+	pneuSadriDadosTaylor
 end
 %--------------------------------------------------------------------------
 if pneuDados == 3
+	pneuSadriDadosAjuste
+end
+%--------------------------------------------------------------------------
+if pneuDados == 4
 	pneuPacejkaDados
 end
 %--------------------------------------------------------------------------
@@ -44,13 +55,17 @@ if pneuModelo == 3
 
 end
 
-cd .. % Saíndo da pasta com os modelos de pneu
+if pneuModelo == 4
+	pneuFun = @pneuPacejkaEstFun; % Definindo a função de pneu como Pacejka
+
+	% Texto sobre o modelo de pneu para uso em descrição de gráficos 
+	pneuTxt = ' Pacejka Estendido'; 
+
+end
 
 %% Veículo
 % Os dados do veículo são definidos de acordo com o modelo de pneu
 % escolhido
-
-cd veiculo
 
 % Selecionando os dados do pneu
 if veiculoDados == 1
@@ -98,4 +113,9 @@ if veiculoModelo == 4
 	veiculoTxt = ' não linear 3 GDL Estendido'; 
 end
 
-cd ..
+end
+
+%% Ver também
+%
+% <index.html Início> 
+%
