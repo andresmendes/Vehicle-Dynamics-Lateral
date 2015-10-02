@@ -4,5 +4,7 @@ Simulações dinâmicas de veículos.
 - Veículo simples. 
 - Modelo do tipo biclicleta.
 
-Documentação em:
-/documentacao/documentacao.pdf
+Documentação online em: http://andresmendes.github.io/Dinamica-Veicular/
+
+Para baixar toda a documentação ver branch gh-pages e baixar arquivo zip.
+

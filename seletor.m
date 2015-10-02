@@ -2,17 +2,14 @@
 % Este script define as variáveis necessárias para as simulações de acordo
 % com os modelos e dados escolhidos.
 %
+%% Descrição
+% Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
+%
 %% Código
 % Código da função:
 
 function [pneuFun,veiculoFun,pneuDadosFrente,pneuDadosTras,veiculoDadosVet,pneuTxt,veiculoTxt]...
     = seletor(pneuModelo,pneuDados,veiculoModelo,veiculoDados)
-
-%% Descrição
-% Esta função tem como objetivo fazer a seleção dos dados e modelos de pneu e veículo
-
-%% Pneu
-% Os dados do pneu são definidos de acordo com o modelo de pneu escolhido
 
 % Selecionando os dados do pneu
 if pneuDados == 1
@@ -69,17 +66,17 @@ end
 
 % Selecionando os dados do pneu
 if veiculoDados == 1
-	veiculoDadosScript
+	veiculoDadosDelta0
 	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
 if veiculoDados == 2
-	veiculoDadosScript14
+	veiculoDadosDelta14
 	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------
 if veiculoDados == 3
-	veiculoDadosScript45
+	veiculoDadosDelta45
 	veiculoDadosVet = veiculoDadosVetor;
 end
 %--------------------------------------------------------------------------

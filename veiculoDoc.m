@@ -30,7 +30,6 @@
 % <tr> <td> <a href="veiculoLinear2gdl.html"><tt>veiculoLinear2gdl</tt></a> </td> <td>Veículo linear com 2 GDL</td></tr>
 % <tr> <td> <a href="veiculoNaoLinear2gdl.html"><tt>veiculoNaoLinear2gdl</tt></a> </td> <td> Veículo não linear com 2 GDL</td></tr>
 % <tr> <td> <a href="veiculoNaoLinear3gdl.html"><tt>veiculoNaoLinear3gdl</tt></a> </td> <td> Veículo não linear com 3 GDL</td></tr>
-% <tr> <td> <a href="veiculoNaoLinear3gdlEst.html"><tt>veiculoNaoLinear3gdlEst</tt></a> </td> <td> Veículo não linear com 3 GDL com tratamento do ângulo de deriva dos pneus</td></tr>
 % </table> </html>
 %
 %% Exemplo - Simulação simples

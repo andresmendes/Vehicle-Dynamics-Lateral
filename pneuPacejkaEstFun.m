@@ -65,7 +65,7 @@
 % *Hipóteses*
 %
 % * Relação não linear.
-% * Válido até 90 graus de ângulo de deriva.
+% * Ângulo vai de -180 a 180 graus.
 %
 %% Código
 % Código da função:

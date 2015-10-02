@@ -1,92 +1,170 @@
-%% Descrição
+%% Gerador de documentação
 % Script que gera toda a documentação do repositório.
 
 %% Documentação do próprio gerador de documentação
 
-publish('docDin','evalCode',false)
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('docDin','outputDir','../documentacao/','evalCode',false)
 
 %% Página inicial da documentação
 
-publish('index','evalCode',false)
-publish('fluxograma') % Gera o fluxograma ilustrativo
 close all % Fechando as figuras geradas
-
-%% Página principal do modelo de pneu
-
-publish('pneuDoc')
+clear all % Limpando o workspace
+publish('index','outputDir','../documentacao/','evalCode',false)
 close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('fluxograma','outputDir','../documentacao/') % Gera o fluxograma ilustrativo
 
-    % pneuLinear
-    publish('pneuLinearFun','evalCode',false)
-    publish('pneuLinearDados','evalCode',false)
-    % pneuSadri
-    publish('pneuSadriFun','evalCode',false)
-    publish('pneuSadriDadosTaylor','evalCode',false)
-    publish('pneuSadriDadosAjuste','evalCode',false)
-    % pneuPacejka
-    publish('pneuPacejkaFun','evalCode',false)
-    publish('pneuPacejkaDados','evalCode',false)
+%% Estudos
+
+% Simples
+clear all
+close all
+publish('estudoSimples','outputDir','../documentacao/')
+
+% Comparação DELTA 14
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDelta14','outputDir','../documentacao/')
+
+% Comparação DELTA 45
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDelta45','outputDir','../documentacao/')
+
+% Comparação dPSI 2
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDpsi2','outputDir','../documentacao/')
+
+% Comparação dPSI 3 com
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDpsi3com','outputDir','../documentacao/')
+
+% Comparação dPSI 3 sem
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDpsi3sem','outputDir','../documentacao/')
+
+% Comparação dPSI 3 est
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDpsi3est','outputDir','../documentacao/')
+
+% Comparação dPSI 3 veiculo
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('estudoComparacaoDpsi3veiculo','outputDir','../documentacao/')
 
 %% Página principal do modelo de veículo
 
-publish('veiculoDoc')
+% Doc
 close all % Fechando as figuras geradas
 clear all % Limpando o workspace
-    % veiculoLinear2gdl
-    publish('veiculoLinear2gdl','evalCode',false)
-    %publish('veiculoLinear2gdlDados','evalCode',false)
+publish('veiculoDoc','outputDir','../documentacao/')
+    % veiculoLinear2gdl    
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('veiculoLinear2gdl','outputDir','../documentacao/','evalCode',false)
     % veiculoNaoLinear2gdl
-    publish('veiculoNaoLinear2gdl','evalCode',false)
-    %publish('veiculoLinear2gdlDados','evalCode',false)
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('veiculoNaoLinear2gdl','outputDir','../documentacao/','evalCode',false)
     % veiculoNaoLinear3gdl
-    publish('veiculoNaoLinear3gdl','evalCode',false)
-    %publish('veiculoLinear2gdlDados','evalCode',false)
-    % veiculoNaoLinear3gdlEst
-    publish('veiculoNaoLinear3gdlEst','evalCode',false)
-    %publish('veiculoLinear2gdlDados','evalCode',false)
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('veiculoNaoLinear3gdl','outputDir','../documentacao/','evalCode',false)
 
-%% Simulações
+    % Dados veículo
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('veiculoDadosDelta0','outputDir','../documentacao/','evalCode',false)
 
-    % Simulação
-    publish('simulacao')
     close all % Fechando as figuras geradas
     clear all % Limpando o workspace
-    % Comparação DELTA 14
-    publish('comparacaoDelta14')
-    close all % Fechando as figuras geradas
-    clear all % Limpando o workspace
-    % Comparação DELTA 45
-    publish('comparacaoDelta45')
-    close all % Fechando as figuras geradas
-    clear all % Limpando o workspace
-    % Comparação dPSI 2
-    publish('comparacaoDpsi2')
-    close all % Fechando as figuras geradas
-    clear all % Limpando o workspace
-    % Comparação dPSI 3
-    publish('comparacaoDpsi3')
-    close all % Fechando as figuras geradas
-    clear all % Limpando o workspace
+    publish('veiculoDadosDelta14','outputDir','../documentacao/','evalCode',false)
 
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('veiculoDadosDelta45','outputDir','../documentacao/','evalCode',false)
     
+%% PNEU
+
+%Doc
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('pneuDoc','outputDir','../documentacao/')
+
+    % pneuLinear
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuLinearFun','outputDir','../documentacao/','evalCode',false)
+
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuLinearDados','outputDir','../documentacao/','evalCode',false)
+
+    % pneuSadri
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuSadriFun','outputDir','../documentacao/','evalCode',false)
+    
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuSadriDadosTaylor','outputDir','../documentacao/','evalCode',false)
+
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuSadriDadosAjuste','outputDir','../documentacao/','evalCode',false)
+
+    % pneuPacejka
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuPacejkaFun','outputDir','../documentacao/','evalCode',false)
+
+    % pneuPacejka estendido
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuPacejkaEstFun','outputDir','../documentacao/','evalCode',false)
+
+    close all % Fechando as figuras geradas
+    clear all % Limpando o workspace
+    publish('pneuPacejkaDados','outputDir','../documentacao/','evalCode',false)
+
 %% Seletor
 
-publish('seletor','evalCode',false)
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('seletor','outputDir','../documentacao/','evalCode',false)
 
 %% Frame
 
-publish('frame','evalCode',false)
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('frame','outputDir','../documentacao/','evalCode',false)
 
 %% Animação
 
-publish('animacao','evalCode',false)
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('animacao','outputDir','../documentacao/','evalCode',false)
+
 % Vetor
-publish('vetor','evalCode',false)
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
+publish('vetor','outputDir','../documentacao/','evalCode',false)
 
+close all % Fechando as figuras geradas
+clear all % Limpando o workspace
 
-clear all
-clc    
+clc % Limpando a command window
 
-cd html % Entrando na pasta da documentação
-open index.html % Abrindo a página inicial da documentação
-cd .. % Voltando para a pasta raíz do repositório
+% Abrindo a página inicial da documentação
+open ../documentacao/index.html
+
+%% Ver também
+%
+% <index.html Início>
+%
