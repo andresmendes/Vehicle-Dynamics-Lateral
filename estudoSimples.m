@@ -235,7 +235,7 @@ frame(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet,'r'); % Cor vermelha do
 %% Animação
 % Executando o script de animação
 
-%animacao(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet);
+animacao(XOUT,TOUT,ALPHAFA,ALPHARA,VF,VR,VT,veiculoDadosVet);
 
 %% Ver também
 %

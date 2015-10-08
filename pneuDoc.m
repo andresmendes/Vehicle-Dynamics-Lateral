@@ -7,11 +7,10 @@
 %% Argumentos
 % Lista de entradas da função:
 %
-% <html> <table border=1 width="97%"> <tr> <td
-% width="30%"><tt>deriva</tt></td> <td width="70%">Ângulo de deriva do
-% pneu. Ângulo formado entre o vetor velocidade e o plano longitudinal do
-% pneu.</td> </tr> <tr> <td><tt>pneuDados</tt></td> <td>Vetor com os dados
-% do pneu.</td> </tr> </table> </html>
+% <html> <table border=1 width="97%"> 
+% <tr> <td width="30%"><tt>deriva</tt></td> <td width="70%">Ângulo de deriva do pneu. Ângulo formado entre o vetor velocidade e o plano longitudinal do pneu.</td> </tr>
+% <tr> <td><tt>pneuDados</tt></td> <td>Vetor com os dados do pneu.</td> </tr> 
+% </table> </html>
 % 
 % Lista de saídas da função:
 %
@@ -21,16 +20,12 @@
 %% Funções de pneu - pneuFun
 % As opções de funções de pneu são aprentadas na tabela abaixo:
 %
-% <html> <table border=1 width="97%"> <tr><td width="30%"> <b> pneuFun
-% </b></td><td width="35%"> <b>Modelo</b></td><td width="35%"><b>Argumentos
-% de entrada</b></td></tr> <tr> <td> <a
-% href="pneuLinearFun.html"><tt>pneuLinearFun</tt></a> </td> <td>Pneu
-% linear</td><td> <tt>delta, pneuDados = [C]</tt> </td></tr><tr> <td> <a
-% href="pneuSadriFun.html"><tt>pneuSadriFun</tt></a> </td> <td>Pneu
-% Sadri</td><td> <tt>delta, pneuDados = [k1 k2]</tt> </td></tr><tr> <td> <a
-% href="pneuPacejkaFun.html"><tt>pneuPacejkaFun</tt></a> </td> <td>Pneu
-% pacejka</td><td> <tt>delta, pneuDados = [Fz0 muy0 Cy Ey c1 c2 Fz muy]</tt>
-% </td></tr></table> </html>
+% <html> <table border=1 width="97%"> 
+% <tr><td width="30%"> <b> pneuFun </b></td><td width="35%"> <b>Modelo</b></td><td width="35%"><b>Argumentos de entrada</b></td></tr> 
+% <tr> <td> <a href="pneuLinearFun.html"><tt>pneuLinearFun</tt></a> </td> <td>Pneu linear</td><td> <tt>delta, pneuDados = [C]</tt> </td></tr>
+% <tr> <td> <a href="pneuSadriFun.html"><tt>pneuSadriFun</tt></a> </td> <td>Pneu Sadri</td><td> <tt>delta, pneuDados = [k1 k2]</tt> </td></tr>
+% <tr> <td> <a href="pneuPacejkaFun.html"><tt>pneuPacejkaFun</tt></a> </td> <td>Pneu pacejka</td><td> <tt>delta, pneuDados = [Fz0 muy0 Cy Ey c1 c2 Fz muy]</tt> </td></tr>
+% </table> </html>
 %
 %% Dados do pneu - pneuDados
 % Os dados do pneu dependem do modelo adotado. Este repositório possui os
