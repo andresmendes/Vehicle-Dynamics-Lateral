@@ -87,6 +87,8 @@
 %
 %% Extra
 % Para gerar a figura de fluxograma: <fluxograma.html fluxograma.m>
+% Para gerar a animacao: <animacao.html animacao.m>
+% Para gerar os vetores na animação: <vetor.html vetor.m>
 %
 %% Encoding
 % Todos os arquivos deste repositório utilizam o encoding: windows-1252 (via
