@@ -1,0 +1,2 @@
+classdef (Abstract) Carreta
+end
