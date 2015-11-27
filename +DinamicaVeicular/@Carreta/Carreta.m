@@ -1,2 +1,0 @@
-classdef (Abstract) Carreta
-end

@@ -3,7 +3,7 @@ classdef PneuPacejka < DinamicaVeicular.Pneu
         % constructor
         function self = PneuPacejka(varargin)
             if nargin == 0
-                self.params = [30e+03 0.8 1.5 -2 3.59 1.33 30e+03 0.8];
+                self.params = [30e+03 0.8 1.5 -2 3.59 1.33 30e+03 0.3];
                 % Fz0 - Carga vertical nominal
                 % muy0 - Coeficiente de atrito nominal
                 % Cy - Coeficiente experimental
