@@ -1,3 +1,6 @@
+%% Simulação
+% Integração numérica das equações de movimento do modelo de sistema escolhido.
+
 classdef Simula
     methods
         % Constructor
@@ -39,3 +42,8 @@ classdef Simula
     end
 
 end
+
+%% Ver também
+%
+% <index.html Início>
+%

@@ -1,3 +1,6 @@
+%% Veículo Articulado Não Linear 4GDL
+%
+% * <EquacionamentoVeiculoArticuladoNaoLinear4GDL.html Equacinamento>
 classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
 	methods
         % constructor
@@ -174,3 +177,8 @@ end
 % b - Distância do eixo traseiro ao CG do caminhão-trator (R-T) [m]
 % d - Distância da articulação ao CG do semirreboque (A-S) [m]
 % e - Distância do eixo traseiro ao CG do semirreboque (M-S) [m]
+
+%% Ver também
+%
+% <index.html Início>
+%

@@ -1,3 +1,23 @@
+%% Pneu linear
+% Relação linear entre a força lateral e o ângulo de deriva
+%
+%% Equacionamento
+%
+% A equação que descreve este modelo é dada por:
+%
+% $$ F_y = C \alpha $$
+%
+% Onde $F_y$ é a força lateral, $C$ é o coeficiente de rigidez de curva e
+% $\alpha$ é o ângulo de deriva.
+%
+% *Hipóteses*
+%
+% * Relação linear.
+% * Válido apenas para pequenos ângulos de deriva.
+%
+%% Código
+% Código da classe:
+
 classdef PneuLinear < DinamicaVeicular.Pneu
 	methods
         % constructor
@@ -19,3 +39,8 @@ classdef PneuLinear < DinamicaVeicular.Pneu
 		params
     end
 end
+
+%% Ver também
+%
+% <index.html Início>
+%

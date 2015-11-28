@@ -1,20 +1,7 @@
 %% Animação
-% Fazer a animação do veículo andando após a integração. Este script faz
-% uso do <vetor.html vetor>.
-
-%% Sintaxe
-% |animacao(XOUT,TOUT,ALPHAFRONT,ALPHAREAR,VELF,VELR,VELT,DADOS)|
+% Fazer a animação do veículo se movimentando.
 %
-%% Argumentos
-% Lista de entradas da função:
-%
-% <html> <table border=1 width="97%">
-% <tr> <td width="30%"><tt>XOUT</tt></td> <td width="70%">Estados de saída do integrador.</td> </tr>
-% <tr> <td><tt>TOUT</tt></td> <td>Tempo de saída do integrador.</td> </tr>
-% <tr> <td><tt>DADOS</tt></td> <td>Dados do veículo.</td> </tr>
-% </table> </html>
-%
-%% Definindo as variáveis locais
+%% Código
 %
 classdef Graficos
 	methods
@@ -45,7 +32,7 @@ classdef Graficos
         d = self.veiculo(21);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
         e = self.veiculo(22);        % distancia da articulação ao centro de massa do caminhão-trator [m]
 
-        %% Calculando variáveis
+        % Calculando variáveis
         %
 
         % Ângulo de deriva na dianteira [rad]
@@ -55,7 +42,7 @@ classdef Graficos
         % Ângulo de deriva no eixo do semirreboque [rad]
         ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VT.*sin(ALPHAT + PHI) - b*dPSI.*cos(PHI) - c*dPSI.*cos(PHI)),(VT.*cos(ALPHAT + PHI) + b*dPSI.*sin(PHI) + c*dPSI.*sin(PHI)));
 
-        %%
+        %
         % OBS: Calculando os ângulos de deriva com "atan2", quando o valor chega a
         % 180 graus fica estranho o vetor.
         %
@@ -68,7 +55,7 @@ classdef Graficos
 
         RS = [XT-(b+c)*cos(PSI)-d*cos(PSI-PHI) YT-(b+c)*sin(PSI)-d*sin(PSI-PHI)];
 
-        %% Posição relativa dos cantos e eixos
+        % Posição relativa dos cantos e eixos
         % Determina a posição dos cantos e eixos do veículo com relação ao centro
         % de massa.
 
@@ -89,16 +76,35 @@ classdef Graficos
 
         eim = [-e;0];           % Posicao do eixo do semirreboque
 
-        %% Evolução da posição absoluta dos cantos e eixos
+        % Evolução da posição absoluta dos cantos e eixos
         % Determina a movimentação dos pontos devido a mudança de orientação do
         % veículo.
+
+% Pre alocando as matrizes
+
+rt1i = zeros(length(TOUT),2);
+rt2i = zeros(length(TOUT),2);
+rt3i = zeros(length(TOUT),2);
+rt4i = zeros(length(TOUT),2);
+
+eff = zeros(length(TOUT),2);
+err = zeros(length(TOUT),2);
+
+rn1i = zeros(length(TOUT),2);
+rn2i = zeros(length(TOUT),2);
+rn3i = zeros(length(TOUT),2);
+rn4i = zeros(length(TOUT),2);
+
+emm = zeros(length(TOUT),2);
+
+% Início do loop
 
         for j=1:length(TOUT)
         % Matriz de rotação da base (T t1 t2 t3) para (o i j k)
         RTI=[cos(PSI(j)) -sin(PSI(j));sin(PSI(j)) cos(PSI(j))];
         % Vetores posição 1, 2, 3 e 4 em relação a origem do ref inercial na
-        % base (T t1 t2 t3)
         rt1i(j,1:2) = (RTI*rt1t)';
+        % base (T t1 t2 t3)
         rt2i(j,1:2) = (RTI*rt2t)';
         rt3i(j,1:2) = (RTI*rt3t)';
         rt4i(j,1:2) = (RTI*rt4t)';
@@ -118,7 +124,7 @@ classdef Graficos
         emm(j,1:2) = (RSI*eim);     % Eixo trasiro
         end
 
-        %% Posição absoluta dos cantos e eixos
+        % Posição absoluta dos cantos e eixos
         % A evolução da posição absoluta dos pontos ao longo do tempo.
 
         % Vetores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
@@ -139,12 +145,44 @@ classdef Graficos
 
         em = RS+emm;
 
-        %% Ajuste do tempo
+        % Ajuste do tempo
         % A exibição deve ser ajustada pois a o número de frames não é a mesma que
         % a resolução do integrador (TSPAN).
         %
 
         TEMPO = 0:0.05:TOUT(end);
+
+% Pre alocando as matrizes
+rc1 = zeros(length(TEMPO),2);
+rc2 = zeros(length(TEMPO),2);
+rc3 = zeros(length(TEMPO),2);
+rc4 = zeros(length(TEMPO),2);
+
+efrente = zeros(length(TEMPO),2);
+etras = zeros(length(TEMPO),2);
+
+xxx = zeros(length(TEMPO),2);
+yyy = zeros(length(TEMPO),2);
+alphat = zeros(length(TEMPO),2);
+psii = zeros(length(TEMPO),2);
+phii = zeros(length(TEMPO),2);
+
+alphaf = zeros(length(TEMPO),2);
+alphar = zeros(length(TEMPO),2);
+alpham = zeros(length(TEMPO),2);
+
+velf = zeros(length(TEMPO),2);
+velr = zeros(length(TEMPO),2);
+velt = zeros(length(TEMPO),2);
+velm = zeros(length(TEMPO),2);
+
+rn1 = zeros(length(TEMPO),2);
+rn2 = zeros(length(TEMPO),2);
+rn3 = zeros(length(TEMPO),2);
+rn4 = zeros(length(TEMPO),2);
+
+emsemi = zeros(length(TEMPO),2);
+
 
         for i=1:length(TEMPO)
         % Posição dos cantos e eixo
@@ -185,7 +223,7 @@ classdef Graficos
         emsemi(i,1:2) = interp1(TOUT,em,TEMPO(i));
         end
 
-        %% Definindo a figura
+        % Definindo a figura
         % Gerando a figura e definindo algumas propriedades
         %
 
@@ -207,7 +245,7 @@ classdef Graficos
         xlabel('Dist\^ancia [m]','Interpreter','Latex');
         ylabel('Dist\^ncia [m]','Interpreter','Latex');
 
-        %% Primeiro frame
+        % Primeiro frame
         %
         %
 
@@ -236,7 +274,7 @@ classdef Graficos
         % [A,map] = rgb2ind(im,256,'nodither');
         % imwrite(A,map,'.../result/gifs/animacao.gif','LoopCount',Inf,'DelayTime',0.1);
 
-        %% Frames restantes
+        % Frames restantes
         %
 
         for j = 1:length(TEMPO)
@@ -284,7 +322,7 @@ classdef Graficos
         cla(ax); % Limpando o axes
         end
 
-        %% Último frame
+        % Último frame
         % A última imagem que a figura vai exibir quando a animação acabar
         %
 
@@ -318,7 +356,7 @@ classdef Graficos
 
         end
 
-        %% Ver também
+        % Ver também
         %
         % <index.html Início> | <vetor.html Vetor>
         %
@@ -362,3 +400,8 @@ methods(Static)
         veiculo
     end
 end
+
+%% Ver também
+%
+% <index.html Início>
+%
