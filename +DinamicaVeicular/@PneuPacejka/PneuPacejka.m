@@ -50,21 +50,19 @@ classdef PneuPacejka < DinamicaVeicular.Pneu
         % constructor
         function self = PneuPacejka(varargin)
             if nargin == 0
-                self.params = [30e+03 0.8 1.5 -2 3.59 1.33 30e+03 0.3];
-                % Fz0 - Carga vertical nominal
-                % muy0 - Coeficiente de atrito nominal
-                % Cy - Coeficiente experimental
-                % Ey - Coeficiente experimental
-                % c1 - Coeficiente experimental
-                % c2 - Coeficiente experimental
-                % Fz0 - Carga vertical nominal
-                % muy0 - Coeficiente de atrito nominal
+                Fz0 = 30e+03;   % Carga vertical nominal
+                muy0 = 0.8;     % Coeficiente de atrito nominal
+                Cy = 1.5;       % Coeficiente experimental
+                Ey = -2;        % Coeficiente experimental
+                c1 =  3.59;     % Coeficiente experimental
+                c2 =  1.33;     % Coeficiente experimental
+                self.params = [Fz0 muy0 Cy Ey c1 c2];
             else
                 self.params = varargin{1};
             end
         end
 
-        function Fy = Characteristic(self,alpha)
+        function Fy = Characteristic(self,alpha,Fz,muy)
                         % Parâmetros nominais
             Fz0 = self.params(1);
             muy0 = self.params(2);
@@ -73,9 +71,6 @@ classdef PneuPacejka < DinamicaVeicular.Pneu
             Ey = self.params(4);
             c1 = self.params(5);
             c2 = self.params(6);
-            % Condições de operação
-            Fz = self.params(7);
-            muy = self.params(8);
             % Ângulo de deriva - Com tratamento
             ALPHA = asin(sin(alpha)); % [rad]
             % Modelo de pneu

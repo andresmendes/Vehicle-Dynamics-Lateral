@@ -37,7 +37,7 @@ classdef PneuPolinomial < DinamicaVeicular.Pneu
             k1 = self.params(1);
             k2 = self.params(2);
             % Força lateral polinomial
-            Fy = - (k1*alpha-k2*alpha^3);
+            Fy = - (k1*alpha-k2*alpha.^3);
         end
     end
 

@@ -30,7 +30,7 @@ classdef PneuLinear < DinamicaVeicular.Pneu
         end
 
 		function Fy = Characteristic(self,alpha)
-            Fy = self.params*alpha;
+            Fy = -self.params*alpha;
         end
 
 	end

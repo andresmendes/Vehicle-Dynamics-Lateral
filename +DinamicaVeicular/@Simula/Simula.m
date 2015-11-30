@@ -23,14 +23,20 @@ classdef Simula
             else
                 self.x0 = varargin{1};
                 self.TSPAN = varargin{2};
+                ModeloInsano = varargin{3};
                 % Integrando
-                [self.TOUT,self.XOUT] = ode45(@(t, estados) varargin{3}.Model(t, estados),self.TSPAN,self.x0);
+                [self.TOUT,self.XOUT] = ode45(@(t, estados) ModeloInsano.Model(t, estados),self.TSPAN,self.x0);
                 % Definindo os parametros da classe Graficos
-                g = DinamicaVeicular.Graficos(varargin{3});
+                g = DinamicaVeicular.Graficos(ModeloInsano);
             end
             % Animação
-            g.AnimacaoArticulado(self.XOUT,self.TOUT);
-            % save('workspace')
+            % g.EstadosArticulado(self.XOUT,self.TOUT);
+            % g.DerivaArticulado(self.XOUT,self.TOUT);
+            % g.AceleracaoArticulado(ModeloInsano,self.XOUT,self.TOUT);
+            % g.Estados3DArticulado1(self.XOUT,self.TOUT);
+            % g.Estados3DArticulado2(self.XOUT,self.TOUT);
+            % g.TrajetoriaArticulado(self.XOUT,self.TOUT);
+            % g.AnimacaoArticulado(self.XOUT,self.TOUT);
         end
     end
 

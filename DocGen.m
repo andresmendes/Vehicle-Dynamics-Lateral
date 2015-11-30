@@ -4,6 +4,8 @@
 publish('index','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
 % Simula
 publish('+DinamicaVeicular/@Simula/Simula','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
+% Template
+publish('Template','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
 % Pneu
 publish('+DinamicaVeicular/@Pneu/Pneu','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
     publish('+DinamicaVeicular/@PneuLinear/PneuLinear','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);

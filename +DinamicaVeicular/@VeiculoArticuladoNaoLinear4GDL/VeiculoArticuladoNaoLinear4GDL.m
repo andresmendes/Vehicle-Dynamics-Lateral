@@ -7,24 +7,24 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
         function self = VeiculoArticuladoNaoLinear4GDL(varargin)
             if nargin == 0
                 % Entrada padrão dos dados do veículo
-                entradaVetor = [5237 2440 6000 10000 17000 46100 452010 0 -0.310 3.550 7.700 2 4 8 2.6 2.550];
-                % 01 - mF0 - Massa no eixo dianteiro do caminhão-trator desacoplado [kg]
-                % 02 - mR0 - Massa no eixo traseiro do caminhão-trator desacoplado [kg]
-                % 03 - mF - Massa no eixo dianteiro do caminhão-trator (F) [kg]
-                % 04 - mR - Massa no eixo traseiro do caminhão-trator (R) [kg]
-                % 05 - mM - Massa no eixo do semirreboque (M) [kg]
-                % 06 - IT - Momento de inércia do caminhão-trator [kg*m2]
-                % 07 - IS - Momento de inércia do semirreboque [kg*m2]
-                % 08 - DELTA - Esterçamento do eixo dianteiro [rad]
-                % 09 - c - Distância da articulação ao eixo traseiro do caminhão-trator (A-R) [m]
-                % 10 - lT - Distância entre os eixos do caminhão-trator [m]
-                % 11 - lS - Distância entre a articulação e o eixo do semirreboque [m]
-                % 12 - nF - Número de pneus no eixo dianteiro do caminhão-trator
-                % 13 - nR - Número de pneus no eixo traseiro do caminhão-trator
-                % 14 - nM - Número de pneus no eixo do semirreboque
-                % 15 - largT - Largura do caminhão-trator [m]
-                % 16 - largS - Largura do semirreboque [m]
-
+                mF0 = 5237;     % Massa no eixo dianteiro do caminhão-trator desacoplado [kg]
+                mR0 = 2440;     % Massa no eixo traseiro do caminhão-trator desacoplado [kg]
+                mF = 6000;      % Massa no eixo dianteiro do caminhão-trator (F) [kg]
+                mR = 10000;     % Massa no eixo traseiro do caminhão-trator (R) [kg]
+                mM = 17000;     % Massa no eixo do semirreboque (M) [kg]
+                IT = 46100;     % Momento de inércia do caminhão-trator [kg*m2]
+                IS = 452010;    % Momento de inércia do semirreboque [kg*m2]
+                DELTA = 0;      % Esterçamento do eixo dianteiro [rad]
+                c = -0.310;     % Distância da articulação ao eixo traseiro do caminhão-trator (A-R) [m]
+                lT = 3.550;     % Distância entre os eixos do caminhão-trator [m]
+                lS = 7.700;     % Distância entre a articulação e o eixo do semirreboque [m]
+                nF = 2;         % Número de pneus no eixo dianteiro do caminhão-trator
+                nR = 4;         % Número de pneus no eixo traseiro do caminhão-trator
+                nM = 8;         % Número de pneus no eixo do semirreboque
+                largT = 2.6;    % Largura do caminhão-trator [m]
+                largS = 2.550;  % Largura do semirreboque [m]
+                muy = 0.3;      % Coeficiente de atrito de operação
+                entradaVetor = [mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM largT largS muy];
                 % Definindo os parâmetros da classe
                 self.params = self.conversao(entradaVetor);
                 self.pneu = DinamicaVeicular.PneuPacejka;
@@ -41,20 +41,24 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
 
 		function dx = Model(self,~,estados)
             % Dados do veículo
-            mT = self.params(17);       % massa do veiculo [kg]
-            mS = self.params(18);       % massa do veiculo [kg]
+            mT = self.params(18);       % massa do veiculo [kg]
+            mS = self.params(19);       % massa do veiculo [kg]
             IT = self.params(6);       % momento de inercia [kg]
             IS = self.params(7);       % momento de inercia [kg]
-            a = self.params(19);        % distancia do eixo dianteiro ao centro de massa do caminhão-trator [m]
-            b = self.params(20);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+            a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminhão-trator [m]
+            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
             c = self.params(9);        % distancia da articulação ao centro de massa do caminhão-trator [m]
-            d = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
-            e = self.params(22);        % distancia da articulação ao centro de massa do caminhão-trator [m]
+            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+            e = self.params(23);        % distancia da articulação ao centro de massa do caminhão-trator [m]
             DELTA = self.params(8);   % Esterçamento [rad]
             nF = self.params(12);      % Número de pneus no eixo dianteiro do caminhão-trator
             nR = self.params(13);      % Número de pneus no eixo traseiro do caminhão-trator
             nM = self.params(14);      % Número de pneus no eixo do semirreboque
             g = 9.81;                  % Aceleração da gravidade [m/s^2]
+            FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
+            FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
+            FzM = self.params(5)*g;     % Carga vertical no eixo do semirreboque [N]
+            muy = self.params(17);      % Coeficiente de atrito de operação
             % Definição dos estados
             dPSI = estados(1,1);              % Velocidade angular do caminhão-trator [rad/s]
             ALPHAT = estados(2,1);            % Ângulo de deriva do CG do caminhão-trator [rad]
@@ -73,12 +77,9 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
             FxR = 0;
             FxM = 0;
             % Forças laterais nos pneus - Curva característica
-            self.pneu.params(7) = self.params(3)*g; % Mudando a carga vertical no eixo dianteiro
-            FyF = nF*self.pneu.Characteristic(ALPHAF);
-            self.pneu.params(7) = self.params(4)*g; % Mudando a carga vertical no eixo traseiro
-            FyR = nR*self.pneu.Characteristic(ALPHAR);
-            self.pneu.params(7) = self.params(5)*g; % Mudando a carga vertical no eixo do semirreboque
-            FyM = nM*self.pneu.Characteristic(ALPHAM);
+            FyF = nF*self.pneu.Characteristic(ALPHAF,FzF/nF,muy);
+            FyR = nR*self.pneu.Characteristic(ALPHAR,FzR/nR,muy);
+            FyM = nM*self.pneu.Characteristic(ALPHAM,FzM/nM,muy);
 
             % Matriz de massa
             M11 = -d*mS*sin(PHI);
