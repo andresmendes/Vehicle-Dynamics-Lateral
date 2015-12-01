@@ -110,6 +110,9 @@ classdef Graficos
         set(p1,'Color','r','Marker','o','MarkerFaceColor','r','MarkerEdgeColor','k')
         set(p2,'Color','g','Marker','s','MarkerFaceColor','g','MarkerEdgeColor','k')
         set(p3,'Color','b','Marker','d','MarkerFaceColor','b','MarkerEdgeColor','k')
+        self.changeMarker(p1,10);
+        self.changeMarker(p2,10);
+        self.changeMarker(p3,10);
         xlabel('$t$ [s]','Interpreter','Latex')
         ylabel('$\alpha$ [grau]','Interpreter','Latex')
         %title('Ângulo de deriva nos eixos','Interpreter','Latex')
@@ -146,7 +149,7 @@ classdef Graficos
         dXOUT = zeros(size(XOUT));
         % Loop
         for i=1:length(TOUT)
-            dXOUT(i,:) = ModeloVeiculo.Model(0,XOUT(i,:)');
+            dXOUT(i,:) = ModeloVeiculo.MatrizMassa(0,XOUT(i,:)')\ModeloVeiculo.Model(0,XOUT(i,:)');
         end
 
         ddPSI = dXOUT(:,1);       % Velocidade angular [rad/s]
@@ -184,6 +187,8 @@ classdef Graficos
             p2 = plot(TOUT,ASy);
             set(p1,'Color','r','Marker','o','MarkerFaceColor','r','MarkerEdgeColor','k')
             set(p2,'Color','g','Marker','s','MarkerFaceColor','g','MarkerEdgeColor','k')
+            self.changeMarker(p1,10);
+            self.changeMarker(p2,10);
             p1 = plot(TOUT,9.81*0.3*ones(length(TOUT),1),'--k');
             p2 = plot(TOUT,-9.81*0.3*ones(length(TOUT),1),'--k');
             set(p1,'LineWidth',2)

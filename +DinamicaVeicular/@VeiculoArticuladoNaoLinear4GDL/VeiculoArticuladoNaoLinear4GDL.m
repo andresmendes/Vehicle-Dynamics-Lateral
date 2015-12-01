@@ -43,8 +43,8 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
             % Dados do veículo
             mT = self.params(18);       % massa do veiculo [kg]
             mS = self.params(19);       % massa do veiculo [kg]
-            IT = self.params(6);       % momento de inercia [kg]
-            IS = self.params(7);       % momento de inercia [kg]
+            % IT = self.params(6);       % momento de inercia [kg]
+            % IS = self.params(7);       % momento de inercia [kg]
             a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminhão-trator [m]
             b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
             c = self.params(9);        % distancia da articulação ao centro de massa do caminhão-trator [m]
@@ -81,6 +81,53 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
             FyR = nR*self.pneu.Characteristic(ALPHAR,FzR/nR,muy);
             FyM = nM*self.pneu.Characteristic(ALPHAM,FzM/nM,muy);
 
+            % ddPSI,dALPHAT,ddPHI,dPHI,dVEL
+            f1 = FxR + FxF*cos(DELTA) + FxM*cos(PHI) - FyF*sin(DELTA) + FyM*sin(PHI) - b*dPSI^2*mS - c*dPSI^2*mS + VEL*dPSI*mS*sin(ALPHAT) + VEL*dPSI*mT*sin(ALPHAT) - d*dPHI^2*mS*cos(PHI) - d*dPSI^2*mS*cos(PHI) + 2*d*dPHI*dPSI*mS*cos(PHI);
+            f2 = FyR + FyF*cos(DELTA) + FyM*cos(PHI) + FxF*sin(DELTA) - FxM*sin(PHI) - VEL*dPSI*mS*cos(ALPHAT) - VEL*dPSI*mT*cos(ALPHAT) + d*dPHI^2*mS*sin(PHI) + d*dPSI^2*mS*sin(PHI) - 2*d*dPHI*dPSI*mS*sin(PHI);
+            f3 = a*(FyF*cos(DELTA) + FxF*sin(DELTA)) - FyR*b - (b + c)*(d*mS*sin(PHI)*dPHI^2 - 2*d*mS*sin(PHI)*dPHI*dPSI + d*mS*sin(PHI)*dPSI^2 - VEL*mS*cos(ALPHAT)*dPSI + FyM*cos(PHI) - FxM*sin(PHI));
+            f4 = d*(b*dPSI^2*mS*sin(PHI) - FyM + c*dPSI^2*mS*sin(PHI) + VEL*dPSI*mS*cos(ALPHAT + PHI)) - FyM*e;
+            f5 = dPHI;
+
+            f = [f1 ; f2 ; f3 ; f4 ; f5];
+
+            % Equações adicionais para o posicionamento (Não necessárias para a dinâmica em guinada)
+            dx6 = dPSI;
+            dx7 = VEL*cos(ALPHAT + PSI); % X
+            dx8 = VEL*sin(ALPHAT + PSI); % Y
+
+            dx = [f;...
+                  dx6;...
+                  dx7;...
+                  dx8];
+        end
+
+        function M = MatrizMassa(self,~,estados)
+            % Dados do veículo
+            mT = self.params(18);       % massa do veiculo [kg]
+            mS = self.params(19);       % massa do veiculo [kg]
+            IT = self.params(6);       % momento de inercia [kg]
+            IS = self.params(7);       % momento de inercia [kg]
+            % a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminhão-trator [m]
+            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+            c = self.params(9);        % distancia da articulação ao centro de massa do caminhão-trator [m]
+            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+            % e = self.params(23);        % distancia da articulação ao centro de massa do caminhão-trator [m]
+            % DELTA = self.params(8);   % Esterçamento [rad]
+            % nF = self.params(12);      % Número de pneus no eixo dianteiro do caminhão-trator
+            % nR = self.params(13);      % Número de pneus no eixo traseiro do caminhão-trator
+            % nM = self.params(14);      % Número de pneus no eixo do semirreboque
+            % g = 9.81;                  % Aceleração da gravidade [m/s^2]
+            % FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
+            % FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
+            % FzM = self.params(5)*g;     % Carga vertical no eixo do semirreboque [N]
+            % muy = self.params(17);      % Coeficiente de atrito de operação
+            % Definição dos estados
+            % dPSI = estados(1,1);              % Velocidade angular do caminhão-trator [rad/s]
+            ALPHAT = estados(2,1);            % Ângulo de deriva do CG do caminhão-trator [rad]
+            % dPHI = estados(3,1);              % Velocidade angular relativa entre o semirreboque e o caminhão-trator [rad/s]
+            VEL = estados(4,1);               % Ângulo relativo entre o semirreboque e o caminhão-trator [rad]
+            PHI = estados(5,1);               % Módulo do vetor velocidade do CG do caminhão-trator [m/s]
+            % PSI = estados(6,1);               % Ângulo de orientação do caminhão-trator [rad]
             % Matriz de massa
             M11 = -d*mS*sin(PHI);
             M12 = -VEL*sin(ALPHAT)*(mS + mT);
@@ -99,31 +146,18 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.Veiculo
             M43 = - mS*d^2 - IS;
             M44 = -d*mS*sin(ALPHAT + PHI);
 
-            M = [M11 M12 M13 M14 0;...
-                 M21 M22 M23 M24 0;...
-                 M31 M32 M33 M34 0;...
-                 M41 M42 M43 M44 0;...
-                  0   0   0   0  1];
-
-            % ddPSI,dALPHAT,ddPHI,dPHI,dVEL
-            f1 = FxR + FxF*cos(DELTA) + FxM*cos(PHI) - FyF*sin(DELTA) + FyM*sin(PHI) - b*dPSI^2*mS - c*dPSI^2*mS + VEL*dPSI*mS*sin(ALPHAT) + VEL*dPSI*mT*sin(ALPHAT) - d*dPHI^2*mS*cos(PHI) - d*dPSI^2*mS*cos(PHI) + 2*d*dPHI*dPSI*mS*cos(PHI);
-            f2 = FyR + FyF*cos(DELTA) + FyM*cos(PHI) + FxF*sin(DELTA) - FxM*sin(PHI) - VEL*dPSI*mS*cos(ALPHAT) - VEL*dPSI*mT*cos(ALPHAT) + d*dPHI^2*mS*sin(PHI) + d*dPSI^2*mS*sin(PHI) - 2*d*dPHI*dPSI*mS*sin(PHI);
-            f3 = a*(FyF*cos(DELTA) + FxF*sin(DELTA)) - FyR*b - (b + c)*(d*mS*sin(PHI)*dPHI^2 - 2*d*mS*sin(PHI)*dPHI*dPSI + d*mS*sin(PHI)*dPSI^2 - VEL*mS*cos(ALPHAT)*dPSI + FyM*cos(PHI) - FxM*sin(PHI));
-            f4 = d*(b*dPSI^2*mS*sin(PHI) - FyM + c*dPSI^2*mS*sin(PHI) + VEL*dPSI*mS*cos(ALPHAT + PHI)) - FyM*e;
-            f5 = dPHI;
-
-            f = [f1 ; f2 ; f3 ; f4 ; f5];
-
-            % Equações adicionais para o posicionamento (Não necessárias para a dinâmica em guinada)
-            dx6 = dPSI;
-            dx7 = VEL*cos(ALPHAT + PSI); % X
-            dx8 = VEL*sin(ALPHAT + PSI); % Y
-
-            dx = [M\f;...
-                  dx6;...
-                  dx7;...
-                  dx8];
+            M = [M11 M12 M13 M14 0 0 0 0;...
+                 M21 M22 M23 M24 0 0 0 0;...
+                 M31 M32 M33 M34 0 0 0 0;...
+                 M41 M42 M43 M44 0 0 0 0;...
+                  0   0   0   0  1 0 0 0;...
+                  0   0   0   0  0 1 0 0;...
+                  0   0   0   0  0 0 1 0;...
+                  0   0   0   0  0 0 0 1];
         end
+
+
+
     end
 
     methods (Static)

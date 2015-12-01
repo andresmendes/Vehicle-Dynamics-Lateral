@@ -70,9 +70,23 @@ VeiculoDados = [mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM largT largS muy];
 % 01 - VeiculoArticuladoNaoLinear4GDL
 ModeloSistema = DinamicaVeicular.VeiculoArticuladoNaoLinear4GDL(VeiculoDados,PneuModelo);
 
+%% Quais gráficos exibir
+graf = [0 0 0 0 0 0 1];
+% 1 - Faz o gráfico / 0 - Não faz o gráfico
+% graf(1) -> Estados
+% graf(2) -> Deriva
+% graf(3) -> Aceleracao
+% graf(4) -> Estados3DVEL
+% graf(5) -> Estados3DPHI
+% graf(6) -> Trajetória
+% graf(6) -> Aceleração
+
+%% Salva a figuras
+salvar = 0;
+
 %% Execução
 
-result = Simula(x0,TSPAN,ModeloSistema);
+result = Simula(x0,TSPAN,ModeloSistema,graf,salvar);
 
 %% Ver também
 %
