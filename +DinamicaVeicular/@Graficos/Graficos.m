@@ -18,7 +18,7 @@ classdef Graficos
 %% Estados
 % Figure 1
 
-        function EstadosArticulado(~,XOUT,TOUT)
+        function EstadosArticulado(~,XOUT,TOUT,salvar)
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
         % dPHI = XOUT(:,3);       % Velocidade angular relativa entre as unidades [rad/s]
@@ -66,12 +66,17 @@ classdef Graficos
         	xlabel(ax4,'$t$ [s]','Interpreter','Latex')
         	ylabel(ax4,'$v$ [m/s]','Interpreter','Latex')
         	title(ax4,'$v$ x $t$','Interpreter','Latex')
+
+            if salvar == 1
+                print(f1,'-dpdf','Estados.pdf')
+            end
+
         end
 
 %% Ângulo de deriva
 % Figure 2
 
-        function DerivaArticulado(self,XOUT,TOUT)
+        function DerivaArticulado(self,XOUT,TOUT,salvar)
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
         dPHI = XOUT(:,3);       % Velocidade angular relativa entre as unidades [rad/s]
@@ -118,12 +123,17 @@ classdef Graficos
         %title('Ângulo de deriva nos eixos','Interpreter','Latex')
         l = legend('F','R','M');
         set(l,'Interpreter','Latex','Box','on','Location','NorthEast')
+
+        if salvar == 1
+            print(f2,'-dpdf','Deriva.pdf')
+        end
+
         end
 
 %% Aceleração
 % Figure 3
 
-        function AceleracaoArticulado(self,ModeloVeiculo,XOUT,TOUT)
+        function AceleracaoArticulado(self,ModeloVeiculo,XOUT,TOUT,salvar)
         % l = 2.6/2;              % Metade da largura do veiculo [m] % Scania
         % dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
@@ -200,12 +210,16 @@ classdef Graficos
             set(l,'Interpreter','Latex','Location','SouthEast','Box','on')
             pos = get(l,'Position');
             set(l,'Position',[pos(1) pos(2) pos(3)+0.005 pos(4)])
+
+            if salvar == 1
+                print(f3,'-dpdf','Aceleracao.pdf')
+            end
         end
 
 %% Estados 3D (Velocidade)
 % Figure 4
 
-        function Estados3DArticulado1(~,XOUT,~)
+        function Estados3DArticulado1(~,XOUT,~,salvar)
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
         % dPHI = XOUT(:,3);       % Velocidade angular relativa entre as unidades [rad/s]
@@ -275,12 +289,17 @@ classdef Graficos
         	xlabel(ax4,'$\alpha_T$ [rad]','Interpreter','Latex')
         	ylabel(ax4,'$\dot{\psi}$ [rad/s]','Interpreter','Latex')
         	title(ax4,'$\dot{\psi}$ x $\alpha_T$','Interpreter','Latex')
+
+            if salvar == 1
+                print(f4,'-dpdf','Estados3DVEL.pdf')
+            end
+
         end
 
         %% Estados 3D (Orientação relativa)
         % Figure 5
 
-        function Estados3DArticulado2(~,XOUT,~)
+        function Estados3DArticulado2(~,XOUT,~,salvar)
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
         % dPHI = XOUT(:,3);       % Velocidade angular relativa entre as unidades [rad/s]
@@ -348,12 +367,16 @@ classdef Graficos
         	ylabel(ax4,'$\dot{\psi}$ [rad]','Interpreter','Latex')
         	title(ax4,'$\dot{\psi}$ x $\alpha_T$','Interpreter','Latex')
 
+            if salvar == 1
+                print(f5,'-dpdf','Estados3DPHI.pdf')
+            end
+
         end
 
 %% Animação
 % Figure 666
 
-        function AnimacaoArticulado(self,XOUT,TOUT)
+        function AnimacaoArticulado(self,XOUT,TOUT,salvar)
         l = 2.6/2;              % Metade da largura do veiculo [m] % Scania
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
@@ -606,12 +629,13 @@ classdef Graficos
         fill(xc,yc,'r')
         fill(xn,yn,'g')
 
-        % % Inicializando o gif
-        % frame = getframe(666);
-        % im = frame2im(frame);
-        % [A,map] = rgb2ind(im,256,'nodither');
-        % imwrite(A,map,'.../result/gifs/animacao.gif','LoopCount',Inf,'DelayTime',0.1);
-
+        if salvar == 1
+            % Inicializando o gif
+            frame = getframe(666);
+            im = frame2im(frame);
+            [A,map] = rgb2ind(im,256,'nodither');
+            imwrite(A,map,'AnimacaoArticulado.gif','LoopCount',Inf,'DelayTime',0.05);
+        end
         % Frames restantes
         %
 
@@ -646,12 +670,13 @@ classdef Graficos
         self.Vetor(etras(j,1:2),(alphar(j)+psii(j)),velr(j),'g');
         self.Vetor(emsemi(j,1:2),(alpham(j)+psii(j)-phii(j)),velm(j),'b');
 
-        % % Adicionando o frame atual ao gif iniciado
-        % frame = getframe(666);
-        % im = frame2im(frame);
-        % [A,map] = rgb2ind(im,256,'nodither');
-        % imwrite(A,map,'../result/gifs/animacao.gif','WriteMode','append','DelayTime',0.05);
-
+        if salvar == 1
+        % Adicionando o frame atual ao gif iniciado
+            frame = getframe(666);
+            im = frame2im(frame);
+            [A,map] = rgb2ind(im,256,'nodither');
+            imwrite(A,map,'AnimacaoArticulado.gif','WriteMode','append','DelayTime',0.05);
+        end
         % Pausa a exibição - ATENÇÂO: Tem que ser o mesmo valor usado no ajuste
         % do tempo
 
@@ -697,7 +722,7 @@ classdef Graficos
 %% Trajetória
 % Figure 999
 
-        function TrajetoriaArticulado(self,XOUT,TOUT)
+        function TrajetoriaArticulado(self,XOUT,TOUT,salvar)
         l = 2.6/2;              % Metade da largura do veiculo [m] % Scania
         dPSI = XOUT(:,1);       % Velocidade angular [rad/s]
         ALPHAT = XOUT(:,2);     % Ângulo de deriva do centro de massa [rad]
@@ -935,7 +960,9 @@ classdef Graficos
             fill(xc,yc,'r');
             fill(xn,yn,'g');
         end
-
+        if salvar == 1
+            print(f999,'-dpdf','Trajetoria.pdf')
+        end
         end
 
 %% Extra
