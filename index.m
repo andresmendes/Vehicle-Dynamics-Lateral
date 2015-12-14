@@ -1,49 +1,54 @@
 %% Dinâmica Veicular
-% Este repositório fornece as classes de simulação, modelo de pneu, modelo de veículo e geração de gráficos.
+% Este repositório tem como objetivo servir de biblioteca de funções destinadas ao estudo de dinâmica veicular.
 %
-%% Instruções
+%% Instructions
 % Para a utilização do pacote é necessário realizar os seguintes passos:
 %
 % * Baixar o pacote Dinamica-Veicular clicando em "Download ZIP" na página <https://github.com/andresmendes/Dinamica-Veicular https://github.com/andresmendes/Dinamica-Veicular>.
-% * Salvar o pacote num _path_ do MATLAB(R) ou adicionar o diretório na lista de _paths_. Mais detalhes em <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
-% * Importar o pacote inteiro digitando no _command window_:
+% * Salvar o pacote (pasta "+DinamicaVeicular") num _path_ do MATLAB(R) ou adicionar o caminho na lista de _paths_. Mais detalhes em <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
+% * Importar o pacote inteiro com o comando:
 %
 
 import DinamicaVeicular.*
 
-%% Simulação
-% A simulação consiste na integração numérica do sistema.
+%% Description
+% Este repositório é destinado à organizar as funções necessárias para a integração numérica das equações de movimento de veículos e ilustrar o resultado. A estrutura mínima de simulação se encontra no fluxograma abaixo. Com os parâmetros de integração e condições iniciais o modelo do sistema pode ser integrado para a obtenção da evolução dos estados em função do tempo. O modelo do sistema consiste na combinação do modelo de veículo com o modelo de pneu e seus respectivos parâmetros. Por fim, é possível gerar os gráficos à partir dos resultados. Portanto, as funções disponíveis neste repositório procuram realizar as tarefas representadas pelos blocos de *modelo de veículo*, *modelo de pneu* e *gráficos*.
 %
-% Para Rodar simulação padrão:
+% <<ilustracoes/fluxograma.png>>
 %
-
-Simula
-
-%%
-% Para maiores detalhes ver: <Simula.html Simula>
+%% Templates
+% Os templates realizam uma simulação de veículo utilizando os elementos descritos no fluxograma acima.
+% Para auxiliar os primeiros passos na utilização das funções estão disponíveis dois templates:
 %
-% Para rodar simulação diferente da padrão: ver <Template.html Template.m>.
+% * Simulação de veículo simples: <TemplateSimples.html TemplateSimples.m>
+% * Simulação de veículo articulado: <TemplateArticulado.html TemplateArticulado.m>
 %
-%% Pneu
-% Relação entre a força lateral e o ângulo de deriva. <Pneu.html Pneu (Abstract)>
-%
-% <<CurvaCaracteristica.png>>
+%% Tire model
+% Relação entre a força lateral e o ângulo de deriva.
 %
 % Modelos de pneu:
 %
 % * <PneuLinear.html Pneu Linar>
 % * <PneuPolinomial.html Pneu Polinomial>
-% * <PneuPacejka.html Pneu Pacejka>
+% * <PneuPacejka1989.html Pneu Pacejka>
 %
-%% Veiculo
-% Equação do movimento. <Veiculo.html Veiculo (Abstract)>
+% Extra:
 %
-% <<modelo.png>>
+% * <ComparacaoPneu.html Comparação pneu>
 %
-% Modelos de veículo:
+% Outros: <Pneu.html Pneu (Abstract)>
 %
-% * <VeiculoArticuladoNaoLinear4GDL.html Veiculo Articulado Linear 4 GDL> (Pendente)
+%% Vehicle model
+% Função com a equação de estados do modelo.
+%
+% Modelo de veículo:
+%
+% * <VeiculoSimplesLinear2GDL.html Veiculo Simples Linear 2 GDL> (Pendente)
+% * <VeiculoSimplesNaoLinear3GDL.html Veiculo Simples Não Linear 3 GDL>
+% * <VeiculoArticuladoLinear4GDL.html Veiculo Articulado Linear 3 GDL> (Pendente)
 % * <VeiculoArticuladoNaoLinear4GDL.html Veiculo Articulado Não Linear 4 GDL>
 %
-%% Gráficos
-% Evolução dos estados, planos e espaço de fase, frame e animação. <Graficos.html Graficos>
+% Outros: <VeiculoSimples.html Veiculo simples (Abstract)> | <VeiculoArticulado.html Veiculo articulado (Abstract)>
+%
+%% Graphics
+% Funções para a geração de ilustrações: <Graficos.html Graficos>.

@@ -1,26 +1,35 @@
-%% Pneu linear
+%% Linear tire
 % Relação linear entre a força lateral e o ângulo de deriva
 %
-%% Equacionamento
+%% Sintax
+% |Fy = _TireModel_.Characteristic(alpha)|
+%
+%% Arguments
+% The following table describes the input arguments:
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>alpha</tt></td> <td width="70%">Tire slip angle [rad]</td> </tr>
+% </table> </html>
+%
+%% Description
 %
 % A equação que descreve este modelo é dada por:
 %
-% $$ F_y = C \alpha $$
+% $$ F_y = K \alpha $$
 %
-% Onde $F_y$ é a força lateral, $C$ é o coeficiente de rigidez de curva e
-% $\alpha$ é o ângulo de deriva.
+% $F_y$ is the lateral force, $K$ is the cornering stiffness and $\alpha$ is the tire slip angle.
 %
 % *Hipóteses*
 %
 % * Relação linear.
 % * Válido apenas para pequenos ângulos de deriva.
 %
-%% Código
-% Código da classe:
+%% Code
+%
 
 classdef PneuLinear < DinamicaVeicular.Pneu
-	methods
-        % constructor
+    methods
+        % Constructor
         function self = PneuLinear(varargin)
             if nargin == 0
                 self.params = 1000;
@@ -29,18 +38,20 @@ classdef PneuLinear < DinamicaVeicular.Pneu
             end
         end
 
-		function Fy = Characteristic(self,alpha)
+        function Fy = Characteristic(self,alpha)
             Fy = -self.params*alpha;
         end
+    end
 
-	end
-
-	properties
-		params
+    %% Properties
+    %
+    
+    properties
+        params
     end
 end
 
-%% Ver também
+%% See Also
 %
-% <index.html Início>
+% <index.html Início> | <PneuPolinomial.html Pneu polinomial> | <PneuPacejka1989.html Pneu Pacejka 1989>
 %
