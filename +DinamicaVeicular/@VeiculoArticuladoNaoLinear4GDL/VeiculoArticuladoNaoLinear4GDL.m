@@ -13,7 +13,7 @@
 %% Description
 % O ângulo $\psi$ define a orientação do caminhão-trator em relação ao referencial inercial. O estado $\phi$ é o ângulo formado entre o caminhão-trator e o semirreboque. O ângulo $\alpha_T$ é o ângulo de deriva do módulo dianteiro e é formado pelo vetor velocidade do centro de massa e a linha longitudinal do caminhão-trator. Por fim, $v$ é o módulo do vetor velocidade do centro de massa do caminhão-trator. Os pontos $T$ e $S$ são coincidentes com os centros de massa do caminhão-trator e semirreboque, respectivamente. Os pontos F e R são coincidentes com os eixos dianteiro e traseiro do caminhão-trator, respectivamente. M é o ponto que representa o eixo do semirreboque e A é o ponto de articulação ente as duas unidades. As grandezas a, b e c da unidade motora são as distâncias entre os pontos F-T, T-R e R-A, respectivamente. Na unidade movida, d e e definem as distâncias entre os pontos A-S e S-M, respectivamente.
 %
-% <<ilustracoes/modeloArticulado.png>>
+% <<ilustracoes/modeloArticulado.svg>>
 %
 % Este modelo é escrito na forma:
 %
@@ -97,7 +97,8 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
             % Angulos de deriva não linear
             ALPHAF = atan2((a*dPSI + VEL*sin(ALPHAT)),(VEL*cos(ALPHAT))) - DELTA;
             ALPHAR = atan2((-b*dPSI + VEL*sin(ALPHAT)),(VEL*cos(ALPHAT)));
-            ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VEL*sin(ALPHAT + PHI) - b*dPSI*cos(PHI) - c*dPSI*cos(PHI)),(VEL*cos(ALPHAT + PHI) + b*dPSI*sin(PHI) + c*dPSI*sin(PHI)));
+            ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VEL*sin(ALPHAT + PHI) - b*dPSI*cos(PHI) - ...
+                     c*dPSI*cos(PHI)),(VEL*cos(ALPHAT + PHI) + b*dPSI*sin(PHI) + c*dPSI*sin(PHI)));
 
             % Forças longitudinais
             FxF = 0;

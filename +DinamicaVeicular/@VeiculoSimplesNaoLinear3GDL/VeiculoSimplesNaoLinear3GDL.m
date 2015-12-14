@@ -14,7 +14,7 @@
 %% Description
 % O centro de massa do veículo é dado pelo ponto $T$ e os eixos dianteiro e traseiro são dados pelos pontos $F$ e $R$, respectivamente. A constante $a$ mede a distância do ponto $F$ ao $T$ e $b$ a distância do ponto $T$ ao $R$. Os ângulos $\alpha_F$ e $\alpha_R$ são os ângulos de deriva nos eixos dianteiro e traseiro. $\alpha_T$ is the vehicle side slip angle and $\psi$ is the vehicle yaw angle. Por fim, $\delta$ é o ângulo de esterçamento.
 %
-% <<ilustracoes/modeloSimples.png>>
+% <<ilustracoes/modeloSimples.svg>>
 %
 %% Code
 %

@@ -8,7 +8,7 @@
 % ser observada na figura abaixo (Adaptado de [1]). Além disso é possível verificar a
 % definição do ângulo de deriva.
 %
-% <<ilustracoes/CurvaCaracteristica.png>>
+% <<ilustracoes/CurvaCaracteristica.svg>>
 %
 %% Equivalência
 % Supondo um modelo de pneu <PneuPacejka1989.html Pacejka 1989> de referência é possível obter um modelo <PneuLinear.html linear> e <PneuPolinomial.html polinomial> equivalente. Isto é feito igualando o coeficiente de rigidez lateral dos três modelos e igualando a força lateral máxima dos modelos <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.

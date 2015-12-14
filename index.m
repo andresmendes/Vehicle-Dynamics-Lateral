@@ -14,7 +14,7 @@ import DinamicaVeicular.*
 %% Description
 % Este repositório é destinado à organizar as funções necessárias para a integração numérica das equações de movimento de veículos e ilustrar o resultado. A estrutura mínima de simulação se encontra no fluxograma abaixo. Com os parâmetros de integração e condições iniciais o modelo do sistema pode ser integrado para a obtenção da evolução dos estados em função do tempo. O modelo do sistema consiste na combinação do modelo de veículo com o modelo de pneu e seus respectivos parâmetros. Por fim, é possível gerar os gráficos à partir dos resultados. Portanto, as funções disponíveis neste repositório procuram realizar as tarefas representadas pelos blocos de *modelo de veículo*, *modelo de pneu* e *gráficos*.
 %
-% <<ilustracoes/fluxograma.png>>
+% <<ilustracoes/fluxograma.svg>>
 %
 %% Templates
 % Os templates realizam uma simulação de veículo utilizando os elementos descritos no fluxograma acima.
