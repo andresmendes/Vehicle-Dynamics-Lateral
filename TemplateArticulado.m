@@ -68,7 +68,7 @@ g.Trajetoria([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 % Animation
 %
 
-% g.Animacao([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
+g.Animacao([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 
 %%
 %
