@@ -140,5 +140,5 @@ end
 
 %% See Also
 %
-% <index.html Início> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>
+% <index.html Index> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>
 %

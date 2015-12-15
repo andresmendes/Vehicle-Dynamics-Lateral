@@ -21,5 +21,5 @@ end
 
 %% Ver também
 %
-% <index.html Início>
+% <index.html Index>
 %

@@ -53,5 +53,5 @@ end
 
 %% See Also
 %
-% <index.html Início> | <PneuPolinomial.html Pneu polinomial> | <PneuPacejka1989.html Pneu Pacejka 1989>
+% <index.html Index> | <PneuPolinomial.html Pneu polinomial> | <PneuPacejka1989.html Pneu Pacejka 1989>
 %

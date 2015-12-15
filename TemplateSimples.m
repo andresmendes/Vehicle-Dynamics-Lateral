@@ -135,5 +135,5 @@ g.Trajetoria([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 %
 %% See Also
 %
-% <index.html Início> | <TemplateArticulado.html Template Articulado>
+% <index.html Index> | <TemplateArticulado.html Template Articulado>
 %

@@ -52,3 +52,8 @@ import DinamicaVeicular.*
 %
 %% Graphics
 % Funções para a geração de ilustrações: <Graficos.html Graficos>.
+%
+%% See Also
+%
+% <https://github.com/andresmendes/Dinamica-Veicular https://github.com/andresmendes/Dinamica-Veicular>
+%

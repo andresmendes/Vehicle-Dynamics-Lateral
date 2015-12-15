@@ -128,5 +128,5 @@ end
 
 %% See Also
 %
-% <index.html Início> | <VeiculoArticuladoNaoLinear4GDL.html Nonlinear 4 DOF articulated vehicle model>
+% <index.html Index> | <VeiculoArticuladoNaoLinear4GDL.html Nonlinear 4 DOF articulated vehicle model>
 %

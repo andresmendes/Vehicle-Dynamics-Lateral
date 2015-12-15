@@ -76,5 +76,5 @@ g.Trajetoria([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 %
 %% See Also
 %
-% <index.html Início> | <TemplateSimples.html Template Simples>
+% <index.html Index> | <TemplateSimples.html Template Simples>
 %
