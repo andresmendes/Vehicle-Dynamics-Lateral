@@ -1,5 +1,7 @@
 # Dinamica-Veicular
 
+Documentação: [http://andresmendes.github.io/Dinamica-Veicular/](http://andresmendes.github.io/Dinamica-Veicular/)
+
 Para a utilização do pacote é necessário realizar os seguintes passos:
 
 * Baixar o pacote Dinamica-Veicular clicando em "Download ZIP" na página [https://github.com/andresmendes/Dinamica-Veicular](https://github.com/andresmendes/Dinamica-Veicular).
