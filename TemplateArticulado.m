@@ -1,5 +1,5 @@
 %% Template articulado
-% Exemplo de script para simula√ß√£o de ve√≠culo articulado.
+% Exemplo de script para simulaÁ„o de veÌculo articulado.
 %
 %% Code start
 
@@ -13,7 +13,7 @@ import DinamicaVeicular.*   % Import package Dinamica Veicular
 %
 
 % Simulation time
-T = 7;                     % Total simulation time [s]
+T = 7;                      % Total simulation time [s]
 resol = 50;                 % Resolution
 TSPAN = 0:T/resol:T;        % Time span [s]
 % Initial conditions
@@ -28,14 +28,14 @@ Y0 = 0;                     % Initial tractor CG vertical position [m]
 x0 = [dPSI0 ALPHAT0 dPHI0 VEL0 PHI0 PSI0 X0 Y0];
 
 %% Default models and parameters
-% Definindo o modelo de ve√≠culo sem passagem de argumentos os par√¢metros e modelos padr√£o s√£o usados.
+% Definindo o modelo de veÌculo sem passagem de argumentos os par‚metros e modelos padr„o s„o usados.
 
 ModeloSistema = DinamicaVeicular.VeiculoArticuladoNaoLinear4GDL;
 
 %% Integration
 % Integration using mass matrix. Details: <http://www.mathworks.com/help/matlab/ref/ode45.html?searchHighlight=%22mass%20matrix%22 ode45 (Mass matrix)>
 
-% Configurando as op√ß√µes do integrador para levar em considera√ß√£o a matriz de massa
+% Configurando as opÁıes do integrador para levar em consideraÁ„o a matriz de massa
 options = odeset('Mass',@ModeloSistema.MatrizMassa);
 
 [TOUT,XOUT] = ode45(@(t, estados) ModeloSistema.Model(t, estados),TSPAN,x0,options);
@@ -76,5 +76,5 @@ g.Trajetoria([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 %
 %% See Also
 %
-% <index.html In√≠cio> | <TemplateSimples.html Template Simples>
+% <index.html InÌcio> | <TemplateSimples.html Template Simples>
 %

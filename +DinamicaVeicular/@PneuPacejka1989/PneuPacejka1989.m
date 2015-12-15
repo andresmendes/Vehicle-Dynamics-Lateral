@@ -1,5 +1,5 @@
 %% Pacejka 1989 tire
-% Rela√ß√£o n√£o linear entre a for√ßa lateral e o √¢ngulo de deriva atrav√©s de uma express√£o semi-emp√≠rica com coeficientes experimentais.
+% RelaÁ„o n„o linear entre a forÁa lateral e o ‚ngulo de deriva atravÈs de uma express„o semi-empÌrica com coeficientes experimentais.
 %
 % Baseado em: BAKKER, E.; PACEJKA, H. B.; LIDNER, L. A new tire model with an application in vehicle dynamics studies. [S.l.], 1989.
 %
@@ -16,19 +16,19 @@
 % </table> </html>
 %
 %% Description
-% A equa√ß√£o que descreve este modelo √© dada por:
+% A equaÁ„o que descreve este modelo È dada por:
 %
 % $$ F_y = - \frac{\mu_y}{\mu_{y,n}} (F_{y,n}(\alpha_{eq}) + S_v)$$
 %
-% Onde $\alpha_{eq}$ √© o √¢ngulo de deriva equivalente:
+% Onde $\alpha_{eq}$ È o ‚ngulo de deriva equivalente:
 %
 % $$ \alpha_{eq} = \frac{\mu_{y0}}{\mu_y} \frac{F_{z0}}{F_z} (\alpha + S_h)$$
 %
-% e $F_{y,n}$ √© a equa√ß√£o caracter√≠stica nominal dada por:
+% e $F_{y,n}$ È a equaÁ„o caracterÌstica nominal dada por:
 %
 % $$ F_{y,n} = D \sin(C \arctan(B \alpha - E (B \alpha - \arctan(B \alpha)))) $$
 %
-% Onde $B$, $C$, $D$ e $E$ s√£o coeficientes do modelo que podem ser obtidos atrav√©s das seguintes express√µes:
+% Onde $B$, $C$, $D$ e $E$ s„o coeficientes do modelo que podem ser obtidos atravÈs das seguintes expressıes:
 %
 % $$ C = a_0 $$
 %
@@ -38,23 +38,23 @@
 %
 % $$ E = a_6 F_z + a_7$$
 %
-% Os deslocamentos da curva s√£o dados por:
+% Os deslocamentos da curva s„o dados por:
 %
 % $$ S_h = a_8 \gamma + a_9 F_z + a_{10} $$
 %
 % $$ S_v = a_{11} F_z \gamma + a_{12} F_z + a_{13} $$
 %
-% O modelo implementado aqui realiza tratamento do √¢ngulo de deriva para valores acima de 90 graus. A partir deste valor a dire√ß√£o de avan√ßo sobre a curva caracter√≠stica se inverte. O √¢ngulo utilizado no modelo de pneu deve ser igual a zero quando o √¢ngulo de deriva no m√©todo convencional for igual a 180. Isto deve ser feito porque a for√ßa lateral com 180 graus de √¢ngulo de deriva deve ser igual a zero e n√£o m√°xima como ocorre no modelo sem tratamento. Isto √© obtido atrav√©s da inclus√£o da linha de c√≥digo:
+% O modelo implementado aqui realiza tratamento do ‚ngulo de deriva para valores acima de 90 graus. A partir deste valor a direÁ„o de avanÁo sobre a curva caracterÌstica se inverte. O ‚ngulo utilizado no modelo de pneu deve ser igual a zero quando o ‚ngulo de deriva no mÈtodo convencional for igual a 180. Isto deve ser feito porque a forÁa lateral com 180 graus de ‚ngulo de deriva deve ser igual a zero e n„o m·xima como ocorre no modelo sem tratamento. Isto È obtido atravÈs da inclus„o da linha de cÛdigo:
 %
 % _ALPHA = asin(sin(alpha));_
 %
-% Em que o √¢ngulo de deriva sem tratamento "alpha" da origem ao √¢ngulo com
-% tratamento "ALPHA" que ser√° usado no c√°lculo da for√ßa lateral.
+% Em que o ‚ngulo de deriva sem tratamento "alpha" da origem ao ‚ngulo com
+% tratamento "ALPHA" que ser· usado no c·lculo da forÁa lateral.
 %
-% *Hip√≥teses*
+% *HipÛteses*
 %
-% * Rela√ß√£o n√£o linear.
-% * √Çngulo de deriva vai de -180 a 180 graus.
+% * RelaÁ„o n„o linear.
+% * ¬ngulo de deriva vai de -180 a 180 graus.
 %
 %% Code
 %
@@ -86,14 +86,14 @@ classdef PneuPacejka1989 < DinamicaVeicular.Pneu
 
         function Fy = Characteristic(self,alpha,Fz,muy)
             % Input
-            % alpha - √Çngulo de deriva [rad]
+            % alpha - ¬ngulo de deriva [rad]
             % Fz - Load [N]
             % muy - Lateral friction coefficient (*1000) [-]
 
-            % Tratamento do √¢ngulo de deriva
+            % Tratamento do ‚ngulo de deriva
             ALPHA = asin(sin(alpha));           % [rad]
-            ALPHA = 180/pi*ALPHA;               % Convers√£o [rad] - [deg]
-            % Par√¢metros nominais
+            ALPHA = 180/pi*ALPHA;               % Convers„o [rad] - [deg]
+            % Par‚metros nominais
             a0 = self.params(1);
             a1 = self.params(2);
             a2 = self.params(3);
@@ -109,7 +109,7 @@ classdef PneuPacejka1989 < DinamicaVeicular.Pneu
             a12 = self.params(13);
             a13 = self.params(14);
 
-            Fz = Fz/1000;                       % Convers√£o [N] - [kN]
+            Fz = Fz/1000;                       % Convers„o [N] - [kN]
 
             camber = 0;                         % Camber angle
 
@@ -122,7 +122,7 @@ classdef PneuPacejka1989 < DinamicaVeicular.Pneu
             B = BCD/(C*D);                      % stiffness factor
             Sh = a8*camber + a9*Fz + a10;       % Horizontal shift
             Sv = a11*Fz*camber + a12*Fz + a13;  % Vertical shift
-            ALPHAeq = muy0/muy*(ALPHA + Sh);    % √Çngulo de deriva equivalente
+            ALPHAeq = muy0/muy*(ALPHA + Sh);    % ¬ngulo de deriva equivalente
             % Reference characteristics
             fy = D*sin(C*atan(B*ALPHAeq - E*(B*ALPHAeq - atan(B*ALPHAeq))));
             % Lateral force
@@ -140,5 +140,5 @@ end
 
 %% See Also
 %
-% <index.html In√≠cio> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>
+% <index.html InÌcio> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>
 %

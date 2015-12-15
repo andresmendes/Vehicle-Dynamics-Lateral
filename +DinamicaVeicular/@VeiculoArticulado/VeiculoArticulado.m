@@ -1,4 +1,4 @@
-%% Ve√≠culo articulado (Abstract)
+%% VeÌculo articulado (Abstract)
 %
 
 classdef (Abstract) VeiculoArticulado
@@ -14,12 +14,12 @@ classdef (Abstract) VeiculoArticulado
         distRA
         distAS
         distSM
-        largura     % Largura do caminh√£o-trator
+        largura     % Largura do caminh„o-trator
         larguraSemi % Largura do semirreboque
 	end
 end
 
-%% Ver tamb√©m
+%% Ver tambÈm
 %
-% <index.html In√≠cio>
+% <index.html InÌcio>
 %

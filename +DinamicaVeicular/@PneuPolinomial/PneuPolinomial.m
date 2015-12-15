@@ -1,5 +1,5 @@
 %% Polynomial tire
-% Rela√ß√£o n√£o linear entre a for√ßa lateral e o √¢ngulo de deriva atrav√©s de uma express√£o polinomial.
+% RelaÁ„o n„o linear entre a forÁa lateral e o ‚ngulo de deriva atravÈs de uma express„o polinomial.
 %
 %% Sintax
 % |Fy = _TireModel_.Characteristic(alpha)|
@@ -13,17 +13,17 @@
 %
 %% Description
 %
-% A equa√ß√£o que descreve este modelo √© dada por:
+% A equaÁ„o que descreve este modelo È dada por:
 %
 % $$ F_y = k_1 \alpha  - k_2\alpha^3 $$
 %
 % $F_y$ is the lateral force and $\alpha$ is the tire slip angle. $k_1$ e
 % $k_2$ are the model coefficients.
 %
-% *Hip√≥teses*
+% *HipÛteses*
 %
-% * Rela√ß√£o n√£o linear.
-% * V√°lido apenas at√© o √¢ngulos de deriva que fornece a m√°xima for√ßa
+% * RelaÁ„o n„o linear.
+% * V·lido apenas atÈ o ‚ngulos de deriva que fornece a m·xima forÁa
 % lateral (Tire saturation).
 %
 %% Code
@@ -61,5 +61,5 @@ end
 
 %% See Also
 %
-% <index.html In√≠cio> | <PneuLinear.html Pneu linear> | <PneuPacejka1989.html Pneu Pacejka 1989>
+% <index.html InÌcio> | <PneuLinear.html Pneu linear> | <PneuPacejka1989.html Pneu Pacejka 1989>
 %

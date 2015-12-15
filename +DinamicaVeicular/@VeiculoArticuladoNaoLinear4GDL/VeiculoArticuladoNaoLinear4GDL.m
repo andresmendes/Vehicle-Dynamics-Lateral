@@ -11,15 +11,15 @@
 % </table> </html>
 %
 %% Description
-% O √¢ngulo $\psi$ define a orienta√ß√£o do caminh√£o-trator em rela√ß√£o ao referencial inercial. O estado $\phi$ √© o √¢ngulo formado entre o caminh√£o-trator e o semirreboque. O √¢ngulo $\alpha_T$ √© o √¢ngulo de deriva do m√≥dulo dianteiro e √© formado pelo vetor velocidade do centro de massa e a linha longitudinal do caminh√£o-trator. Por fim, $v$ √© o m√≥dulo do vetor velocidade do centro de massa do caminh√£o-trator. Os pontos $T$ e $S$ s√£o coincidentes com os centros de massa do caminh√£o-trator e semirreboque, respectivamente. Os pontos F e R s√£o coincidentes com os eixos dianteiro e traseiro do caminh√£o-trator, respectivamente. M √© o ponto que representa o eixo do semirreboque e A √© o ponto de articula√ß√£o ente as duas unidades. As grandezas a, b e c da unidade motora s√£o as dist√¢ncias entre os pontos F-T, T-R e R-A, respectivamente. Na unidade movida, d e e definem as dist√¢ncias entre os pontos A-S e S-M, respectivamente.
+% O ‚ngulo $\psi$ define a orientaÁ„o do caminh„o-trator em relaÁ„o ao referencial inercial. O estado $\phi$ È o ‚ngulo formado entre o caminh„o-trator e o semirreboque. O ‚ngulo $\alpha_T$ È o ‚ngulo de deriva do mÛdulo dianteiro e È formado pelo vetor velocidade do centro de massa e a linha longitudinal do caminh„o-trator. Por fim, $v$ È o mÛdulo do vetor velocidade do centro de massa do caminh„o-trator. Os pontos $T$ e $S$ s„o coincidentes com os centros de massa do caminh„o-trator e semirreboque, respectivamente. Os pontos F e R s„o coincidentes com os eixos dianteiro e traseiro do caminh„o-trator, respectivamente. M È o ponto que representa o eixo do semirreboque e A È o ponto de articulaÁ„o ente as duas unidades. As grandezas a, b e c da unidade motora s„o as dist‚ncias entre os pontos F-T, T-R e R-A, respectivamente. Na unidade movida, d e e definem as dist‚ncias entre os pontos A-S e S-M, respectivamente.
 %
 % <<ilustracoes/modeloArticulado.svg>>
 %
-% Este modelo √© escrito na forma:
+% Este modelo È escrito na forma:
 %
 % $$ M(x) \dot{x} = f(x)$$
 %
-% Onde $x$ √© o vetor de estados, $M(x)$ √© a matriz de massa do sistema e $f(x)$ √© uma fun√ß√£o vetorial n√£o linear. Logo, √© necess√°ria uma fun√ß√£o que permita a integra√ß√£o do sistema com a matriz de massa escrita explicitamente. Uma op√ß√£o √© utilizar a fun√ß√£o _ode45_. Details: <http://www.mathworks.com/help/matlab/ref/ode45.html?searchHighlight=%22mass%20matrix%22 ode45 (Mass matrix)>
+% Onde $x$ È o vetor de estados, $M(x)$ È a matriz de massa do sistema e $f(x)$ È uma funÁ„o vetorial n„o linear. Logo, È necess·ria uma funÁ„o que permita a integraÁ„o do sistema com a matriz de massa escrita explicitamente. Uma opÁ„o È utilizar a funÁ„o _ode45_. Details: <http://www.mathworks.com/help/matlab/ref/ode45.html?searchHighlight=%22mass%20matrix%22 ode45 (Mass matrix)>
 %
 %% Code
 %
@@ -29,26 +29,26 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
         % Constructor
         function self = VeiculoArticuladoNaoLinear4GDL(varargin)
             if nargin == 0
-                % Entrada padr√£o dos dados do ve√≠culo
-                mF0 = 5237;         % Massa no eixo dianteiro do caminh√£o-trator desacoplado [kg]
-                mR0 = 2440;         % Massa no eixo traseiro do caminh√£o-trator desacoplado [kg]
-                mF = 6000;          % Massa no eixo dianteiro do caminh√£o-trator (F) [kg]
-                mR = 10000;         % Massa no eixo traseiro do caminh√£o-trator (R) [kg]
+                % Entrada padr„o dos dados do veÌculo
+                mF0 = 5237;         % Massa no eixo dianteiro do caminh„o-trator desacoplado [kg]
+                mR0 = 2440;         % Massa no eixo traseiro do caminh„o-trator desacoplado [kg]
+                mF = 6000;          % Massa no eixo dianteiro do caminh„o-trator (F) [kg]
+                mR = 10000;         % Massa no eixo traseiro do caminh„o-trator (R) [kg]
                 mM = 17000;         % Massa no eixo do semirreboque (M) [kg]
-                IT = 46100;         % Momento de in√©rcia do caminh√£o-trator [kg*m2]
-                IS = 452010;        % Momento de in√©rcia do semirreboque [kg*m2]
-                DELTA = 0;          % Ester√ßamento do eixo dianteiro [rad]
-                c = -0.310;         % Dist√¢ncia da articula√ß√£o ao eixo traseiro do caminh√£o-trator (A-R) [m]
-                lT = 3.550;         % Dist√¢ncia entre os eixos do caminh√£o-trator [m]
-                lS = 7.700;         % Dist√¢ncia entre a articula√ß√£o e o eixo do semirreboque [m]
-                nF = 2;             % N√∫mero de pneus no eixo dianteiro do caminh√£o-trator
-                nR = 4;             % N√∫mero de pneus no eixo traseiro do caminh√£o-trator
-                nM = 8;             % N√∫mero de pneus no eixo do semirreboque
-                larguraT = 2.6;     % Largura do caminh√£o-trator [m]
+                IT = 46100;         % Momento de inÈrcia do caminh„o-trator [kg*m2]
+                IS = 452010;        % Momento de inÈrcia do semirreboque [kg*m2]
+                DELTA = 0;          % EsterÁamento do eixo dianteiro [rad]
+                c = -0.310;         % Dist‚ncia da articulaÁ„o ao eixo traseiro do caminh„o-trator (A-R) [m]
+                lT = 3.550;         % Dist‚ncia entre os eixos do caminh„o-trator [m]
+                lS = 7.700;         % Dist‚ncia entre a articulaÁ„o e o eixo do semirreboque [m]
+                nF = 2;             % N˙mero de pneus no eixo dianteiro do caminh„o-trator
+                nR = 4;             % N˙mero de pneus no eixo traseiro do caminh„o-trator
+                nM = 8;             % N˙mero de pneus no eixo do semirreboque
+                larguraT = 2.6;     % Largura do caminh„o-trator [m]
                 larguraS = 2.550;   % Largura do semirreboque [m]
-                muy = 0.3;          % Coeficiente de atrito de opera√ß√£o
+                muy = 0.3;          % Coeficiente de atrito de operaÁ„o
                 entradaVetor = [mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM larguraT larguraS muy];
-                % Definindo os par√¢metros da classe
+                % Definindo os par‚metros da classe
                 self.params = self.conversao(entradaVetor);
                 self.pneu = DinamicaVeicular.PneuPacejka1989;
             else
@@ -65,46 +65,46 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
         end
 
         %% Model
-        % Fun√ß√£o com as equa√ß√µes de estado do modelo
+        % FunÁ„o com as equaÁıes de estado do modelo
         function dx = Model(self,~,estados)
-            % Dados do ve√≠culo
+            % Dados do veÌculo
             mT = self.params(18);       % massa do veiculo [kg]
             mS = self.params(19);       % massa do veiculo [kg]
             % IT = self.params(6);       % momento de inercia [kg]
             % IS = self.params(7);       % momento de inercia [kg]
-            a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminh√£o-trator [m]
-            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminh√£o-trator [m]
-            c = self.params(9);         % distancia da articula√ß√£o ao centro de massa do caminh√£o-trator [m]
-            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminh√£o-trator [m]
-            e = self.params(23);        % distancia da articula√ß√£o ao centro de massa do caminh√£o-trator [m]
-            DELTA = self.params(8);     % Ester√ßamento [rad]
-            nF = self.params(12);       % N√∫mero de pneus no eixo dianteiro do caminh√£o-trator
-            nR = self.params(13);       % N√∫mero de pneus no eixo traseiro do caminh√£o-trator
-            nM = self.params(14);       % N√∫mero de pneus no eixo do semirreboque
-            g = 9.81;                   % Acelera√ß√£o da gravidade [m/s^2]
+            a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminh„o-trator [m]
+            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminh„o-trator [m]
+            c = self.params(9);         % distancia da articulaÁ„o ao centro de massa do caminh„o-trator [m]
+            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminh„o-trator [m]
+            e = self.params(23);        % distancia da articulaÁ„o ao centro de massa do caminh„o-trator [m]
+            DELTA = self.params(8);     % EsterÁamento [rad]
+            nF = self.params(12);       % N˙mero de pneus no eixo dianteiro do caminh„o-trator
+            nR = self.params(13);       % N˙mero de pneus no eixo traseiro do caminh„o-trator
+            nM = self.params(14);       % N˙mero de pneus no eixo do semirreboque
+            g = 9.81;                   % AceleraÁ„o da gravidade [m/s^2]
             FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
             FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
             FzM = self.params(5)*g;     % Carga vertical no eixo do semirreboque [N]
-            muy = self.params(17);      % Coeficiente de atrito de opera√ß√£o
-            % Defini√ß√£o dos estados
-            dPSI = estados(1,1);        % Velocidade angular do caminh√£o-trator [rad/s]
-            ALPHAT = estados(2,1);      % √Çngulo de deriva do CG do caminh√£o-trator [rad]
-            dPHI = estados(3,1);        % Velocidade angular relativa entre o semirreboque e o caminh√£o-trator [rad/s]
-            VEL = estados(4,1);         % √Çngulo relativo entre o semirreboque e o caminh√£o-trator [rad]
-            PHI = estados(5,1);         % M√≥dulo do vetor velocidade do CG do caminh√£o-trator [m/s]
-            PSI = estados(6,1);         % √Çngulo de orienta√ß√£o do caminh√£o-trator [rad]
+            muy = self.params(17);      % Coeficiente de atrito de operaÁ„o
+            % DefiniÁ„o dos estados
+            dPSI = estados(1,1);        % Velocidade angular do caminh„o-trator [rad/s]
+            ALPHAT = estados(2,1);      % ¬ngulo de deriva do CG do caminh„o-trator [rad]
+            dPHI = estados(3,1);        % Velocidade angular relativa entre o semirreboque e o caminh„o-trator [rad/s]
+            VEL = estados(4,1);         % ¬ngulo relativo entre o semirreboque e o caminh„o-trator [rad]
+            PHI = estados(5,1);         % MÛdulo do vetor velocidade do CG do caminh„o-trator [m/s]
+            PSI = estados(6,1);         % ¬ngulo de orientaÁ„o do caminh„o-trator [rad]
 
-            % Angulos de deriva n√£o linear
+            % Angulos de deriva n„o linear
             ALPHAF = atan2((a*dPSI + VEL*sin(ALPHAT)),(VEL*cos(ALPHAT))) - DELTA;
             ALPHAR = atan2((-b*dPSI + VEL*sin(ALPHAT)),(VEL*cos(ALPHAT)));
             ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VEL*sin(ALPHAT + PHI) - b*dPSI*cos(PHI) - ...
                      c*dPSI*cos(PHI)),(VEL*cos(ALPHAT + PHI) + b*dPSI*sin(PHI) + c*dPSI*sin(PHI)));
 
-            % For√ßas longitudinais
+            % ForÁas longitudinais
             FxF = 0;
             FxR = 0;
             FxM = 0;
-            % For√ßas laterais nos pneus - Curva caracter√≠stica
+            % ForÁas laterais nos pneus - Curva caracterÌstica
             FyF = nF*self.pneu.Characteristic(ALPHAF,FzF/nF,muy);
             FyR = nR*self.pneu.Characteristic(ALPHAR,FzR/nR,muy);
             FyM = nM*self.pneu.Characteristic(ALPHAM,FzM/nM,muy);
@@ -121,7 +121,7 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
 
             f = [f1 ; f2 ; f3 ; f4 ; f5];
 
-            % Equa√ß√µes adicionais para o posicionamento (N√£o necess√°rias para a din√¢mica em guinada)
+            % EquaÁıes adicionais para o posicionamento (N„o necess·rias para a din‚mica em guinada)
             dx6 = dPSI;
             dx7 = VEL*cos(ALPHAT + PSI); % X
             dx8 = VEL*sin(ALPHAT + PSI); % Y
@@ -136,32 +136,32 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
         %
 
         function M = MatrizMassa(self,~,estados)
-            % Dados do ve√≠culo
+            % Dados do veÌculo
             mT = self.params(18);       % massa do veiculo [kg]
             mS = self.params(19);       % massa do veiculo [kg]
             IT = self.params(6);        % momento de inercia [kg]
             IS = self.params(7);        % momento de inercia [kg]
-            % a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminh√£o-trator [m]
-            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminh√£o-trator [m]
-            c = self.params(9);         % distancia da articula√ß√£o ao centro de massa do caminh√£o-trator [m]
-            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminh√£o-trator [m]
-            % e = self.params(23);        % distancia da articula√ß√£o ao centro de massa do caminh√£o-trator [m]
-            % DELTA = self.params(8);   % Ester√ßamento [rad]
-            % nF = self.params(12);      % N√∫mero de pneus no eixo dianteiro do caminh√£o-trator
-            % nR = self.params(13);      % N√∫mero de pneus no eixo traseiro do caminh√£o-trator
-            % nM = self.params(14);      % N√∫mero de pneus no eixo do semirreboque
-            % g = 9.81;                  % Acelera√ß√£o da gravidade [m/s^2]
+            % a = self.params(20);        % distancia do eixo dianteiro ao centro de massa do caminh„o-trator [m]
+            b = self.params(21);        % distancia do eixo traseiro ao centro de massa do caminh„o-trator [m]
+            c = self.params(9);         % distancia da articulaÁ„o ao centro de massa do caminh„o-trator [m]
+            d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminh„o-trator [m]
+            % e = self.params(23);        % distancia da articulaÁ„o ao centro de massa do caminh„o-trator [m]
+            % DELTA = self.params(8);   % EsterÁamento [rad]
+            % nF = self.params(12);      % N˙mero de pneus no eixo dianteiro do caminh„o-trator
+            % nR = self.params(13);      % N˙mero de pneus no eixo traseiro do caminh„o-trator
+            % nM = self.params(14);      % N˙mero de pneus no eixo do semirreboque
+            % g = 9.81;                  % AceleraÁ„o da gravidade [m/s^2]
             % FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
             % FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
             % FzM = self.params(5)*g;     % Carga vertical no eixo do semirreboque [N]
-            % muy = self.params(17);      % Coeficiente de atrito de opera√ß√£o
-            % Defini√ß√£o dos estados
-            % dPSI = estados(1,1);              % Velocidade angular do caminh√£o-trator [rad/s]
-            ALPHAT = estados(2,1);      % √Çngulo de deriva do CG do caminh√£o-trator [rad]
-            % dPHI = estados(3,1);              % Velocidade angular relativa entre o semirreboque e o caminh√£o-trator [rad/s]
-            VEL = estados(4,1);         % √Çngulo relativo entre o semirreboque e o caminh√£o-trator [rad]
-            PHI = estados(5,1);         % M√≥dulo do vetor velocidade do CG do caminh√£o-trator [m/s]
-            % PSI = estados(6,1);               % √Çngulo de orienta√ß√£o do caminh√£o-trator [rad]
+            % muy = self.params(17);      % Coeficiente de atrito de operaÁ„o
+            % DefiniÁ„o dos estados
+            % dPSI = estados(1,1);              % Velocidade angular do caminh„o-trator [rad/s]
+            ALPHAT = estados(2,1);      % ¬ngulo de deriva do CG do caminh„o-trator [rad]
+            % dPHI = estados(3,1);              % Velocidade angular relativa entre o semirreboque e o caminh„o-trator [rad/s]
+            VEL = estados(4,1);         % ¬ngulo relativo entre o semirreboque e o caminh„o-trator [rad]
+            PHI = estados(5,1);         % MÛdulo do vetor velocidade do CG do caminh„o-trator [m/s]
+            % PSI = estados(6,1);               % ¬ngulo de orientaÁ„o do caminh„o-trator [rad]
             % Matriz de massa
             M11 = -d*mS*sin(PHI);
             M12 = -VEL*sin(ALPHAT)*(mS + mT);
@@ -196,25 +196,25 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
 
     methods (Static)
         %% conversao
-        % A fun√ß√£o conversao adiciona no vetor de entrada ([mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM larguraT larguraS muy]) os par√¢metros restantes do modelo de ve√≠culo ([mT mS a b d e]).
+        % A funÁ„o conversao adiciona no vetor de entrada ([mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM larguraT larguraS muy]) os par‚metros restantes do modelo de veÌculo ([mT mS a b d e]).
         function parametros = conversao(entrada)
-            mF0 = entrada(1);       % Massa no eixo dianteiro do caminh√£o-trator desacoplado [kg]
-            mR0 = entrada(2);       % Massa no eixo traseiro do caminh√£o-trator desacoplado [kg]
-            mF = entrada(3);        % Massa no eixo dianteiro do caminh√£o-trator (F) [kg]
-            mR = entrada(4);        % Massa no eixo traseiro do caminh√£o-trator (R) [kg]
+            mF0 = entrada(1);       % Massa no eixo dianteiro do caminh„o-trator desacoplado [kg]
+            mR0 = entrada(2);       % Massa no eixo traseiro do caminh„o-trator desacoplado [kg]
+            mF = entrada(3);        % Massa no eixo dianteiro do caminh„o-trator (F) [kg]
+            mR = entrada(4);        % Massa no eixo traseiro do caminh„o-trator (R) [kg]
             mM = entrada(5);        % Massa no eixo do semirreboque (M) [kg]
-            lT = entrada(10);       % Dist√¢ncia entre os eixos do caminh√£o-trator [m]
-            lS = entrada(11);       % Dist√¢ncia entre a articula√ß√£o e o eixo do semirreboque [m]
-            % Convers√£o dos dados para os par√¢metros usados na equa√ß√£o de movimento
-            g = 9.81;               % Acelera√ß√£o da gravidade [m/s^2]
-            mT = mF0 + mR0;         % massa do caminh√£o-trator [kg]
-            a = mR0/mT*lT;          % Dist√¢ncia do eixo dianteiro ao CG do caminh√£o-trator (F-T) [m]
-            b = lT - a;             % Dist√¢ncia do eixo traseiro ao CG do caminh√£o-trator (R-T) [m]
-            A = mF*g + mR*g - mT*g; % For√ßa vertical na articula√ß√£o [N]
+            lT = entrada(10);       % Dist‚ncia entre os eixos do caminh„o-trator [m]
+            lS = entrada(11);       % Dist‚ncia entre a articulaÁ„o e o eixo do semirreboque [m]
+            % Convers„o dos dados para os par‚metros usados na equaÁ„o de movimento
+            g = 9.81;               % AceleraÁ„o da gravidade [m/s^2]
+            mT = mF0 + mR0;         % massa do caminh„o-trator [kg]
+            a = mR0/mT*lT;          % Dist‚ncia do eixo dianteiro ao CG do caminh„o-trator (F-T) [m]
+            b = lT - a;             % Dist‚ncia do eixo traseiro ao CG do caminh„o-trator (R-T) [m]
+            A = mF*g + mR*g - mT*g; % ForÁa vertical na articulaÁ„o [N]
             mS = (A + mM*g)/g;      % massa do semirreboque [kg]
-            d = (lS*mM)/mS;         % Dist√¢ncia da articula√ß√£o ao CG do semirreboque (A-S) [m]
-            e = lS - d;             % Dist√¢ncia do eixo traseiro ao CG do semirreboque (M-S) [m]
-            % Sa√≠da
+            d = (lS*mM)/mS;         % Dist‚ncia da articulaÁ„o ao CG do semirreboque (A-S) [m]
+            e = lS - d;             % Dist‚ncia do eixo traseiro ao CG do semirreboque (M-S) [m]
+            % SaÌda
             parametros = [entrada mT mS a b d e];
         end
     end
@@ -230,7 +230,7 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
         distRA
         distAS
         distSM
-        largura     % Largura do caminh√£o-trator
+        largura     % Largura do caminh„o-trator
         larguraSemi % Largura do semirreboque
     end
 end
@@ -238,5 +238,5 @@ end
 
 %% See Also
 %
-% <index.html In√≠cio> | <VeiculoSimpesNaoLinear3GDL.html Nonlinear 3 DOF vehicle model>
+% <index.html InÌcio> | <VeiculoSimpesNaoLinear3GDL.html Nonlinear 3 DOF vehicle model>
 %

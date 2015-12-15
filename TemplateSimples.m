@@ -1,5 +1,5 @@
 %% Template simples
-% Exemplo de script para simulaÃ§Ã£o de veÃ­culo simples, sem articulaÃ§Ã£o.
+% Exemplo de script para simulação de veículo simples, sem articulação.
 %
 %% Code start
 
@@ -47,17 +47,17 @@ PneuDados = [a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13];
 PneuModelo = DinamicaVeicular.PneuPacejka1989(PneuDados);
 
 %% Vehicle parameters
-% VeÃ­culo escolhido: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
+% Veículo escolhido: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
 
 mF0 = 700;                  % Massa sobre o eixo dianteiro [kg]
 mR0 = 600;                  % Massa sobre o eixo traseiro [kg]
-IT = 10000;                 % Momento de inÃ©rcia [kg*m2]
-DELTA = 0;                  % EsterÃ§amento do eixo dianteiro [rad]
-lT = 3.550;                 % DistÃ¢ncia entre os eixos[m]
-nF = 2;                     % NÃºmero de pneus no eixo dianteiro
-nR = 2;                     % NÃºmero de pneus no eixo traseiro
+IT = 10000;                 % Momento de inércia [kg*m2]
+DELTA = 0;                  % Esterçamento do eixo dianteiro [rad]
+lT = 3.550;                 % Distância entre os eixos[m]
+nF = 2;                     % Número de pneus no eixo dianteiro
+nR = 2;                     % Número de pneus no eixo traseiro
 largT = 2;                  % Largura [m]
-muy = 0.8;                  % Coeficiente de atrito de operaÃ§Ã£o
+muy = 0.8;                  % Coeficiente de atrito de operação
 VeiculoDados = [mF0 mR0 IT DELTA lT nF nR largT muy];
 ModeloSistema = DinamicaVeicular.VeiculoSimplesNaoLinear3GDL(VeiculoDados,PneuModelo);
 
@@ -135,5 +135,5 @@ g.Trajetoria([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 %
 %% See Also
 %
-% <index.html InÃ­cio> | <TemplateArticulado.html Template Articulado>
+% <index.html Início> | <TemplateArticulado.html Template Articulado>
 %

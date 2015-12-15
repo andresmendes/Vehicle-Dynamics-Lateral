@@ -1,6 +1,8 @@
 %% Doc Generator
 %
 
+slCharacterEncoding('windows1252')
+
 clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window

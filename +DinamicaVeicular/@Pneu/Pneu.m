@@ -11,7 +11,7 @@ classdef (Abstract) Pneu
 	end
 end
 
-%% Ver tambÃ©m
+%% Ver também
 %
-% <index.html InÃ­cio>
+% <index.html Início>
 %

@@ -1,5 +1,5 @@
 %% Linear tire
-% RelaÃ§Ã£o linear entre a forÃ§a lateral e o Ã¢ngulo de deriva
+% Relação linear entre a força lateral e o ângulo de deriva
 %
 %% Sintax
 % |Fy = _TireModel_.Characteristic(alpha)|
@@ -13,16 +13,16 @@
 %
 %% Description
 %
-% A equaÃ§Ã£o que descreve este modelo Ã© dada por:
+% A equação que descreve este modelo é dada por:
 %
 % $$ F_y = K \alpha $$
 %
 % $F_y$ is the lateral force, $K$ is the cornering stiffness and $\alpha$ is the tire slip angle.
 %
-% *HipÃ³teses*
+% *Hipóteses*
 %
-% * RelaÃ§Ã£o linear.
-% * VÃ¡lido apenas para pequenos Ã¢ngulos de deriva.
+% * Relação linear.
+% * Válido apenas para pequenos ângulos de deriva.
 %
 %% Code
 %
@@ -45,7 +45,7 @@ classdef PneuLinear < DinamicaVeicular.Pneu
 
     %% Properties
     %
-    
+
     properties
         params
     end
@@ -53,5 +53,5 @@ end
 
 %% See Also
 %
-% <index.html InÃ­cio> | <PneuPolinomial.html Pneu polinomial> | <PneuPacejka1989.html Pneu Pacejka 1989>
+% <index.html Início> | <PneuPolinomial.html Pneu polinomial> | <PneuPacejka1989.html Pneu Pacejka 1989>
 %

@@ -1,4 +1,4 @@
-%% VeÃ­culo simples (Abstract)
+%% Veículo simples (Abstract)
 %
 
 classdef (Abstract) VeiculoSimples
@@ -15,7 +15,7 @@ classdef (Abstract) VeiculoSimples
 	end
 end
 
-%% Ver tambÃ©m
+%% Ver também
 %
-% <index.html InÃ­cio>
+% <index.html Início>
 %

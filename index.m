@@ -1,10 +1,10 @@
-%% Din√¢mica Veicular
-% Este reposit√≥rio tem como objetivo servir de biblioteca de fun√ß√µes destinadas ao estudo de din√¢mica veicular.
+%% Din‚mica Veicular
+% Este repositÛrio tem como objetivo servir de biblioteca de funÁıes destinadas ao estudo de din‚mica veicular.
 %
 %% Instructions
-% Para a utiliza√ß√£o do pacote √© necess√°rio realizar os seguintes passos:
+% Para a utilizaÁ„o do pacote È necess·rio realizar os seguintes passos:
 %
-% * Baixar o pacote Dinamica-Veicular clicando em "Download ZIP" na p√°gina <https://github.com/andresmendes/Dinamica-Veicular https://github.com/andresmendes/Dinamica-Veicular>.
+% * Baixar o pacote Dinamica-Veicular clicando em "Download ZIP" na p·gina <https://github.com/andresmendes/Dinamica-Veicular https://github.com/andresmendes/Dinamica-Veicular>.
 % * Salvar o pacote (pasta "+DinamicaVeicular") num _path_ do MATLAB(R) ou adicionar o caminho na lista de _paths_. Mais detalhes em <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
 % * Importar o pacote inteiro com o comando:
 %
@@ -12,19 +12,19 @@
 import DinamicaVeicular.*
 
 %% Description
-% Este reposit√≥rio √© destinado √† organizar as fun√ß√µes necess√°rias para a integra√ß√£o num√©rica das equa√ß√µes de movimento de ve√≠culos e ilustrar o resultado. A estrutura m√≠nima de simula√ß√£o se encontra no fluxograma abaixo. Com os par√¢metros de integra√ß√£o e condi√ß√µes iniciais o modelo do sistema pode ser integrado para a obten√ß√£o da evolu√ß√£o dos estados em fun√ß√£o do tempo. O modelo do sistema consiste na combina√ß√£o do modelo de ve√≠culo com o modelo de pneu e seus respectivos par√¢metros. Por fim, √© poss√≠vel gerar os gr√°ficos √† partir dos resultados. Portanto, as fun√ß√µes dispon√≠veis neste reposit√≥rio procuram realizar as tarefas representadas pelos blocos de *modelo de ve√≠culo*, *modelo de pneu* e *gr√°ficos*.
+% Este repositÛrio È destinado ‡ organizar as funÁıes necess·rias para a integraÁ„o numÈrica das equaÁıes de movimento de veÌculos e ilustrar o resultado. A estrutura mÌnima de simulaÁ„o se encontra no fluxograma abaixo. Com os par‚metros de integraÁ„o e condiÁıes iniciais o modelo do sistema pode ser integrado para a obtenÁ„o da evoluÁ„o dos estados em funÁ„o do tempo. O modelo do sistema consiste na combinaÁ„o do modelo de veÌculo com o modelo de pneu e seus respectivos par‚metros. Por fim, È possÌvel gerar os gr·ficos ‡ partir dos resultados. Portanto, as funÁıes disponÌveis neste repositÛrio procuram realizar as tarefas representadas pelos blocos de *modelo de veÌculo*, *modelo de pneu* e *gr·ficos*.
 %
 % <<ilustracoes/fluxograma.svg>>
 %
 %% Templates
-% Os templates realizam uma simula√ß√£o de ve√≠culo utilizando os elementos descritos no fluxograma acima.
-% Para auxiliar os primeiros passos na utiliza√ß√£o das fun√ß√µes est√£o dispon√≠veis dois templates:
+% Os templates realizam uma simulaÁ„o de veÌculo utilizando os elementos descritos no fluxograma acima.
+% Para auxiliar os primeiros passos na utilizaÁ„o das funÁıes est„o disponÌveis dois templates:
 %
-% * Simula√ß√£o de ve√≠culo simples: <TemplateSimples.html TemplateSimples.m>
-% * Simula√ß√£o de ve√≠culo articulado: <TemplateArticulado.html TemplateArticulado.m>
+% * SimulaÁ„o de veÌculo simples: <TemplateSimples.html TemplateSimples.m>
+% * SimulaÁ„o de veÌculo articulado: <TemplateArticulado.html TemplateArticulado.m>
 %
 %% Tire model
-% Rela√ß√£o entre a for√ßa lateral e o √¢ngulo de deriva.
+% RelaÁ„o entre a forÁa lateral e o ‚ngulo de deriva.
 %
 % Modelos de pneu:
 %
@@ -34,21 +34,21 @@ import DinamicaVeicular.*
 %
 % Extra:
 %
-% * <ComparacaoPneu.html Compara√ß√£o pneu>
+% * <ComparacaoPneu.html ComparaÁ„o pneu>
 %
 % Outros: <Pneu.html Pneu (Abstract)>
 %
 %% Vehicle model
-% Fun√ß√£o com a equa√ß√£o de estados do modelo.
+% FunÁ„o com a equaÁ„o de estados do modelo.
 %
-% Modelo de ve√≠culo:
+% Modelo de veÌculo:
 %
 % * <VeiculoSimplesLinear2GDL.html Veiculo Simples Linear 2 GDL> (Pendente)
-% * <VeiculoSimplesNaoLinear3GDL.html Veiculo Simples N√£o Linear 3 GDL>
+% * <VeiculoSimplesNaoLinear3GDL.html Veiculo Simples N„o Linear 3 GDL>
 % * <VeiculoArticuladoLinear4GDL.html Veiculo Articulado Linear 3 GDL> (Pendente)
-% * <VeiculoArticuladoNaoLinear4GDL.html Veiculo Articulado N√£o Linear 4 GDL>
+% * <VeiculoArticuladoNaoLinear4GDL.html Veiculo Articulado N„o Linear 4 GDL>
 %
 % Outros: <VeiculoSimples.html Veiculo simples (Abstract)> | <VeiculoArticulado.html Veiculo articulado (Abstract)>
 %
 %% Graphics
-% Fun√ß√µes para a gera√ß√£o de ilustra√ß√µes: <Graficos.html Graficos>.
+% FunÁıes para a geraÁ„o de ilustraÁıes: <Graficos.html Graficos>.

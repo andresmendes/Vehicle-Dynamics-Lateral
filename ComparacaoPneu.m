@@ -1,19 +1,19 @@
 %% Tire comparison
-% ComparaÃ§Ã£o entre os modelos de pneu: <PneuLinear.html linear>, <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
+% Comparação entre os modelos de pneu: <PneuLinear.html linear>, <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
 %
 %% Description
-% O modelo de pneu relaciona a forÃ§a lateral com o Ã¢ngulo de deriva (Ã‚ngulo
+% O modelo de pneu relaciona a força lateral com o ângulo de deriva (Ângulo
 % formado entre o vetor velocidade do centro do pneu com o plano
-% longitudinal do pneu). A relaÃ§Ã£o tÃ­pica entre essas duas grandezas pode
-% ser observada na figura abaixo (Adaptado de [1]). AlÃ©m disso Ã© possÃ­vel verificar a
-% definiÃ§Ã£o do Ã¢ngulo de deriva.
+% longitudinal do pneu). A relação típica entre essas duas grandezas pode
+% ser observada na figura abaixo (Adaptado de [1]). Além disso é possível verificar a
+% definição do ângulo de deriva.
 %
 % <<ilustracoes/CurvaCaracteristica.svg>>
 %
-%% EquivalÃªncia
-% Supondo um modelo de pneu <PneuPacejka1989.html Pacejka 1989> de referÃªncia Ã© possÃ­vel obter um modelo <PneuLinear.html linear> e <PneuPolinomial.html polinomial> equivalente. Isto Ã© feito igualando o coeficiente de rigidez lateral dos trÃªs modelos e igualando a forÃ§a lateral mÃ¡xima dos modelos <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
+%% Equivalência
+% Supondo um modelo de pneu <PneuPacejka1989.html Pacejka 1989> de referência é possível obter um modelo <PneuLinear.html linear> e <PneuPolinomial.html polinomial> equivalente. Isto é feito igualando o coeficiente de rigidez lateral dos três modelos e igualando a força lateral máxima dos modelos <PneuPolinomial.html polinomial> e <PneuPacejka1989.html Pacejka 1989>.
 %
-% O modelo <PneuPacejka1989.html Pacejka 1989> Ã© caracterizado essencialmente pelos parÃ¢metros $a_0$, $a_1$, $a_2$, $a_3$, $a_4$, $a_5$, $a_6$ e $a_7$ que dÃ£o origem aos coeficientes $B$, $C$, $D$ e $E$ que podem ser usados na definiÃ§Ã£o dos coeficientes dos modelos equivalentes.
+% O modelo <PneuPacejka1989.html Pacejka 1989> é caracterizado essencialmente pelos parâmetros $a_0$, $a_1$, $a_2$, $a_3$, $a_4$, $a_5$, $a_6$ e $a_7$ que dão origem aos coeficientes $B$, $C$, $D$ e $E$ que podem ser usados na definição dos coeficientes dos modelos equivalentes.
 %
 % O modelo <PneuLinear.html linear> equivalente possui cornering stiffness $K$ dado por:
 %
@@ -25,11 +25,11 @@
 %
 % $$ k_2 = (4 k_1^3)/(27 F_{y,Max}^2) $$
 %
-% Onde $F_{y,Max}$ Ã© a forÃ§a lateral mÃ¡xima da curva caracterÃ­stica de referÃªncia.
+% Onde $F_{y,Max}$ é a força lateral máxima da curva característica de referência.
 %
 
 
-%% ComparaÃ§Ã£o dos modelos
+%% Comparação dos modelos
 
 % Code start
 
@@ -39,9 +39,9 @@ clc                         % Clear command window
 
 import DinamicaVeicular.*   % Importando o pacote Dinamica Veicular
 
-deriva = (0:0.1:15)*pi/180;         % Ã‚ngulo de deriva [rad]
+deriva = (0:0.1:15)*pi/180;         % Ângulo de deriva [rad]
 
-% Pneu Pacejka de referÃªncia
+% Pneu Pacejka de referência
 Fz = 4e+03;
 camber = 0;
 a0 = 1.3;
@@ -101,12 +101,12 @@ l = legend('Linear','Polinomial','Pacejka');
 set(l,'Interpreter','Latex','Location','NorthWest')
 
 %%
-% Na figura acima Ã© possÃ­vel observar a curva caracterÃ­stica dos trÃªs modelos com propriedades equivalentes. Para pequenos Ã¢ngulos de deriva os trÃªs modelos se comportam de maneira semelhante. Para Ã¢ngulos de deriva em torno de 8 graus (valor aproximado que gera a maior forÃ§a lateral) o modelo linear passa a apresentar desvios significativos com relaÃ§Ã£o aos outros dois modelos. Para Ã¢ngulos maiores que 8 graus o modelo polinomial comeÃ§a a nÃ£o acompanhar a curva gerada pelo modelo Pacejka 1989.
+% Na figura acima é possível observar a curva característica dos três modelos com propriedades equivalentes. Para pequenos ângulos de deriva os três modelos se comportam de maneira semelhante. Para ângulos de deriva em torno de 8 graus (valor aproximado que gera a maior força lateral) o modelo linear passa a apresentar desvios significativos com relação aos outros dois modelos. Para ângulos maiores que 8 graus o modelo polinomial começa a não acompanhar a curva gerada pelo modelo Pacejka 1989.
 %
 
-%% ComparaÃ§Ã£o tratamento do Ã¢ngulo de deriva
+%% Comparação tratamento do ângulo de deriva
 
-deriva180 = (0:0.1:180)*pi/180;     % Ã‚ngulo de deriva de 0 Ã  180 graus [rad]
+deriva180 = (0:0.1:180)*pi/180;     % Ângulo de deriva de 0 à 180 graus [rad]
 
 % Sem tratamento
 ALPHA = deriva180*180/pi;
@@ -139,12 +139,12 @@ l = legend('Pacejka sem tratamento','Pacejka com tratamento');
 set(l,'Interpreter','Latex','Location','SouthEast')
 
 %%
-% Na figura acima Ã© possÃ­vel observar o efeito do tratamento do Ã¢ngulo de deriva na curva caracterÃ­stica. A curva passa a ser simÃ©trica com relaÃ§Ã£o a reta vertical posicionada em $\alpha = 90 [graus]$.
+% Na figura acima é possível observar o efeito do tratamento do ângulo de deriva na curva característica. A curva passa a ser simétrica com relação a reta vertical posicionada em $\alpha = 90 [graus]$.
 %
 %% References
 % [1] GILLESPIE, T. D. Fundamentals of vehicle dynamics. [S.l.]: Society of Automotive Engineers Warrendale, PA, 1992.
 %
 %% See Also
 %
-% <index.html InÃ­cio>
+% <index.html Início>
 %
