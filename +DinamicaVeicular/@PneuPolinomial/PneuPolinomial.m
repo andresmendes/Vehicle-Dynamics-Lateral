@@ -34,15 +34,19 @@ classdef PneuPolinomial < DinamicaVeicular.Pneu
         % Constructor
         function self = PneuPolinomial(varargin)
             if nargin == 0
-                k1 = 1000;
-                k2 = 500;
+                % Tire parameters - [1]
+                Ca = 57300;         %
+                k = 4.87;           %
+
+                k1 = 2*Ca;
+                k2 = 2*Ca*k;
                 self.params = [k1 k2];
             else
                 self.params = varargin{1};
             end
         end
 
-        function Fy = Characteristic(self,alpha)
+        function Fy = Characteristic(self,alpha,~,~)
             % Polynomial model coefficients
             k1 = self.params(1);
             k2 = self.params(2);
@@ -59,6 +63,9 @@ classdef PneuPolinomial < DinamicaVeicular.Pneu
     end
 end
 
+%% References
+% [1] SADRI, S.; WU, C. Stability analysis of a nonlinear vehicle model in plane motion using the concept of lyapunov exponents. Vehicle System Dynamics, Taylor & Francis, v. 51, n. 6, p.906–924, 2013.
+%
 %% See Also
 %
 % <index.html Index> | <PneuLinear.html Pneu linear> | <PneuPacejka1989.html Pneu Pacejka 1989>

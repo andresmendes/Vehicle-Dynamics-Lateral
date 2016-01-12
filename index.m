@@ -1,4 +1,4 @@
-%% Dinâmica Veicular
+%% Vehicle Dynamics
 % Este repositório tem como objetivo servir de biblioteca de funções destinadas ao estudo de dinâmica veicular.
 %
 %% Instructions
