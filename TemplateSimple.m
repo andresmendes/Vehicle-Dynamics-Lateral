@@ -7,7 +7,7 @@ clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
-import DinamicaVeicular.*   % Import package Dinamica Veicular
+import VehicleDynamics.*   % Import package Dinamica Veicular
 
 %% Integration parameters
 %
@@ -26,7 +26,7 @@ V0 = 20;                    % Initial CG velocity [m/s]
 x0 = [dPSI0 ALPHAT0 PSI0 X0 Y0 V0];
 
 %% Tire parameters
-% Pneu escolhido: <PneuPacejka1989.html PneuPacejka1989.m>.
+% Pneu escolhido: <TirePacejka1989.html TirePacejka1989.m>.
 %
 
 a0 = 1.002806;
@@ -43,8 +43,8 @@ a10 = 0;
 a11 = 0;
 a12 = 0;
 a13 = 0;
-PneuDados = [a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13];
-PneuModelo = DinamicaVeicular.PneuPacejka1989(PneuDados);
+TireData = [a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13];
+TireModel = VehicleDynamics.TirePacejka1989(TireData);
 
 %% Vehicle parameters
 % Veículo escolhido: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
@@ -58,11 +58,11 @@ nF = 2;                     % Número de pneus no eixo dianteiro
 nR = 2;                     % Número de pneus no eixo traseiro
 largT = 2;                  % Largura [m]
 muy = 0.8;                  % Coeficiente de atrito de operação
-VeiculoDados = [mF0 mR0 IT DELTA lT nF nR largT muy];
-ModeloSistema = DinamicaVeicular.VeiculoSimplesNaoLinear3GDL(VeiculoDados,PneuModelo);
+VehicleData = [mF0 mR0 IT DELTA lT nF nR largT muy];
+System = VehicleDynamics.VehicleSimpleNonlinear3DOF(VehicleData,TireModel);
 
 %% Integration
-[TOUT,XOUT] = ode45(@(t, estados) ModeloSistema.Model(t, estados),TSPAN,x0);
+[TOUT,XOUT] = ode45(@(t, estados) System.Model(t, estados),TSPAN,x0);
 
 %% Post integration
 %
@@ -77,8 +77,7 @@ VEL = XOUT(:,6);            % CG velocity [m/s]
 
 %% Results
 % Details: <Graficos.html Graficos.m>
-
-g = DinamicaVeicular.Graficos(ModeloSistema);
+G = VehicleDynamics.Graphics(System);
 
 f1 = figure(1);
 set(f1,'Units','centimeters')
@@ -117,17 +116,19 @@ ax4 = subplot(2,2,4);
     ylabel(ax4,'$v$ [m/s]','Interpreter','Latex')
     title(ax4,'$v$ x $t$','Interpreter','Latex')
 
+%% Results
+
 %%
 % Trajectory
 %
 
-g.Trajetoria([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
+G.Frame([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 
 %%
 % Animation
 %
 
-g.Animacao([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
+G.Animation([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 
 %%
 %
@@ -135,5 +136,5 @@ g.Animacao([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 %
 %% See Also
 %
-% <index.html Index> | <TemplateArticulado.html Template Articulado>
+% <index.html Index> | <TemplateArticulated.html TemplateArticulated>
 %

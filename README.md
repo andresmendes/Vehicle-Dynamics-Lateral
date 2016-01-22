@@ -1,11 +1,10 @@
-# Dinamica-Veicular
+# Vehicle-Dynamics
 
-Documentação: [http://andresmendes.github.io/Dinamica-Veicular/](http://andresmendes.github.io/Dinamica-Veicular/)
+Documentation: [http://andresmendes.github.io/Vehicle-Dynamics/](http://andresmendes.github.io/Vehicle-Dynamics/)
 
-Para a utilização do pacote é necessário realizar os seguintes passos:
+Installation steps:
 
-* Baixar o pacote Dinamica-Veicular clicando em "Download ZIP" na página [https://github.com/andresmendes/Dinamica-Veicular](https://github.com/andresmendes/Dinamica-Veicular).
-* Salvar o pacote (pasta "+DinamicaVeicular") num _path_ do MATLAB® ou adicionar o caminho na lista de _paths_. Mais detalhes em [help path](http://www.mathworks.com/help/matlab/ref/path.html).
-* Importar o pacote inteiro com o comando:
+* Download the Vehicle-Dynamics package by clicking on "Download ZIP" in <https://github.com/andresmendes/Vehicle-Dynamics https://github.com/andresmendes/Vehicle-Dynamics>.
+* Save the package (folder "+DinamicaVeicular") in the MATLAB(R) _path_ or add your current path to the _paths list_. More details on <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
 
-import DinamicaVeicular.*
+import VehicleDynamics.*

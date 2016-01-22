@@ -42,7 +42,7 @@
 %
 % $$ S_v = a_{11} F_z \gamma + a_{12} F_z + a_{13} $$
 %
-% O modelo implementado aqui realiza tratamento do ângulo de deriva para valores acima de 90 graus. A partir deste valor a direção de avanço sobre a curva característica se inverte. O ângulo utilizado no modelo de pneu deve ser igual a zero quando o ângulo de deriva no método convencional for igual a 180. Isto deve ser feito porque a força lateral com 180 graus de ângulo de deriva deve ser igual a zero e não máxima como ocorre no modelo sem tratamento. Isto é obtido através da inclusão da linha de código:
+% O modelo implementado aqui realiza tratamento do ângulo de deriva para valores acima de 90 graus. A partir deste valor a direção de avanço sobre a curva característica se inverte. O ângulo utilizado no modelo de Tire deve ser igual a zero quando o ângulo de deriva no método convencional for igual a 180. Isto deve ser feito porque a força lateral com 180 graus de ângulo de deriva deve ser igual a zero e não máxima como ocorre no modelo sem tratamento. Isto é obtido através da inclusão da linha de código:
 %
 % _ALPHA = asin(sin(alpha));_
 %
@@ -141,5 +141,5 @@ end
 %
 %% See Also
 %
-% <index.html Index> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>
+% <index.html Index> | <TireLinear.html Tire linear> | <TirePolynomial.html Tire polynomial>
 %

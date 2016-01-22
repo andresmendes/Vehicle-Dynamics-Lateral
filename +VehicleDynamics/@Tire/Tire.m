@@ -11,7 +11,7 @@ classdef (Abstract) Tire
 	end
 end
 
-%% Ver também
+%% See Also
 %
 % <index.html Index>
 %

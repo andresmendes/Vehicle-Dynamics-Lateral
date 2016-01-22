@@ -238,5 +238,5 @@ end
 
 %% See Also
 %
-% <index.html Index> | <VeiculoSimpesNaoLinear3GDL.html Nonlinear 3 DOF vehicle model>
+% <index.html Index> | <VehicleSimpleNonlinear3DOF.html VehicleSimpleNonlinear3DOF>
 %

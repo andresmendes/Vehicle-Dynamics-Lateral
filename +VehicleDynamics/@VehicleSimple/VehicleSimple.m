@@ -15,7 +15,7 @@ classdef (Abstract) VehicleSimple
 	end
 end
 
-%% Ver também
+%% See Also
 %
-% <index.html Index>
+% <index.html Index> | <VehicleArticulated.html VehicleArticulated>
 %

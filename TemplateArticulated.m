@@ -76,5 +76,5 @@ G.Animation([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 %
 %% See Also
 %
-% <index.html Index> | <TemplateSimples.html Template Simples>
+% <index.html Index> | <TemplateSimple.html TemplateSimple>
 %
