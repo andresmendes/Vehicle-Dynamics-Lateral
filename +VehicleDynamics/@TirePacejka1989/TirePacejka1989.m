@@ -1,7 +1,5 @@
 %% Pacejka 1989 tire
-% Relação não linear entre a força lateral e o ângulo de deriva através de uma expressão semi-empírica com coeficientes experimentais.
-%
-% Baseado em: BAKKER, E.; PACEJKA, H. B.; LIDNER, L. A new tire model with an application in vehicle dynamics studies. [S.l.], 1989.
+% Nonlinear relation between tire lateral force and slip angle expressed by a semi-empirical model with experimental coefficients [1].
 %
 %% Sintax
 % |Fy = _TireModel_.Characteristic(alpha,Fz,muy)|
@@ -16,7 +14,7 @@
 % </table> </html>
 %
 %% Description
-% A equação que descreve este modelo é dada por:
+% Model equation:
 %
 % $$ F_y = - \frac{\mu_y}{\mu_{y,n}} (F_{y,n}(\alpha_{eq}) + S_v)$$
 %
@@ -59,10 +57,10 @@
 %% Code
 %
 
-classdef PneuPacejka1989 < DinamicaVeicular.Pneu
+classdef TirePacejka1989 < VehicleDynamics.Tire
     methods
         % constructor
-        function self = PneuPacejka1989(varargin)
+        function self = TirePacejka1989(varargin)
             if nargin == 0
                 a0 = 1.002806;      % Shape factor [-]
                 a1 = 2.014156;      % Load dependency of lateral friction (*1000) [1/kN]
@@ -138,6 +136,9 @@ classdef PneuPacejka1989 < DinamicaVeicular.Pneu
     end
 end
 
+%% References
+% [1] BAKKER, E.; PACEJKA, H. B.; LIDNER, L. A new tire model with an application in vehicle dynamics studies. [S.l.], 1989
+%
 %% See Also
 %
 % <index.html Index> | <PneuLinear.html Pneu linear> | <PneuPolinomial.html Pneu polinomial>

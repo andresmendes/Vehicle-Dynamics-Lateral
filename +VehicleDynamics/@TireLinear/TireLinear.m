@@ -1,5 +1,5 @@
 %% Linear tire
-% Relação linear entre a força lateral e o ângulo de deriva
+% Linear relation between tire lateral force and slip angle.
 %
 %% Sintax
 % |Fy = _TireModel_.Characteristic(alpha)|
@@ -27,10 +27,10 @@
 %% Code
 %
 
-classdef PneuLinear < DinamicaVeicular.Pneu
+classdef TireLinear < VehicleDynamics.Tire
     methods
         % Constructor
-        function self = PneuLinear(varargin)
+        function self = TireLinear(varargin)
             if nargin == 0
                 self.params = 1000;
             else

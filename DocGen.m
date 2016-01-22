@@ -1,43 +1,43 @@
 %% Doc Generator
 %
 
-slCharacterEncoding('windows1252')
+% slCharacterEncoding('windows1252')
 
 clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
 % index
-publish('index','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
+publish('index','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
 
 % Templates
-publish('TemplateSimples','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',true);
+publish('TemplateSimple','outputDir','../Vehicle-Dynamics-Doc/','evalCode',true);
     clear all                   % Clear workspace
     close all                   % Closing figures
     clc                         % Clear command window
-publish('TemplateArticulado','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',true);
+publish('TemplateArticulated','outputDir','../Vehicle-Dynamics-Doc/','evalCode',true);
     clear all                   % Clear workspace
     close all                   % Closing figures
     clc                         % Clear command window
 
 % Tire model
-publish('+DinamicaVeicular/@Pneu/Pneu','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-    publish('+DinamicaVeicular/@PneuLinear/PneuLinear','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-    publish('+DinamicaVeicular/@PneuPolinomial/PneuPolinomial','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-    publish('+DinamicaVeicular/@PneuPacejka1989/PneuPacejka1989','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-publish('ComparacaoPneu','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',true);
+publish('+VehicleDynamics/@Tire/Tire','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+    publish('+VehicleDynamics/@TireLinear/TireLinear','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+    publish('+VehicleDynamics/@TirePolynomial/TirePolynomial','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+    publish('+VehicleDynamics/@TirePacejka1989/TirePacejka1989','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+publish('TireComparison','outputDir','../Vehicle-Dynamics-Doc/','evalCode',true);
 clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
 % Vehicle model
-publish('+DinamicaVeicular/@VeiculoArticulado/VeiculoArticulado','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-    publish('+DinamicaVeicular/@VeiculoArticuladoNaoLinear4GDL/VeiculoArticuladoNaoLinear4GDL','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-publish('+DinamicaVeicular/@VeiculoSimples/VeiculoSimples','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
-    publish('+DinamicaVeicular/@VeiculoSimplesNaoLinear3GDL/VeiculoSimplesNaoLinear3GDL','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
+publish('+VehicleDynamics/@VehicleArticulated/VehicleArticulated','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+    publish('+VehicleDynamics/@VehicleArticulatedNonlinear4DOF/VehicleArticulatedNonlinear4DOF','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+publish('+VehicleDynamics/@VehicleSimple/VehicleSimple','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
+    publish('+VehicleDynamics/@VehicleSimpleNonlinear3DOF/VehicleSimpleNonlinear3DOF','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
 
 % Graphics
-publish('+DinamicaVeicular/@Graficos/Graficos','outputDir','../Dinamica-Veicular-Documentacao/','evalCode',false);
+publish('+VehicleDynamics/@Graphics/Graphics','outputDir','../Vehicle-Dynamics-Doc/','evalCode',false);
 clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window

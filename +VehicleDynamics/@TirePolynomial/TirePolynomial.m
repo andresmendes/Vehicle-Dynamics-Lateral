@@ -1,5 +1,5 @@
 %% Polynomial tire
-% Relação não linear entre a força lateral e o ângulo de deriva através de uma expressão polinomial.
+% Nonlinear relation between tire lateral force and slip angle expressed by polinomial equation [1].
 %
 %% Sintax
 % |Fy = _TireModel_.Characteristic(alpha)|
@@ -13,26 +13,25 @@
 %
 %% Description
 %
-% A equação que descreve este modelo é dada por:
+% Model equation:
 %
 % $$ F_y = k_1 \alpha  - k_2\alpha^3 $$
 %
 % $F_y$ is the lateral force and $\alpha$ is the tire slip angle. $k_1$ e
 % $k_2$ are the model coefficients.
 %
-% *Hipóteses*
+% *Hypothesis*
 %
-% * Relação não linear.
-% * Válido apenas até o ângulos de deriva que fornece a máxima força
-% lateral (Tire saturation).
+% * Nonlinear.
+% * Valid until the maximal lateral force (Tire saturation).
 %
 %% Code
 %
 
-classdef PneuPolinomial < DinamicaVeicular.Pneu
+classdef TirePolynomial < VehicleDynamics.Tire
     methods
         % Constructor
-        function self = PneuPolinomial(varargin)
+        function self = TirePolynomial(varargin)
             if nargin == 0
                 % Tire parameters - [1]
                 Ca = 57300;         %

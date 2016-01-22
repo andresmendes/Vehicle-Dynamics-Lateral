@@ -1,5 +1,5 @@
-%% Nonlinear 3 DOF vehicle model
-% Modelo bicicleta n?o linear com 3 graus de liberdade.
+%% Nonlinear 2 DOF vehicle model
+% Bicycle model nonlinear with 2 degrees of freedom.
 %
 %% Sintax
 % |dx = _VehicleModel_.Model(~,estados)|
@@ -19,10 +19,10 @@
 %% Code
 %
 
-classdef VeiculoSimplesLinear2GDL < DinamicaVeicular.VeiculoSimples
+classdef VehicleSimpleLinear2DOF < VehicleDynamics.VehicleSimple
 	methods
         % Constructor
-        function self = VeiculoSimplesLinear2GDL(varargin)
+        function self = VehicleSimpleLinear2DOF(varargin)
             if nargin == 0
                 % Entrada padr?o dos dados do ve?culo
                 % Vehicle data
@@ -36,34 +36,34 @@ classdef VeiculoSimplesLinear2GDL < DinamicaVeicular.VeiculoSimples
                 IT = Iz;                 % Momento de in?rcia [kg*m2]
                 DELTA = 0;                  % Ester?amento do eixo dianteiro [rad]
                 lT = lf+lr;                 % Dist?ncia entre os eixos[m]
-                % (Os dados de pneu j? s?o do eixo equivalente)
-                nF = 1;                     % N?mero de pneus no eixo dianteiro
-                nR = 1;                     % N?mero de pneus no eixo traseiro
-                largT = 2;                  % Largura [m]
+                % (Os dados de tire j? s?o do eixo equivalente)
+                nF = 1;                     % N?mero de tires no eixo dianteiro
+                nR = 1;                     % N?mero de tires no eixo traseiro
+                largT = 2;                  % width [m]
                 muy = 0.7;                  % Coeficiente de atrito de opera??o
                 entradaVetor = [mF0 mR0 IT DELTA lT nF nR largT muy];
                 % Definindo os par?metros da classe
-                self.params = self.conversao(entradaVetor);
-                self.pneu = DinamicaVeicular.PneuPolinomial;
+                self.params = self.convert(entradaVetor);
+                self.tire = VehicleDynamics.tirePolinomial;
             else
-                self.params = self.conversao(varargin{1});
-                self.pneu = varargin{2};
+                self.params = self.convert(varargin{1});
+                self.tire = varargin{2};
             end
                 self.distFT = self.params(11);
                 self.distTR = self.params(12);
-                self.largura = self.params(8);
+                self.width = self.params(8);
         end
 
         %% Model
-        % Fun??o com as equa??es de estado do modelo
+        % Function with the model
         function dx = Model(self,~,estados)
             % Data
             m = self.params(10);        % massa do veiculo [kg]
             Iz = self.params(3);         % momento de inercia [kg]
             lf = self.params(11);        % distancia do eixo dianteiro ao centro de massa [m]
             lr = self.params(12);        % distancia do eixo dianteiro ao centro de massa [m]
-            nF = self.params(6);        % N?mero de pneus no eixo dianteiro do caminh?o-trator
-            nR = self.params(7);        % N?mero de pneus no eixo traseiro do caminh?o-trator
+            nF = self.params(6);        % N?mero de tires no eixo dianteiro do caminh?o-trator
+            nR = self.params(7);        % N?mero de tires no eixo traseiro do caminh?o-trator
             muy = self.params(9);       % Coeficiente de atrito de opera??o
             deltaf = self.params(4);
             g = 9.81;                   % Acelera??o da gravidade [m/s^2]
@@ -81,8 +81,8 @@ classdef VeiculoSimplesLinear2GDL < DinamicaVeicular.VeiculoSimples
             alphar = (vy - lr*r)/vx;               % Rear
 
             % Lateral force
-            Fyf = nF*self.pneu.Characteristic(alphaf,FzF/nF,muy);
-            Fyr = nR*self.pneu.Characteristic(alphar,FzR/nR,muy);
+            Fyf = nF*self.tire.Characteristic(alphaf,FzF/nF,muy);
+            Fyr = nR*self.tire.Characteristic(alphar,FzR/nR,muy);
 
             % State equations
             dvy = (Fyf*cos(deltaf) + Fyr - m*vx*r)/m;
@@ -103,9 +103,9 @@ classdef VeiculoSimplesLinear2GDL < DinamicaVeicular.VeiculoSimples
     end
 
     methods (Static)
-        %% conversao
-        % A fun??o conversao adiciona no vetor de entrada ([mF0 mR0 IT DELTA lT nF nR largT muy]) os par?metros restantes do modelo de ve?culo ([mT a b]).
-        function parametros = conversao(entrada)
+        %% convert
+        % A fun??o convert adiciona no vetor de entrada ([mF0 mR0 IT DELTA lT nF nR largT muy]) os par?metros restantes do modelo de ve?culo ([mT a b]).
+        function parametros = convert(entrada)
             mF0 = entrada(1);       % Massa no eixo dianteiro [kg]
             mR0 = entrada(2);       % Massa no eixo traseiro [kg]
             lT = entrada(5);        % Dist?ncia entre os eixos [m]
@@ -123,10 +123,10 @@ classdef VeiculoSimplesLinear2GDL < DinamicaVeicular.VeiculoSimples
 
     properties
         params
-        pneu
+        tire
         distFT
         distTR
-        largura
+        width
     end
 
 end

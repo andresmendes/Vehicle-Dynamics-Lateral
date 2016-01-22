@@ -1,5 +1,5 @@
 %% Nonlinear 3 DOF vehicle model
-% Modelo bicicleta não linear com 3 graus de liberdade.
+% Bicycle model nonlinear with 3 degrees of freedom.
 %
 %% Sintax
 % |dx = _VehicleModel_.Model(~,estados)|
@@ -19,10 +19,10 @@
 %% Code
 %
 
-classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
+classdef VehicleSimpleNonlinear3DOF < VehicleDynamics.VehicleSimple
 	methods
         % Constructor
-        function self = VeiculoSimplesNaoLinear3GDL(varargin)
+        function self = VehicleSimpleNonlinear3DOF(varargin)
             if nargin == 0
                 % Entrada padrão dos dados do veículo
                 mF0 = 5237;     % Massa no eixo dianteiro [kg]
@@ -30,21 +30,21 @@ classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
                 IT = 46100;     % Momento de inércia [kg*m2]
                 DELTA = 0;      % Esterçamento do eixo dianteiro [rad]
                 lT = 3.550;     % Distância entre os eixos [m]
-                nF = 2;         % Número de pneus no eixo dianteiro
-                nR = 2;         % Número de pneus no eixo traseiro
-                largT = 2;      % Largura do veículo[m]
+                nF = 2;         % Número de tires no eixo dianteiro
+                nR = 2;         % Número de tires no eixo traseiro
+                largT = 2;      % width do veículo[m]
                 muy = 0.3;      % Coeficiente de atrito de operação
                 entradaVetor = [mF0 mR0 IT DELTA lT nF nR largT muy];
                 % Definindo os parâmetros da classe
-                self.params = self.conversao(entradaVetor);
-                self.pneu = DinamicaVeicular.PneuPacejka;
+                self.params = self.convert(entradaVetor);
+                self.tire = VehicleDynamics.tirePacejka;
             else
-                self.params = self.conversao(varargin{1});
-                self.pneu = varargin{2};
+                self.params = self.convert(varargin{1});
+                self.tire = varargin{2};
             end
                 self.distFT = self.params(11);
                 self.distTR = self.params(12);
-                self.largura = self.params(8);
+                self.width = self.params(8);
         end
 
         %% Model
@@ -55,8 +55,8 @@ classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
             I = self.params(3);         % momento de inercia [kg]
             a = self.params(11);        % distancia do eixo dianteiro ao centro de massa [m]
             b = self.params(12);        % distancia do eixo dianteiro ao centro de massa [m]
-            nF = self.params(6);        % Número de pneus no eixo dianteiro do caminhão-trator
-            nR = self.params(7);        % Número de pneus no eixo traseiro do caminhão-trator
+            nF = self.params(6);        % Número de tires no eixo dianteiro do caminhão-trator
+            nR = self.params(7);        % Número de tires no eixo traseiro do caminhão-trator
             muy = self.params(9);       % Coeficiente de atrito de operação
             DELTA = self.params(4);
             g = 9.81;                   % Aceleração da gravidade [m/s^2]
@@ -77,8 +77,8 @@ classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
             FxR = 0;
 
             % Curva característica
-            FyF = nF*self.pneu.Characteristic(ALPHAF,FzF/nF,muy);
-            FyR = nR*self.pneu.Characteristic(ALPHAR,FzR/nR,muy);
+            FyF = nF*self.tire.Characteristic(ALPHAF,FzF/nF,muy);
+            FyR = nR*self.tire.Characteristic(ALPHAR,FzR/nR,muy);
 
             % Equações de estado
             dx(1,1) = (FyF*a*cos(DELTA) - FyR*b + FxF*a*sin(DELTA))/I;
@@ -98,9 +98,9 @@ classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
     end
 
     methods (Static)
-        %% conversao
-        % A função conversao adiciona no vetor de entrada ([mF0 mR0 IT DELTA lT nF nR largT muy]) os parâmetros restantes do modelo de veículo ([mT a b]).
-        function parametros = conversao(entrada)
+        %% convert
+        % A função convert adiciona no vetor de entrada ([mF0 mR0 IT DELTA lT nF nR largT muy]) os parâmetros restantes do modelo de veículo ([mT a b]).
+        function parametros = convert(entrada)
             mF0 = entrada(1);       % Massa no eixo dianteiro [kg]
             mR0 = entrada(2);       % Massa no eixo traseiro [kg]
             lT = entrada(5);        % Distância entre os eixos [m]
@@ -118,10 +118,10 @@ classdef VeiculoSimplesNaoLinear3GDL < DinamicaVeicular.VeiculoSimples
 
     properties
         params
-        pneu
+        tire
         distFT
         distTR
-        largura
+        width
     end
 
 end

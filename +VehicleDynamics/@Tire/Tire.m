@@ -1,7 +1,7 @@
 %% Pneu (Abstract)
 %
 
-classdef (Abstract) Pneu
+classdef (Abstract) Tire
 	methods(Abstract)
 		Characteristic(self,alpha)
 	end

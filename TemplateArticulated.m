@@ -7,7 +7,7 @@ clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
-import DinamicaVeicular.*   % Import package Dinamica Veicular
+import VehicleDynamics.*   % Import package Vehicle Dynamics
 
 %% Integration parameters
 %
@@ -30,15 +30,15 @@ x0 = [dPSI0 ALPHAT0 dPHI0 VEL0 PHI0 PSI0 X0 Y0];
 %% Default models and parameters
 % Definindo o modelo de veículo sem passagem de argumentos os parâmetros e modelos padrão são usados.
 
-ModeloSistema = DinamicaVeicular.VeiculoArticuladoNaoLinear4GDL;
+System = VehicleDynamics.VehicleArticulatedNonlinear4DOF;
 
 %% Integration
 % Integration using mass matrix. Details: <http://www.mathworks.com/help/matlab/ref/ode45.html?searchHighlight=%22mass%20matrix%22 ode45 (Mass matrix)>
 
 % Configurando as opções do integrador para levar em consideração a matriz de massa
-options = odeset('Mass',@ModeloSistema.MatrizMassa);
+options = odeset('Mass',@System.MassMatrix);
 
-[TOUT,XOUT] = ode45(@(t, estados) ModeloSistema.Model(t, estados),TSPAN,x0,options);
+[TOUT,XOUT] = ode45(@(t, estados) System.Model(t, estados),TSPAN,x0,options);
 
 %% Post integration
 %
@@ -54,21 +54,21 @@ XT = XOUT(:,7);             % Tractor CG horizontal position [m]
 YT = XOUT(:,8);             % Tractor CG vertical position [m]
 
 %% Results
-% Details: <Graficos.html Graficos.m>
+% Details: <Graphics.html Graphics.m>
 
-g = DinamicaVeicular.Graficos(ModeloSistema);
+G = VehicleDynamics.Graphics(System);
 
 %%
 % Trajectory
 %
 
-g.Trajetoria([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
+G.Frame([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 
 %%
 % Animation
 %
 
-g.Animacao([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
+G.Animation([XT YT PSI dPSI VEL ALPHAT PHI dPHI],TOUT,0);
 
 %%
 %

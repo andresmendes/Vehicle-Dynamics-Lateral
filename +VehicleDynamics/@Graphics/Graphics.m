@@ -1,27 +1,27 @@
 %% Graphics
-% Funções para a exibição dos resultados da simulação de veículos.
+% Functions for graphics generation.
 %
 %% Code
 %
 
-classdef Graficos
+classdef Graphics
 	methods
         % Constructor
-        function self = Graficos(varargin)
-            v = DinamicaVeicular.VeiculoArticuladoNaoLinear4GDL;
+        function self = Graphics(varargin)
+            v = VehicleDynamics.VehicleArticulatedNonlinear4DOF;
             if nargin == 0
-                self.veiculo = v;%.params;
+                self.vehicle = v;%.params;
             else
-                self.veiculo = varargin{1};%.params;
+                self.vehicle = varargin{1};%.params;
             end
         end
 
-        %% Animacao
-        % A função Animacao gera a animação da movimentação do veículo.
+        %% Animation
+        % Animates the manoever.
         %
         % *Sintax*
         %
-        % |_GraphicsClass_.Animacao(XOUT,TOUT,saveit)|
+        % |_GraphicsClass_.Animation(XOUT,TOUT,saveit)|
         %
         % *Arguments*
         %
@@ -35,9 +35,9 @@ classdef Graficos
         %
         % *Description*
         %
-        % TEXTO
+        % TEXT
 
-        function Animacao(self,XOUT,TOUT,saveit)
+        function Animation(self,XOUT,TOUT,saveit)
             % Verificando quantidade de colunas para saber se é veículo simples ou articulado
             % col = 6 -> simples
             % col = 8 -> articulado
@@ -52,16 +52,16 @@ classdef Graficos
             ALPHAT = XOUT(:,6);             % Vehicle side slip angle [rad]
 
             % Distances
-            a = self.veiculo.distFT;        % Distance FT [m]
-            b = self.veiculo.distTR;        % Distance TR [m]
-            lT = self.veiculo.largura / 2;  % Metade da largura do veiculo [m]
+            a = self.vehicle.distFT;        % Distance FT [m]
+            b = self.vehicle.distTR;        % Distance TR [m]
+            lT = self.vehicle.width / 2;  % Metade da width do vehicle [m]
 
             % Ângulo de deriva na dianteira [rad]
             ALPHAF = atan2((a*dPSI + VT.*sin(ALPHAT)),(VT.*cos(ALPHAT)));
             % Ângulo de deriva na traseira [rad]
             ALPHAR = atan2((-b*dPSI + VT.*sin(ALPHAT)),(VT.*cos(ALPHAT)));
             % OBS: Calculando os ângulos de deriva com "atan2", quando o valor chega a
-            % 180 graus fica estranho o vetor.
+            % 180 graus fica estranho o vector.
 
             % Módulo da velocidade no eixo dianteiro [m/s]
             VF = sqrt((VT.*cos(ALPHAT)).^2 + (a*dPSI + VT.*sin(ALPHAT)).^2);
@@ -72,7 +72,7 @@ classdef Graficos
             % Determina a posição dos cantos e eixos do veículo com relação ao centro
             % de massa.
 
-            % Vetores posição 1, 2, 3 e 4 em relação a T na base (T t1 t2 t3)
+            % Vectores posição 1, 2, 3 e 4 em relação a T na base (T t1 t2 t3)
             rt1t = [a;lT];                  % dianteira esquerda
             rt2t = [a;-lT];                 % dianteira direita
             rt3t = [-b;-lT];                % traseira direita
@@ -99,7 +99,7 @@ classdef Graficos
             for j=1:length(TOUT)
                 % Matriz de rotação da base (T t1 t2 t3) para (o i j k)
                 RTI=[cos(PSI(j)) -sin(PSI(j));sin(PSI(j)) cos(PSI(j))];
-                % Vetores posição 1, 2, 3 e 4 em relação a origem do ref inercial na
+                % Vectores posição 1, 2, 3 e 4 em relação a origem do ref inercial na
                 rt1i(j,1:2) = (RTI*rt1t)';
                 % base (T t1 t2 t3)
                 rt2i(j,1:2) = (RTI*rt2t)';
@@ -113,7 +113,7 @@ classdef Graficos
             % Posição absoluta dos cantos e eixos
             % A evolução da posição absoluta dos pontos ao longo do tempo.
 
-            % Vetores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
+            % Vectores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
             rc1t=[XT YT]+rt1i;
             rc2t=[XT YT]+rt2i;
             rc3t=[XT YT]+rt3i;
@@ -206,12 +206,12 @@ classdef Graficos
             %
             %
 
-            % Vetores velocidade
-            % Script "vetor.m"
-            % Escolhi não exibir o vetor velocidade do centro de massa pq fica muito poluido
-            %vetor([xxx(1) yyy(1)],(alphat(1)+psii(1)),velt(1),'k');
-            self.Vetor(efrente(1,1:2),(alphaf(1)+psii(1)),velf(1),'r');
-            self.Vetor(etras(1,1:2),(alphar(1)+psii(1)),velr(1),'g');
+            % Vectores velocidade
+            % Script "vector.m"
+            % Escolhi não exibir o vector velocidade do centro de massa pq fica muito poluido
+            %vector([xxx(1) yyy(1)],(alphat(1)+psii(1)),velt(1),'k');
+            self.Vector(efrente(1,1:2),(alphaf(1)+psii(1)),velf(1),'r');
+            self.Vector(etras(1,1:2),(alphar(1)+psii(1)),velr(1),'g');
 
             % Coordenadas dos cantos para o primeiro frame
             xc = [rc1(1,1) rc2(1,1) rc3(1,1) rc4(1,1)];
@@ -225,17 +225,17 @@ classdef Graficos
                 PHI = XOUT(:,7);        % Orientação relativa do semirreboque [rad]
                 dPHI = XOUT(:,8);       % Velocidade angular relativa entre as unidades [rad/s]
 
-                c = self.veiculo.distRA;        % distancia da articulação ao centro de massa do caminhão-trator [m]
-                d = self.veiculo.distAS;        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
-                e = self.veiculo.distSM;        % distancia da articulação ao centro de massa do caminhão-trator [m]
-                lS = self.veiculo.larguraSemi / 2;              % Metade da largura do veiculo [m]
+                c = self.vehicle.distRA;        % distancia da articulação ao centro de massa do caminhão-trator [m]
+                d = self.vehicle.distAS;        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+                e = self.vehicle.distSM;        % distancia da articulação ao centro de massa do caminhão-trator [m]
+                lS = self.vehicle.widthSemi / 2;              % Metade da width do vehicle [m]
 
                 % Ângulo de deriva no eixo do semirreboque [rad]
                 ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VT.*sin(ALPHAT + PHI) - b*dPSI.*cos(PHI) - c*dPSI.*cos(PHI)),(VT.*cos(ALPHAT + PHI) + b*dPSI.*sin(PHI) + c*dPSI.*sin(PHI)));
                 % Módulo da velocidade no eixo do semirreboque [m/s]
                 VM = sqrt((VT.*cos(ALPHAT + PHI) + b*dPSI.*sin(PHI) + c*dPSI.*sin(PHI)).^2 + ((d + e)*(dPHI - dPSI) + VT.*sin(ALPHAT + PHI) - b*dPSI.*cos(PHI) - c*dPSI.*cos(PHI)).^2);
                 RS = [XT-(b+c)*cos(PSI)-d*cos(PSI-PHI) YT-(b+c)*sin(PSI)-d*sin(PSI-PHI)];
-                % Vetores posição 1, 2, 3 e 4 em relação a S na base (S s1 s2 s3)
+                % Vectores posição 1, 2, 3 e 4 em relação a S na base (S s1 s2 s3)
                 rs1s = [d;lS];           % dianteira esquerda
                 rs2s = [d;-lS];          % dianteira direita
                 rs3s = [-e;-lS];         % traseira direita
@@ -253,7 +253,7 @@ classdef Graficos
                 for j=1:length(TOUT)
                     % Matriz de rotação da base (S s1 s2 s3) para (o i j k)
                     RSI=[cos(PSI(j)-PHI(j)) -sin(PSI(j)-PHI(j));sin(PSI(j)-PHI(j)) cos(PSI(j)-PHI(j))];
-                    % Vetores posição 1, 2, 3 e 4 em relação a O na base (c c1 c2 c3)
+                    % Vectores posição 1, 2, 3 e 4 em relação a O na base (c c1 c2 c3)
                     rn1i(j,1:2) = (RSI*rs1s)';
                     rn2i(j,1:2) = (RSI*rs2s)';
                     rn3i(j,1:2) = (RSI*rs3s)';
@@ -263,7 +263,7 @@ classdef Graficos
                     emm(j,1:2) = (RSI*eim);     % Eixo trasiro
                 end
 
-                % Vetores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
+                % Vectores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
                 rn1t=RS+rn1i;
                 rn2t=RS+rn2i;
                 rn3t=RS+rn3i;
@@ -289,7 +289,7 @@ classdef Graficos
                     emsemi(i,1:2) = interp1(TOUT,em,TEMPO(i));
                 end
 
-                self.Vetor(emsemi(1,1:2),(alpham(1)+psii(1)-phii(1)),velm(1),'b');
+                self.Vector(emsemi(1,1:2),(alpham(1)+psii(1)-phii(1)),velm(1),'b');
                 xn = [rn1(1,1) rn2(1,1) rn3(1,1) rn4(1,1)];
                 yn = [rn1(1,2) rn2(1,2) rn3(1,2) rn4(1,2)];
                 fill(xn,yn,'g')
@@ -325,19 +325,19 @@ classdef Graficos
                 % Exibindo o veículo
                 fill(xc,yc,'r')
 
-                % Vetores velocidade
+                % Vectores velocidade
                 % Com cores diferentes
-                % Escolhi não exibir o vetor velocidade do centro de massa pq fica muito poluido
-                %vetor([xxx(j) yyy(j)],(alphat(j)+psii(j)),velt(j),'k');
-                self.Vetor(efrente(j,1:2),(alphaf(j)+psii(j)),velf(j),'r');
-                self.Vetor(etras(j,1:2),(alphar(j)+psii(j)),velr(j),'g');
+                % Escolhi não exibir o vector velocidade do centro de massa pq fica muito poluido
+                %vector([xxx(j) yyy(j)],(alphat(j)+psii(j)),velt(j),'k');
+                self.Vector(efrente(j,1:2),(alphaf(j)+psii(j)),velf(j),'r');
+                self.Vector(etras(j,1:2),(alphar(j)+psii(j)),velr(j),'g');
 
                 if col == 8
                     plot(emsemi(:,1),emsemi(:,2),'b')
                     xn = [rn1(j,1) rn2(j,1) rn3(j,1) rn4(j,1)];
                     yn = [rn1(j,2) rn2(j,2) rn3(j,2) rn4(j,2)];
                     fill(xn,yn,'g')
-                    self.Vetor(emsemi(j,1:2),(alpham(j)+psii(j)-phii(j)),velm(j),'b');
+                    self.Vector(emsemi(j,1:2),(alpham(j)+psii(j)-phii(j)),velm(j),'b');
                 end
 
                 if saveit == 1
@@ -355,7 +355,7 @@ classdef Graficos
                 cla(ax); % Limpando o axes
             end
 
-            % Último frame
+            % ÿltimo frame
             % A última imagem que a figura vai exibir quando a animação acabar
             %
 
@@ -370,10 +370,10 @@ classdef Graficos
             % Exibindo o veículo
             fill(xc,yc,'r')
 
-            % Escolhi não exibir o vetor velocidade do centro de massa pq fica muito poluido
-            %vetor([xxx(end) yyy(end)],(alphat(end)+psii(end)),velt(end),'k');
-            self.Vetor(efrente(end,1:2),(alphaf(end)+psii(end)),velf(end),'r');
-            self.Vetor(etras(end,1:2),(alphar(end)+psii(end)),velr(end),'g');
+            % Escolhi não exibir o vector velocidade do centro de massa pq fica muito poluido
+            %vector([xxx(end) yyy(end)],(alphat(end)+psii(end)),velt(end),'k');
+            self.Vector(efrente(end,1:2),(alphaf(end)+psii(end)),velf(end),'r');
+            self.Vector(etras(end,1:2),(alphar(end)+psii(end)),velr(end),'g');
 
             % Incluindo o semirreboque
             if col == 8
@@ -381,16 +381,16 @@ classdef Graficos
                 xn = [rn1(end,1) rn2(end,1) rn3(end,1) rn4(end,1)];
                 yn = [rn1(end,2) rn2(end,2) rn3(end,2) rn4(end,2)];
                 fill(xn,yn,'g')
-                self.Vetor(emsemi(end,1:2),(alpham(end)+psii(end)-phii(end)),velm(end),'b');
+                self.Vector(emsemi(end,1:2),(alpham(end)+psii(end)-phii(end)),velm(end),'b');
             end
         end
 
-        %% Trajetoria
-        % A função Trajetoria gera uma imagem com a representação do veículo em estágios sucessivos da movimentação.
+        %% Frame
+        % Plots the sequence of frames of the vehicle manoever.
         %
         % *Sintax*
         %
-        % |_GraphicsClass_.Trajetoria(XOUT,TOUT,saveit)|
+        % |_GraphicsClass_.Frame(XOUT,TOUT,saveit)|
         %
         % *Arguments*
         %
@@ -406,7 +406,7 @@ classdef Graficos
         %
         % TEXTO
 
-        function Trajetoria(self,XOUT,TOUT,saveit)
+        function Frame(self,XOUT,TOUT,saveit)
             % Verificando quantidade de colunas para saber se é veículo simples ou articulado
             % col = 6 -> simples
             % col = 8 -> articulado
@@ -421,18 +421,18 @@ classdef Graficos
             ALPHAT = XOUT(:,6);             % Vehicle side slip angle [rad]
 
             % Distances
-            a = self.veiculo.distFT;        % Distance FT [m]
-            b = self.veiculo.distTR;        % Distance TR [m]
-            lT = self.veiculo.largura / 2;  % Metade da largura do veiculo [m]
+            a = self.vehicle.distFT;        % Distance FT [m]
+            b = self.vehicle.distTR;        % Distance TR [m]
+            lT = self.vehicle.width / 2;  % Metade da width do vehicle [m]
 
             % Slip angles
             ALPHAF = atan2((a*dPSI + VT.*sin(ALPHAT)),(VT.*cos(ALPHAT)));   % Front [rad]
-            % OBS: Não tem o delta pq é pra medir o ângulo entre o vetor velocidade do eixo dianteiro e o plano longitudinal do veículo
+            % OBS: Não tem o delta pq é pra medir o ângulo entre o vector velocidade do eixo dianteiro e o plano longitudinal do veículo
             ALPHAR = atan2((-b*dPSI + VT.*sin(ALPHAT)),(VT.*cos(ALPHAT)));  % Rear [rad]
 
             %
             % OBS: Calculando os ângulos de deriva com "atan2", quando o valor chega a
-            % 180 graus fica estranho o vetor.
+            % 180 graus fica estranho o vector.
             %
             % Velocity
             VF = sqrt((VT.*cos(ALPHAT)).^2 + (a*dPSI + VT.*sin(ALPHAT)).^2);    % Front [m/s]
@@ -441,7 +441,7 @@ classdef Graficos
             % Posição relativa dos cantos e eixos
             % Determina a posição dos cantos e eixos do veículo com relação ao centro
             % de massa.
-            % Vetores posição 1, 2, 3 e 4 em relação a T na base (T t1 t2 t3)
+            % Vectores posição 1, 2, 3 e 4 em relação a T na base (T t1 t2 t3)
             rt1t = [a;lT];           % dianteira esquerda
             rt2t = [a;-lT];          % dianteira direita
             rt3t = [-b;-lT];         % traseira direita
@@ -465,7 +465,7 @@ classdef Graficos
             for j=1:length(TOUT)
                 % Matriz de rotação da base (T t1 t2 t3) para (o i j k)
                 RTI=[cos(PSI(j)) -sin(PSI(j));sin(PSI(j)) cos(PSI(j))];
-                % Vetores posição 1, 2, 3 e 4 em relação a origem do ref inercial na
+                % Vectores posição 1, 2, 3 e 4 em relação a origem do ref inercial na
                 % base (T t1 t2 t3)
                 rt1i(j,1:2) = (RTI*rt1t)';
                 rt2i(j,1:2) = (RTI*rt2t)';
@@ -478,7 +478,7 @@ classdef Graficos
 
             % Posição absoluta dos cantos e eixos
             % A evolução da posição absoluta dos pontos ao longo do tempo.
-            % Vetores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
+            % Vectores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
             rc1t=[XT YT]+rt1i;
             rc2t=[XT YT]+rt2i;
             rc3t=[XT YT]+rt3i;
@@ -581,17 +581,17 @@ classdef Graficos
                 PHI = XOUT(:,7);        % Orientação relativa do semirreboque [rad]
                 dPHI = XOUT(:,8);       % Velocidade angular relativa entre as unidades [rad/s]
 
-                c = self.veiculo.distRA;        % distancia da articulação ao centro de massa do caminhão-trator [m]
-                d = self.veiculo.distAS;        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
-                e = self.veiculo.distSM;        % distancia da articulação ao centro de massa do caminhão-trator [m]
-                lS = self.veiculo.larguraSemi / 2;              % Metade da largura do veiculo [m]
+                c = self.vehicle.distRA;        % distancia da articulação ao centro de massa do caminhão-trator [m]
+                d = self.vehicle.distAS;        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
+                e = self.vehicle.distSM;        % distancia da articulação ao centro de massa do caminhão-trator [m]
+                lS = self.vehicle.widthSemi / 2;              % Metade da width do vehicle [m]
                 % Ângulo de deriva no eixo do semirreboque [rad]
                 ALPHAM = atan2(((d + e)*(dPHI - dPSI) + VT.*sin(ALPHAT + PHI) - b*dPSI.*cos(PHI) - c*dPSI.*cos(PHI)),(VT.*cos(ALPHAT + PHI) + b*dPSI.*sin(PHI) + c*dPSI.*sin(PHI)));
                 % Módulo da velocidade no eixo do semirreboque [m/s]
                 VM = sqrt((VT.*cos(ALPHAT + PHI) + b*dPSI.*sin(PHI) + c*dPSI.*sin(PHI)).^2 + ((d + e)*(dPHI - dPSI) + VT.*sin(ALPHAT + PHI) - b*dPSI.*cos(PHI) - c*dPSI.*cos(PHI)).^2);
                 % Posição do centro de massa do semirreboque
                 RS = [XT-(b+c)*cos(PSI)-d*cos(PSI-PHI) YT-(b+c)*sin(PSI)-d*sin(PSI-PHI)];
-                % Vetores posição 1, 2, 3 e 4 em relação a S na base (S s1 s2 s3)
+                % Vectores posição 1, 2, 3 e 4 em relação a S na base (S s1 s2 s3)
                 rs1s = [d;lS];           % dianteira esquerda
                 rs2s = [d;-lS];          % dianteira direita
                 rs3s = [-e;-lS];         % traseira direita
@@ -607,7 +607,7 @@ classdef Graficos
                 for j=1:length(TOUT)
                     % Matriz de rotação da base (S s1 s2 s3) para (o i j k)
                     RSI=[cos(PSI(j)-PHI(j)) -sin(PSI(j)-PHI(j));sin(PSI(j)-PHI(j)) cos(PSI(j)-PHI(j))];
-                    % Vetores posição 1, 2, 3 e 4 em relação a O na base (c c1 c2 c3)
+                    % Vectores posição 1, 2, 3 e 4 em relação a O na base (c c1 c2 c3)
                     rn1i(j,1:2) = (RSI*rs1s)';
                     rn2i(j,1:2) = (RSI*rs2s)';
                     rn3i(j,1:2) = (RSI*rs3s)';
@@ -615,7 +615,7 @@ classdef Graficos
                     % Posicionando o eixo dianteiro e o traseiro
                     emm(j,1:2) = (RSI*eim);     % Eixo trasiro
                 end
-                % Vetores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
+                % Vectores posição 1, 2, 3 e 4 em relação a o na base (o i j k)
                 rn1t=RS+rn1i;
                 rn2t=RS+rn2i;
                 rn3t=RS+rn3i;
@@ -663,12 +663,12 @@ classdef Graficos
 
     methods(Static)
 
-        %% Vetor
-        % A função Vetor gera uma flecha na figura ativa.
+        %% Vector
+        % Plots a vector arrow.
         %
         % *Sintax*
         %
-        % |_GraphicsClass_.Vetor(inicio,angulo,modulo,cor)|
+        % |_GraphicsClass_.Vector(inicio,angulo,modulo,cor)|
         %
         % *Arguments*
         %
@@ -685,15 +685,15 @@ classdef Graficos
         %
         % TEXTO
 
-        function Vetor(inicio,angulo,modulo,cor)
-            coord1 = inicio;                                    % inicio do vetor
+        function Vector(inicio,angulo,modulo,cor)
+            coord1 = inicio;                                    % inicio do vector
             theta = angulo;
-            modulo = 0.7*modulo;                                % modulo do vetor
-            coord2 = modulo*[cos(theta) sin(theta)] + coord1;   % fim do vetor
+            modulo = 0.7*modulo;                                % modulo do vector
+            coord2 = modulo*[cos(theta) sin(theta)] + coord1;   % fim do vector
 
             %theta = atan2((coord1(1)-coord2(1)),(coord1(2)-coord2(2))); % angulo de orientação do triangulo
             esc = 1; % Escala
-            l = 0.5; % Largura relativa em relação ao comprimento do triangulo (0-1)
+            l = 0.5; % width relativa em relação ao comprimento do triangulo (0-1)
 
             % Forma e orientação do triangulo
             c1 = esc*l*[-sin(theta) +cos(theta)];   % canto 1 - inferior esquerdo
@@ -710,7 +710,7 @@ classdef Graficos
             fill(x,y,cor)
             p = plot([coord1(1) coord2(1)],[coord1(2) coord2(2)],cor);
             set(p,'LineWidth',2)
-            % Idéia de colocar um marcador no início do vetor
+            % Idéia de colocar um marcador no início do vector
             % m = plot(coord1(1),coord1(2),strcat('*',cor));
             % set(m,'MarkerSize',10)
         end
@@ -780,7 +780,7 @@ classdef Graficos
     %
 
     properties
-        veiculo
+        vehicle
     end
 end
 

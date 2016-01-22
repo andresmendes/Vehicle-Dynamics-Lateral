@@ -24,10 +24,10 @@
 %% Code
 %
 
-classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
+classdef VehicleArticulatedNonlinear4DOF < VehicleDynamics.VehicleArticulated
 	methods
         % Constructor
-        function self = VeiculoArticuladoNaoLinear4GDL(varargin)
+        function self = VehicleArticulatedNonlinear4DOF(varargin)
             if nargin == 0
                 % Entrada padrão dos dados do veículo
                 mF0 = 5237;         % Massa no eixo dianteiro do caminhão-trator desacoplado [kg]
@@ -41,27 +41,27 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
                 c = -0.310;         % Distância da articulação ao eixo traseiro do caminhão-trator (A-R) [m]
                 lT = 3.550;         % Distância entre os eixos do caminhão-trator [m]
                 lS = 7.700;         % Distância entre a articulação e o eixo do semirreboque [m]
-                nF = 2;             % Número de pneus no eixo dianteiro do caminhão-trator
-                nR = 4;             % Número de pneus no eixo traseiro do caminhão-trator
-                nM = 8;             % Número de pneus no eixo do semirreboque
-                larguraT = 2.6;     % Largura do caminhão-trator [m]
-                larguraS = 2.550;   % Largura do semirreboque [m]
+                nF = 2;             % Número de tires no eixo dianteiro do caminhão-trator
+                nR = 4;             % Número de tires no eixo traseiro do caminhão-trator
+                nM = 8;             % Número de tires no eixo do semirreboque
+                widthT = 2.6;     % width do caminhão-trator [m]
+                widthS = 2.550;   % width do semirreboque [m]
                 muy = 0.3;          % Coeficiente de atrito de operação
-                entradaVetor = [mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM larguraT larguraS muy];
+                entradaVetor = [mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM widthT widthS muy];
                 % Definindo os parâmetros da classe
-                self.params = self.conversao(entradaVetor);
-                self.pneu = DinamicaVeicular.PneuPacejka1989;
+                self.params = self.convert(entradaVetor);
+                self.tire = VehicleDynamics.TirePacejka1989;
             else
-                self.params = self.conversao(varargin{1});
-                self.pneu = varargin{2};
+                self.params = self.convert(varargin{1});
+                self.tire = varargin{2};
             end
                 self.distFT = self.params(20);
                 self.distTR = self.params(21);
                 self.distRA = self.params(9);
                 self.distAS = self.params(22);
                 self.distSM = self.params(23);
-                self.largura = self.params(15);
-                self.larguraSemi = self.params(16);
+                self.width = self.params(15);
+                self.widthSemi = self.params(16);
         end
 
         %% Model
@@ -78,9 +78,9 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
             d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
             e = self.params(23);        % distancia da articulação ao centro de massa do caminhão-trator [m]
             DELTA = self.params(8);     % Esterçamento [rad]
-            nF = self.params(12);       % Número de pneus no eixo dianteiro do caminhão-trator
-            nR = self.params(13);       % Número de pneus no eixo traseiro do caminhão-trator
-            nM = self.params(14);       % Número de pneus no eixo do semirreboque
+            nF = self.params(12);       % Número de tires no eixo dianteiro do caminhão-trator
+            nR = self.params(13);       % Número de tires no eixo traseiro do caminhão-trator
+            nM = self.params(14);       % Número de tires no eixo do semirreboque
             g = 9.81;                   % Aceleração da gravidade [m/s^2]
             FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
             FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
@@ -104,14 +104,14 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
             FxF = 0;
             FxR = 0;
             FxM = 0;
-            % Forças laterais nos pneus - Curva característica
-            FyF = nF*self.pneu.Characteristic(ALPHAF,FzF/nF,muy);
-            FyR = nR*self.pneu.Characteristic(ALPHAR,FzR/nR,muy);
-            FyM = nM*self.pneu.Characteristic(ALPHAM,FzM/nM,muy);
+            % Forças laterais nos tires - Curva característica
+            FyF = nF*self.tire.Characteristic(ALPHAF,FzF/nF,muy);
+            FyR = nR*self.tire.Characteristic(ALPHAR,FzR/nR,muy);
+            FyM = nM*self.tire.Characteristic(ALPHAM,FzM/nM,muy);
 
             % ddPSI,dALPHAT,ddPHI,dPHI,dVEL
             f1 = FxR + FxF*cos(DELTA) + FxM*cos(PHI) - FyF*sin(DELTA) + FyM*sin(PHI) - b*dPSI^2*mS - c*dPSI^2*mS + VEL*dPSI*mS*sin(ALPHAT) ...
-                 + VEL*dPSI*mT*sin(ALPHAT) - d*dPHI^2*mS*cos(PHI) - d*dPSI^2*mS*cos(PHI) + 2*d*dPHI*dPSI*mS*cos(PHI);
+                    + VEL*dPSI*mT*sin(ALPHAT) - d*dPHI^2*mS*cos(PHI) - d*dPSI^2*mS*cos(PHI) + 2*d*dPHI*dPSI*mS*cos(PHI);
             f2 = FyR + FyF*cos(DELTA) + FyM*cos(PHI) + FxF*sin(DELTA) - FxM*sin(PHI) - VEL*dPSI*mS*cos(ALPHAT) - VEL*dPSI*mT*cos(ALPHAT) + ...
                  d*dPHI^2*mS*sin(PHI) + d*dPSI^2*mS*sin(PHI) - 2*d*dPHI*dPSI*mS*sin(PHI);
             f3 = a*(FyF*cos(DELTA) + FxF*sin(DELTA)) - FyR*b - (b + c)*(d*mS*sin(PHI)*dPHI^2 - 2*d*mS*sin(PHI)*dPHI*dPSI + d*mS*sin(PHI)*dPSI^2 - ...
@@ -135,7 +135,7 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
         %% Matriz de massa
         %
 
-        function M = MatrizMassa(self,~,estados)
+        function M = MassMatrix(self,~,estados)
             % Dados do veículo
             mT = self.params(18);       % massa do veiculo [kg]
             mS = self.params(19);       % massa do veiculo [kg]
@@ -147,9 +147,9 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
             d = self.params(22);        % distancia do eixo traseiro ao centro de massa do caminhão-trator [m]
             % e = self.params(23);        % distancia da articulação ao centro de massa do caminhão-trator [m]
             % DELTA = self.params(8);   % Esterçamento [rad]
-            % nF = self.params(12);      % Número de pneus no eixo dianteiro do caminhão-trator
-            % nR = self.params(13);      % Número de pneus no eixo traseiro do caminhão-trator
-            % nM = self.params(14);      % Número de pneus no eixo do semirreboque
+            % nF = self.params(12);      % Número de tires no eixo dianteiro do caminhão-trator
+            % nR = self.params(13);      % Número de tires no eixo traseiro do caminhão-trator
+            % nM = self.params(14);      % Número de tires no eixo do semirreboque
             % g = 9.81;                  % Aceleração da gravidade [m/s^2]
             % FzF = self.params(3)*g;     % Carga vertical no eixo dianteiro [N]
             % FzR = self.params(4)*g;     % Carga vertical no eixo traseiro [N]
@@ -195,9 +195,9 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
     end
 
     methods (Static)
-        %% conversao
-        % A função conversao adiciona no vetor de entrada ([mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM larguraT larguraS muy]) os parâmetros restantes do modelo de veículo ([mT mS a b d e]).
-        function parametros = conversao(entrada)
+        %% convert
+        % A função convert adiciona no vetor de entrada ([mF0 mR0 mF mR mM IT IS DELTA c lT lS nF nR nM widthT widthS muy]) os parâmetros restantes do modelo de veículo ([mT mS a b d e]).
+        function parametros = convert(entrada)
             mF0 = entrada(1);       % Massa no eixo dianteiro do caminhão-trator desacoplado [kg]
             mR0 = entrada(2);       % Massa no eixo traseiro do caminhão-trator desacoplado [kg]
             mF = entrada(3);        % Massa no eixo dianteiro do caminhão-trator (F) [kg]
@@ -224,14 +224,14 @@ classdef VeiculoArticuladoNaoLinear4GDL < DinamicaVeicular.VeiculoArticulado
 
     properties
         params
-        pneu
+        tire
         distFT
         distTR
         distRA
         distAS
         distSM
-        largura     % Largura do caminhão-trator
-        larguraSemi % Largura do semirreboque
+        width     % width do caminhão-trator
+        widthSemi % width do semirreboque
     end
 end
 
