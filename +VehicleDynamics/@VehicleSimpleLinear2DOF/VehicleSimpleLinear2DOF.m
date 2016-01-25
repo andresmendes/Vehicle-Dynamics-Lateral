@@ -44,7 +44,7 @@ classdef VehicleSimpleLinear2DOF < VehicleDynamics.VehicleSimple
                 entradaVetor = [mF0 mR0 IT DELTA lT nF nR largT muy];
                 % Definindo os par?metros da classe
                 self.params = self.convert(entradaVetor);
-                self.tire = VehicleDynamics.tirePolinomial;
+                self.tire = VehicleDynamics.TirePolynomial;
             else
                 self.params = self.convert(varargin{1});
                 self.tire = varargin{2};

@@ -1,5 +1,5 @@
 %% Template articulado
-% Exemplo de script para simulação de veículo articulado.
+% Exemplo de script para simulaï¿½ï¿½o de veï¿½culo articulado.
 %
 %% Code start
 
@@ -28,14 +28,14 @@ Y0 = 0;                     % Initial tractor CG vertical position [m]
 x0 = [dPSI0 ALPHAT0 dPHI0 VEL0 PHI0 PSI0 X0 Y0];
 
 %% Default models and parameters
-% Definindo o modelo de veículo sem passagem de argumentos os parâmetros e modelos padrão são usados.
+% Definindo o modelo de veï¿½culo sem passagem de argumentos os parï¿½metros e modelos padrï¿½o sï¿½o usados.
 
 System = VehicleDynamics.VehicleArticulatedNonlinear4DOF;
 
 %% Integration
 % Integration using mass matrix. Details: <http://www.mathworks.com/help/matlab/ref/ode45.html?searchHighlight=%22mass%20matrix%22 ode45 (Mass matrix)>
 
-% Configurando as opções do integrador para levar em consideração a matriz de massa
+% Configurando as opï¿½ï¿½es do integrador para levar em consideraï¿½ï¿½o a matriz de massa
 options = odeset('Mass',@System.MassMatrix);
 
 [TOUT,XOUT] = ode45(@(t, estados) System.Model(t, estados),TSPAN,x0,options);
