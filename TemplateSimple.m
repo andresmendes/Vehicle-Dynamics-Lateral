@@ -124,6 +124,17 @@ ax4 = subplot(2,2,4);
 
 G.Frame([XT YT PSI dPSI VEL ALPHAT],TOUT,0);
 
+figFrame = gcf;
+% Setting Matlab figure
+set(figFrame,'Units','centimeters')
+set(figFrame,'Position',[0 0 16 7])
+% Setting PDF
+set(figFrame,'PaperUnits','centimeters')
+set(figFrame,'PaperPosition',[0 0 16 7])
+PaperPos = get(figFrame,'PaperPosition');
+set(figFrame,'PaperSize',PaperPos(3:4))
+
+print(figFrame,'-dpdf','frame.pdf')
 %%
 % Animation
 %
