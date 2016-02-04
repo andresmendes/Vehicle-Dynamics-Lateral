@@ -1,10 +1,11 @@
-# Dinamica-Veicular
-Simulações dinâmicas de veículos.
+# Vehicle-Dynamics
 
-- Veículo simples. 
-- Modelo do tipo biclicleta.
+Documentation: [http://andresmendes.github.io/Vehicle-Dynamics/](http://andresmendes.github.io/Vehicle-Dynamics/)
 
-Documentação online em: http://andresmendes.github.io/Dinamica-Veicular/
+Installation steps:
 
-Para baixar toda a documentação ver branch gh-pages e baixar arquivo zip.
+* Download the Vehicle-Dynamics package by clicking on "Download ZIP".
+* Save the package (folder "+DinamicaVeicular") in the MATLAB(R) _path_ or add your current path to the _paths list_. More details:  <http://www.mathworks.com/help/matlab/ref/path.html  help path>.
+* Import the entire package with the command:
 
+import VehicleDynamics.*
