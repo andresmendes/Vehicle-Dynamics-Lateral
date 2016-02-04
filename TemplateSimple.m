@@ -7,7 +7,7 @@ clear all                   % Clear workspace
 close all                   % Closing figures
 clc                         % Clear command window
 
-import VehicleDynamics.*   % Import package Dinamica Veicular
+import VehicleDynamics.*   % Import package VehicleDynamics
 
 %% Integration parameters
 %
@@ -47,17 +47,17 @@ TireData = [a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13];
 TireModel = VehicleDynamics.TirePacejka1989(TireData);
 
 %% Vehicle parameters
-% Chosen Vehicle: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
+% Chosen Vehicle: <VehicleSimpleNonlinear3DOF.html VehicleSimpleNonlinear3DOF.m>.
 
-mF0 = 700;                  % Massa sobre o eixo dianteiro [kg]
-mR0 = 600;                  % Massa sobre o eixo traseiro [kg]
-IT = 10000;                 % Momento de in�rcia [kg*m2]
-DELTA = 0;                  % Ester�amento do eixo dianteiro [rad]
-lT = 3.550;                 % Dist�ncia entre os eixos[m]
-nF = 2;                     % N�mero de pneus no eixo dianteiro
-nR = 2;                     % N�mero de pneus no eixo traseiro
-largT = 2;                  % Largura [m]
-muy = 0.8;                  % Coeficiente de atrito de opera��o
+mF0 = 700;                  % mass over front axle [kg]
+mR0 = 600;                  % mass over rear axle [kg]
+IT = 10000;                 % moment of inertia [kg*m2]
+DELTA = 0;                  % front axle steering [rad]
+lT = 3.550;                 % distance between axles [m]
+nF = 2;                     % number of tires in the front axle
+nR = 2;                     % number of tires in the rear axle
+largT = 2;                  % width [m]
+muy = 0.8;                  % coefficient of operation friction
 VehicleData = [mF0 mR0 IT DELTA lT nF nR largT muy];
 System = VehicleDynamics.VehicleSimpleNonlinear3DOF(VehicleData,TireModel);
 
