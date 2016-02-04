@@ -1,5 +1,5 @@
 %% Template simples
-% Exemplo de script para simulação de veículo simples, sem articulação.
+% Exemplo de script para simulaÃ§Ã£o de veÃ­culo simples, sem articulaÃ§Ã£o.
 %
 %% Code start
 
@@ -47,17 +47,17 @@ TireData = [a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13];
 TireModel = VehicleDynamics.TirePacejka1989(TireData);
 
 %% Vehicle parameters
-% Veículo escolhido: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
+% Chosen Vehicle: <VeiculoSimplesNaoLinear3GDL.html VeiculoSimplesNaoLinear3GDL.m>.
 
 mF0 = 700;                  % Massa sobre o eixo dianteiro [kg]
 mR0 = 600;                  % Massa sobre o eixo traseiro [kg]
-IT = 10000;                 % Momento de inércia [kg*m2]
-DELTA = 0;                  % Esterçamento do eixo dianteiro [rad]
-lT = 3.550;                 % Distância entre os eixos[m]
-nF = 2;                     % Número de pneus no eixo dianteiro
-nR = 2;                     % Número de pneus no eixo traseiro
+IT = 10000;                 % Momento de inï¿½rcia [kg*m2]
+DELTA = 0;                  % Esterï¿½amento do eixo dianteiro [rad]
+lT = 3.550;                 % Distï¿½ncia entre os eixos[m]
+nF = 2;                     % Nï¿½mero de pneus no eixo dianteiro
+nR = 2;                     % Nï¿½mero de pneus no eixo traseiro
 largT = 2;                  % Largura [m]
-muy = 0.8;                  % Coeficiente de atrito de operação
+muy = 0.8;                  % Coeficiente de atrito de operaï¿½ï¿½o
 VehicleData = [mF0 mR0 IT DELTA lT nF nR largT muy];
 System = VehicleDynamics.VehicleSimpleNonlinear3DOF(VehicleData,TireModel);
 
@@ -76,7 +76,7 @@ YT = XOUT(:,5);             % CG vertical position [m]
 VEL = XOUT(:,6);            % CG velocity [m/s]
 
 %% Results
-% Details: <Graficos.html Graficos.m>
+% Details: <Graphics.html Graphics.m>
 G = VehicleDynamics.Graphics(System);
 
 f1 = figure(1);

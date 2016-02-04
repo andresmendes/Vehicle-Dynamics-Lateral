@@ -13,7 +13,6 @@ import VehicleDynamics.*
 
 %% Description
 %
-%
 % <<ilustracoes/fluxograma.svg>>
 %
 %% Templates
@@ -25,10 +24,10 @@ import VehicleDynamics.*
 %% Tire model
 % Relation between lateral force and slip angle.
 %
-% Modelos de Tire:
+% Tire models:
 %
 % * <TireLinear.html Linear Tire>
-% * <TirePolynomial.html Plynomial Tire>
+% * <TirePolynomial.html Polynomial Tire>
 % * <TirePacejka1989.html Pacejka Tire>
 %
 % Academic:

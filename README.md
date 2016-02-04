@@ -1,4 +1,4 @@
-# Vehicle-Dynamics
+# Vehicle Dynamics Simulation Package for MATLAB
 
 Documentation: [http://andresmendes.github.io/Vehicle-Dynamics/](http://andresmendes.github.io/Vehicle-Dynamics/)
 
