@@ -1,0 +1,1764 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>KALMAN FILTER</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="KalmanFilter.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>KALMAN FILTER</h1><!--introduction--><p>Kalman filter application.</p><p>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">System</a></li><li><a href="#2">Plant</a></li><li><a href="#5">Maneuver</a></li><li><a href="#11">Modelo</a></li><li><a href="#17">Plant and model comparison</a></li><li><a href="#23">Model linearization</a></li><li><a href="#36">Medi&ccedil;&atilde;o</a></li><li><a href="#41">Verifica&ccedil;&atilde;o da lineariza&ccedil;&atilde;o</a></li><li><a href="#46">Filtro estendido de Kalman</a></li><li><a href="#57">Compara&ccedil;&atilde;o</a></li><li><a href="#61">Trajet&oacute;ria da estimativa</a></li><li><a href="#64">See Also</a></li></ul></div><h2>System<a name="1"></a></h2><p>Supondo um sistema n&atilde;o linear descrito por uma equa&ccedil;&atilde;o diferencial estoc&aacute;stica vetorial dada por:</p><p>\[ \dot{{\bf x}} = {\bf f} ( {\bf x}(t) , t ) + {\bf G} (t) {\bf w} (t) \]</p><p>onde</p><div><ul><li>\({\bf w}\) &eacute; de processo branco gaussiano. \({\bf w}(t)\) ~ \(N ( {\bf 0} , {\bf Q}(t) )\)</li><li>\({\bf f} ( {\bf x}(t) , t )\) &eacute; uma fun&ccedil;&atilde;o vetorial de dimens&atilde;o \(n\)</li><li>\({\bf x}(t)\) &eacute; o vetor de estados \((n \times 1)\)</li><li>\({\bf G}\) &eacute; uma matriz conhecida \((n \times s)\)</li></ul></div><h2>Plant<a name="2"></a></h2><p>Neste exemplo, a planta &eacute; representada por um modelo din&acirc;mico n&atilde;o linear baseado no modelo f&iacute;sico ilustrado na seguinte figura</p><p><img vspace="5" hspace="5" src="../illustrations/modelSimple.svg" alt=""> </p><p>O modelo da planta &eacute; composto pelos modelos n&atilde;o lineares de maior complexidade dispon&iacute;vel no pacote, ou seja, o modelo de ve&iacute;culo <a href="../DocVehicleSimpleNonlinear.html">Vehicle Simple Nonlinear</a> com o modelo de pneu <a href="../DocTirePacejka.html">Tire Pacejka</a>. A descri&ccedil;&atilde;o das equa&ccedil;&otilde;es de movimento podem ser encontradas em <a href="../theory/vehicleSimple.pdf">Simple equations of motion</a></p><pre class="codeinput"><span class="comment">% O pacote &eacute; importado com o comando:</span>
+<span class="comment">%</span>
+
+import <span class="string">VehicleDynamicsLateral.*</span>
+</pre><p>O pneu escolhido <a href="../DocTirePacejka.html">Tire Pacejka</a> &eacute; inicializado com os par&acirc;metros predefinidos (default).</p><pre class="codeinput">TirePlant = TirePacejka;
+disp(TirePlant)
+</pre><pre class="codeoutput">  TirePacejka with properties:
+
+     a0: 1
+     a1: 0
+     a2: 800
+     a3: 3000
+     a4: 50
+     a5: 0
+     a6: 0
+     a7: -1
+     a8: 0
+     a9: 0
+    a10: 0
+    a11: 0
+    a12: 0
+    a13: 0
+
+</pre><p>O modelo de ve&iacute;culo <a href="../DocVehicleSimpleNonlinear.html">Vehicle Simple Nonlinear</a> &eacute; inicializado, tamb&eacute;m, com os par&acirc;metros predefinidos (default). Em seguida o pneu escolhido &eacute; passado para o ve&iacute;culo.</p><pre class="codeinput">VehiclePlant = VehicleSimpleNonlinear;
+VehiclePlant.tire = TirePlant;
+disp(VehiclePlant)
+</pre><pre class="codeoutput">  VehicleSimpleNonlinear with properties:
+
+        mT: 1300
+        IT: 10000
+         a: 1.6154
+         b: 1.8846
+       mF0: 700
+       mR0: 600
+        lT: 3.5000
+        nF: 2
+        nR: 2
+        wT: 2
+       muy: 0.8000
+      tire: [1x1 VehicleDynamicsLateral.TirePacejka]
+    deltaf: 0
+       Fxf: 0
+       Fxr: 0
+
+</pre><h2>Maneuver<a name="5"></a></h2><p>Este t&oacute;pico apresenta a manobra do ve&iacute;culo (plant) que dever&aacute; ser estimada pelo Filtro de Kalman.</p><p>Choosing simulation parameters:</p><pre class="codeinput">T = 6;                      <span class="comment">% Total simulation time [s]</span>
+resol = 50;                 <span class="comment">% Resolution</span>
+TSPAN = 0:T/resol:T;        <span class="comment">% Time span [s]</span>
+</pre><p>Inicializando o simulador e simulando.</p><pre class="codeinput">simulatorPlant = Simulator(VehiclePlant, TSPAN);
+simulatorPlant.dPSI0 = 0.35;
+simulatorPlant.Simulate
+</pre><p>Obtendo os par&acirc;metros da simula&ccedil;&atilde;o.</p><pre class="codeinput">disp(simulatorPlant)
+</pre><pre class="codeoutput">  Simulator with properties:
+
+    Vehicle: [1x1 VehicleDynamicsLateral.VehicleSimpleNonlinear]
+      TSpan: [51x1 double]
+         X0: 0
+         Y0: 0
+       PSI0: 0
+       PHI0: []
+     THETA0: []
+         V0: 20
+    ALPHAT0: 0
+      dPSI0: 0.3500
+      dPHI0: []
+    dTHETA0: []
+         XT: [51x1 double]
+         YT: [51x1 double]
+        PSI: [51x1 double]
+        PHI: []
+      THETA: []
+        VEL: [51x1 double]
+     ALPHAT: [51x1 double]
+       dPSI: [51x1 double]
+       dPHI: []
+     dTHETA: []
+
+</pre><p>Retrieving states</p><pre class="codeinput">XTPlant = simulatorPlant.XT;
+YTPlant = simulatorPlant.YT;
+PSIPlant = simulatorPlant.PSI;
+vTPlant = simulatorPlant.VEL;
+ALPHATPlant = simulatorPlant.ALPHAT;
+dPSIPlant = simulatorPlant.dPSI;
+
+
+XOUTPlant = [XTPlant YTPlant PSIPlant vTPlant ALPHATPlant dPSIPlant];
+</pre><p>Gerando os gr&aacute;ficos da manobra do carro (plant)</p><pre class="codeinput">gPlant = Graphics(simulatorPlant);
+gPlant.TractorColor = <span class="string">'r'</span>;
+gPlant.Frame();
+</pre><img vspace="5" hspace="5" src="KalmanFilter_01.png" alt=""> <pre class="codeinput">close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
+</pre><h2>Modelo<a name="11"></a></h2><p>O modelo utilizado no algoritmo de estima&ccedil;&atilde;o &eacute; baseado no mesmo modelo f&iacute;sico considerado no modelo da planta. Al&eacute;m disso, o modelo parte da premissa de que o projetista do estimador n&atilde;o tem conhecimento adequado da curva caracter&iacute;stica do pneu. Logo, o modelo de ve&iacute;culo &eacute; igual ao utilizado na planta, por&eacute;m, o modelo de pneu &eacute; dado pelo modelo linear <a href="../DocTireLinear.html">Tire linear</a>, resultando num modelo do sistema de menor complexidade (em rela&ccedil;&atilde;o &agrave; planta) e com mais hip&oacute;teses simplificadoras.</p><p>Inicializando o pneu</p><pre class="codeinput">TireModel = TireLinear;
+disp(TireModel)
+</pre><pre class="codeoutput">  TireLinear with properties:
+
+    k: 40000
+
+</pre><p>Choosing model vehicle</p><pre class="codeinput">VehicleModel = VehicleSimpleNonlinear;
+VehicleModel.tire = TireModel;
+disp(VehicleModel)
+</pre><pre class="codeoutput">  VehicleSimpleNonlinear with properties:
+
+        mT: 1300
+        IT: 10000
+         a: 1.6154
+         b: 1.8846
+       mF0: 700
+       mR0: 600
+        lT: 3.5000
+        nF: 2
+        nR: 2
+        wT: 2
+       muy: 0.8000
+      tire: [1x1 VehicleDynamicsLateral.TireLinear]
+    deltaf: 0
+       Fxf: 0
+       Fxr: 0
+
+</pre><p>Simulador com o mesmo vetor TSPAN e simula&ccedil;&atilde;o</p><pre class="codeinput">simulatorModel = Simulator(VehicleModel, TSPAN);
+simulatorModel.dPSI0 = 0.35;
+simulatorModel.Simulate;
+
+disp(simulatorModel)
+</pre><pre class="codeoutput">  Simulator with properties:
+
+    Vehicle: [1x1 VehicleDynamicsLateral.VehicleSimpleNonlinear]
+      TSpan: [51x1 double]
+         X0: 0
+         Y0: 0
+       PSI0: 0
+       PHI0: []
+     THETA0: []
+         V0: 20
+    ALPHAT0: 0
+      dPSI0: 0.3500
+      dPHI0: []
+    dTHETA0: []
+         XT: [51x1 double]
+         YT: [51x1 double]
+        PSI: [51x1 double]
+        PHI: []
+      THETA: []
+        VEL: [51x1 double]
+     ALPHAT: [51x1 double]
+       dPSI: [51x1 double]
+       dPHI: []
+     dTHETA: []
+
+</pre><p>Retrieving states</p><pre class="codeinput">XTModel = simulatorModel.XT;
+YTModel = simulatorModel.YT;
+PSIModel = simulatorModel.PSI;
+vTModel = simulatorModel.VEL;
+ALPHATModel = simulatorModel.ALPHAT;
+dPSIModel = simulatorModel.dPSI;
+</pre><p>A manobra gerada pelo modelo escolhido pelo projetista a partir da mesma condi&ccedil;&atilde;o inicial &eacute; ilustrada na figura a seguir</p><pre class="codeinput">gModel = Graphics(simulatorModel);
+gModel.TractorColor = <span class="string">'g'</span>;
+gModel.Frame();
+</pre><img vspace="5" hspace="5" src="KalmanFilter_02.png" alt=""> <pre class="codeinput">close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
+</pre><h2>Plant and model comparison<a name="17"></a></h2><p>Comparando o modelo de pneu</p><pre class="codeinput">g = 9.81;
+FzF = VehiclePlant.mF0*g;
+FzR = VehiclePlant.mR0*g;
+muy = VehiclePlant.muy;
+nF = VehiclePlant.nF;
+nR = VehiclePlant.nR;
+
+alpha= 0:0.5:15;
+alpha = alpha*pi/180;
+FyLin = - TireModel.Characteristic(alpha);
+FyFPac = - TirePlant.Characteristic(alpha, FzF, muy);
+FyRPac = - TirePlant.Characteristic(alpha, FzR, muy);
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(alpha(1:floor(end/2))*180/pi,FyLin(1:floor(end/2)),<span class="string">'r'</span>)
+plot(alpha*180/pi,FyFPac,<span class="string">'g'</span>)
+plot(alpha*180/pi,FyRPac,<span class="string">'g--'</span>)
+xlabel(<span class="string">'alpha [deg]'</span>)
+ylabel(<span class="string">'Fy [N]'</span>)
+l = legend(<span class="string">'Linear'</span>,<span class="string">'Pacejka F'</span>,<span class="string">'Pacejka R'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_03.png" alt=""> <p>Comparando os estados</p><pre class="codeinput">figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XTPlant,<span class="string">'r'</span>)
+plot(TSPAN,XTModel,<span class="string">'r--'</span>)
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'Distance X [m]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,YTPlant,<span class="string">'g'</span>)
+plot(TSPAN,YTModel,<span class="string">'g--'</span>)
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'Distance Y [m]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,PSIPlant,<span class="string">'b'</span>)
+plot(TSPAN,PSIModel,<span class="string">'b--'</span>)
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'PSI [rad]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,vTPlant,<span class="string">'c'</span>)
+plot(TSPAN,vTModel,<span class="string">'c--'</span>)
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'vT [m/s]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,ALPHATPlant,<span class="string">'m'</span>),
+plot(TSPAN,ALPHATModel,<span class="string">'m--'</span>),
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'ALPHAT [rad/s]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,dPSIPlant,<span class="string">'k'</span>)
+plot(TSPAN,dPSIModel,<span class="string">'k--'</span>)
+xlabel(<span class="string">'Time [s]'</span>)
+ylabel(<span class="string">'dPSI [rad/s]'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_04.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_05.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_06.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_07.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_08.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_09.png" alt=""> <p>Comparando a acelera&ccedil;&atilde;o longitudinal e transversal</p><pre class="codeinput">saidasPlant = [XTPlant YTPlant PSIPlant vTPlant ALPHATPlant dPSIPlant];
+matDerivEstadosPlant = zeros(size(saidasPlant));
+<span class="keyword">for</span> i = 1:size(saidasPlant,1)
+    auxil = simulatorPlant.Vehicle.Model(1,saidasPlant(i,:),TSPAN);
+    matDerivEstadosPlant(i,:) = auxil';
+<span class="keyword">end</span>
+
+dXTPlant = matDerivEstadosPlant(:,1);
+dYTPlant = matDerivEstadosPlant(:,2);
+dPSIPlant = matDerivEstadosPlant(:,3);
+dvTPlant = matDerivEstadosPlant(:,4);
+dALPHATPlant = matDerivEstadosPlant(:,5);
+ddPSIPlant = matDerivEstadosPlant(:,6);
+
+ddXPlant = dvTPlant.*cos(PSIPlant + ALPHATPlant) - vTPlant.*(dPSIPlant + dALPHATPlant).*sin(PSIPlant + ALPHATPlant);
+ddYPlant = dvTPlant.*sin(PSIPlant + ALPHATPlant) + vTPlant.*(dPSIPlant + dALPHATPlant).*cos(PSIPlant + ALPHATPlant);
+
+ACELNumPlant = [(ddXPlant.*cos(PSIPlant) - ddYPlant.*sin(PSIPlant))  (-ddXPlant.*sin(PSIPlant) + ddYPlant.*cos(PSIPlant))];
+
+saidasModel = [XTModel YTModel PSIModel vTModel ALPHATModel dPSIModel];
+matDerivEstadosModel = zeros(size(saidasModel));
+<span class="keyword">for</span> i = 1:size(saidasModel,1)
+    auxil = simulatorModel.Vehicle.Model(1,saidasModel(i,:),TSPAN);
+    matDerivEstadosModel(i,:) = auxil';
+<span class="keyword">end</span>
+
+dXTModel = matDerivEstadosModel(:,1);
+dYTModel = matDerivEstadosModel(:,2);
+dPSIModel = matDerivEstadosModel(:,3);
+dvTModel = matDerivEstadosModel(:,4);
+dALPHATModel = matDerivEstadosModel(:,5);
+ddPSIModel = matDerivEstadosModel(:,6);
+
+ddXModel = dvTModel.*cos(PSIModel + ALPHATModel) - vTModel.*(dPSIModel + dALPHATModel).*sin(PSIModel + ALPHATModel);
+ddYModel = dvTModel.*sin(PSIModel + ALPHATModel) + vTModel.*(dPSIModel + dALPHATModel).*cos(PSIModel + ALPHATModel);
+
+ACELNumModel = [(ddXModel.*cos(PSIModel) - ddYModel.*sin(PSIModel))  (-ddXModel.*sin(PSIModel) + ddYModel.*cos(PSIModel))];
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,ACELNumPlant(:,1),<span class="string">'r'</span>)
+plot(TSPAN,ACELNumPlant(:,2),<span class="string">'g'</span>)
+plot(TSPAN,ACELNumModel(:,1),<span class="string">'r--'</span>)
+plot(TSPAN,ACELNumModel(:,2),<span class="string">'g--'</span>)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'acc. [m/s]'</span>)
+l = legend(<span class="string">'AX Plant'</span>,<span class="string">'AY Plant'</span>,<span class="string">'AX Model'</span>,<span class="string">'AY Model'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_10.png" alt=""> <p>Comparando as derivadas dos estados</p><pre class="codeinput"><span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,dXTPlant,'r')</span>
+<span class="comment">% plot(TSPAN,dXTModel,'r--')</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('dX [m/s]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','SouthWest')</span>
+<span class="comment">%</span>
+<span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,dYTPlant,'r')</span>
+<span class="comment">% plot(TSPAN,dYTModel,'r--')</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('dY [m/s]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','NorthWest')</span>
+<span class="comment">%</span>
+<span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,dPSIPlant,'r')</span>
+<span class="comment">% plot(TSPAN,dPSIModel,'r--')</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('dPSI [rad/s]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','NorthEast')</span>
+<span class="comment">%</span>
+<span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,dvTPlant,'r')</span>
+<span class="comment">% plot(TSPAN,dvTModel,'r--')</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('dvT [m/s]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','SouthEast')</span>
+<span class="comment">%</span>
+<span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,dALPHATPlant,'r'),</span>
+<span class="comment">% plot(TSPAN,dALPHATModel,'r--'),</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('dALPHAT [rad/s]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','NorthEast')</span>
+<span class="comment">%</span>
+<span class="comment">% figure</span>
+<span class="comment">% ax = gca;</span>
+<span class="comment">% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')</span>
+<span class="comment">% plot(TSPAN,ddPSIPlant,'r')</span>
+<span class="comment">% plot(TSPAN,ddPSIModel,'r--')</span>
+<span class="comment">% xlabel('Time [s]')</span>
+<span class="comment">% ylabel('ddPSI [rad/s2]')</span>
+<span class="comment">% l = legend('Plant','Model');</span>
+<span class="comment">% set(l,'Location','SouthEast')</span>
+</pre><p>Compara&ccedil;&atilde;o - Diferen&ccedil;a de 10 m na dire&ccedil;&atilde;o X no momento da curva.</p><pre class="codeinput">gModel.Frame();
+hold <span class="string">on</span>
+gPlant.Frame();
+gModel.Frame();
+</pre><img vspace="5" hspace="5" src="KalmanFilter_11.png" alt=""> <pre class="codeinput">close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
+</pre><h2>Model linearization<a name="23"></a></h2><p>A express&atilde;o geral da equa&ccedil;&atilde;o linearizada &eacute; obtida neste t&oacute;pico utilizando o processador simb&oacute;lico.</p><p>Definindo os s&iacute;mbolos:</p><pre class="codeinput">syms <span class="string">XT</span> <span class="string">YT</span> <span class="string">PSI</span> <span class="string">vT</span> <span class="string">ALPHAT</span> <span class="string">dPSI</span> <span class="string">mT</span> <span class="string">IT</span> <span class="string">a</span> <span class="string">b</span> <span class="string">K</span>
+</pre><p>Slip angles</p><pre class="codeinput">ALPHAF = atan((vT * sin(ALPHAT) + a * dPSI)/(vT * cos(ALPHAT))); <span class="comment">% Dianteiro</span>
+ALPHAR = atan((vT * sin(ALPHAT) - b * dPSI)/(vT * cos(ALPHAT))); <span class="comment">% Traseiro</span>
+</pre><pre class="codeinput">pretty(ALPHAF)
+</pre><pre class="codeoutput">    / a dPSI + vT sin(ALPHAT) \
+atan| ----------------------- |
+    \      vT cos(ALPHAT)     /
+
+</pre><pre class="codeinput">pretty(ALPHAR)
+</pre><pre class="codeoutput">     / b dPSI - vT sin(ALPHAT) \
+-atan| ----------------------- |
+     \      vT cos(ALPHAT)     /
+
+</pre><p>Lateral forces</p><pre class="codeinput">FyF = -K*ALPHAF;
+FyR = -K*ALPHAR;
+</pre><pre class="codeinput">pretty(FyF)
+</pre><pre class="codeoutput">       / a dPSI + vT sin(ALPHAT) \
+-K atan| ----------------------- |
+       \      vT cos(ALPHAT)     /
+
+</pre><pre class="codeinput">pretty(FyR)
+</pre><pre class="codeoutput">      / b dPSI - vT sin(ALPHAT) \
+K atan| ----------------------- |
+      \      vT cos(ALPHAT)     /
+
+</pre><p>State equations</p><pre class="codeinput">f1 = vT * cos(ALPHAT + PSI);
+f2 = vT * sin(ALPHAT + PSI);
+f3 = dPSI;
+f4 = (FyF * sin(ALPHAT) + FyR * sin(ALPHAT))/(mT);
+f5 = (FyF * cos(ALPHAT) + FyR * cos(ALPHAT) - mT * vT * dPSI) / (mT * vT);
+f6 = (FyF * a - FyR * b) / IT;
+
+f = [f1 ; f2 ; f3 ; f4 ; f5 ; f6];
+</pre><pre class="codeinput">pretty(f)
+</pre><pre class="codeoutput">/                vT cos(ALPHAT + PSI)                \
+|                                                    |
+|                vT sin(ALPHAT + PSI)                |
+|                                                    |
+|                        dPSI                        |
+|                                                    |
+|          K #2 sin(ALPHAT) - K #1 sin(ALPHAT)       |
+|        - -----------------------------------       |
+|                           mT                       |
+|                                                    |
+|   dPSI mT vT + K cos(ALPHAT) #2 - K cos(ALPHAT) #1 |
+| - ------------------------------------------------ |
+|                         mT vT                      |
+|                                                    |
+|                    K a #2 + K b #1                 |
+|                  - ---------------                 |
+\                           IT                       /
+
+where
+
+             / b dPSI - vT sin(ALPHAT) \
+   #1 == atan| ----------------------- |
+             \      vT cos(ALPHAT)     /
+
+             / a dPSI + vT sin(ALPHAT) \
+   #2 == atan| ----------------------- |
+             \      vT cos(ALPHAT)     /
+
+
+</pre><p>Vetor de estados</p><pre class="codeinput">States = [XT ; YT ; PSI ; vT ; ALPHAT ; dPSI];
+</pre><pre class="codeinput">pretty(States)
+</pre><pre class="codeoutput">/   XT   \
+|        |
+|   YT   |
+|        |
+|   PSI  |
+|        |
+|   vT   |
+|        |
+| ALPHAT |
+|        |
+\  dPSI  /
+
+</pre><p>O sistema linearizado &eacute; escrito na forma</p><p>\[ \dot{\bf x} = {\bf F} {\bf x} \]</p><p>onde \({\bf F}\) &eacute; a matriz din&acirc;mica do modelo linear que &eacute; calculada a partir da equa&ccedil;&atilde;o n&atilde;o linear expandida em s&eacute;rie de Taylor e truncada nos termos de primeira ordem. Logo, a matriz \({\bf F}\) &eacute; dada por</p><p>\[ {\bf F} = \left[ \frac{\partial f_i}{\partial x_j} \right]_{n \times n} \]</p><p>onde \(i\) e \(j\) indicam as equa&ccedil;&otilde;es e vari&aacute;veis de estado utilizadas no c&aacute;lculo correpondente &agrave; posi&ccedil;&atilde;o \((i,j)\) da matriz jacobiana.</p><pre class="codeinput">F = jacobian(f,States);
+F = simplify(F);
+</pre><pre class="codeinput">pretty(F)
+</pre><pre class="codeoutput">--
+|
+|
+|
+|  [0, 0, #6, cos(ALPHAT + PSI), #6, 0],
+|
+--
+
+  [0, 0, #7, sin(ALPHAT + PSI), #7, 0], [0, 0, 0, 0, 0, 1],
+
+  --
+  |
+  |                                    2       2      2     2
+  |  0, 0, 0, -(K dPSI sin(2 ALPHAT) (a  b dPSI  - a b  dPSI
+  --
+
+                                     2       2
+   + sin(ALPHAT) a b dPSI vT 4 - a vT  + b vT ))/(mT #2 #1 2),
+
+         K vT sin(ALPHAT) #5   K vT sin(ALPHAT) #4
+    #8 + ------------------- + -------------------
+                  #2                    #1
+  - ----------------------------------------------,
+                          mT
+
+    K a vT sin(2 ALPHAT)   K b vT sin(2 ALPHAT) --
+    -------------------- - --------------------  |
+            2 #2                   2 #1          |
+  - -------------------------------------------  |,
+                         mT                     --
+
+  --
+  |
+  |             #8     K a dPSI #3   K b dPSI #3
+  |  0, 0, 0, ------ - ----------- + -----------,
+  |                2     mT vT #2      mT vT #1
+  --          mT vT
+
+    K vT cos(ALPHAT) #5                      K vT cos(ALPHAT) #4
+    ------------------- - K sin(ALPHAT) #9 + -------------------
+             #2                                       #1
+  - ------------------------------------------------------------,
+                                mT vT
+
+            K a vT #3   K b vT #3 --
+    mT vT - --------- + ---------  |
+                #2          #1     |
+  - -----------------------------  |,
+                mT vT              |
+                                  --
+
+  --
+  |
+  |
+  |                                   2  2     2                2
+  |  0, 0, 0, (K dPSI cos(ALPHAT) (2 a  b  dPSI  - sin(ALPHAT) a  b dPSI vT
+  --
+
+        2   2                  2              2   2
+   2 + a  vT  + sin(ALPHAT) a b  dPSI vT 2 + b  vT ))/(IT #2 #1),
+
+                                2                     2                -- --
+    K a vT #5   K b vT #4    K a  vT cos(ALPHAT)   K b  vT cos(ALPHAT)  |  |
+    --------- - ---------    ------------------- + -------------------  |  |
+        #2          #1                #2                    #1          |  |
+  - ---------------------, - -----------------------------------------  |  |
+              IT                                 IT                    --  |
+                                                                          --
+
+where
+
+          2     2                               2
+   #1 == b  dPSI  - sin(ALPHAT) b dPSI vT 2 + vT
+
+          2     2                               2
+   #2 == a  dPSI  + sin(ALPHAT) a dPSI vT 2 + vT
+
+                    2
+   #3 == sin(ALPHAT)  - 1
+
+   #4 == vT - b dPSI sin(ALPHAT)
+
+   #5 == vT + a dPSI sin(ALPHAT)
+
+   #6 == -vT sin(ALPHAT + PSI)
+
+   #7 == vT cos(ALPHAT + PSI)
+
+   #8 == K cos(ALPHAT) #9
+
+             / a dPSI + vT sin(ALPHAT) \       / b dPSI - vT sin(ALPHAT) \
+   #9 == atan| ----------------------- | - atan| ----------------------- |
+             \      vT cos(ALPHAT)     /       \      vT cos(ALPHAT)     /
+
+
+</pre><h2>Medi&ccedil;&atilde;o<a name="36"></a></h2><p>Continuando simbolicamente, as grandezas medidas s&atilde;o:</p><div><ul><li>Posi&ccedil;&atilde;o X</li><li>Posi&ccedil;&atilde;o Y</li><li>Acelera&ccedil;&atilde;o angular</li><li>acelera&ccedil;&atilde;o longitudinal</li><li>acelera&ccedil;&atilde;o transversal</li></ul></div><p>Para isso, utiliza-se as rela&ccedil;&otilde;es:</p><p>\[ \dot{x} = v_{\rm T} \cos \left( \psi + \alpha_{\rm T} \right) \]</p><p>\[ \dot{y} = v_{\rm T} \sin \left( \psi + \alpha_{\rm T} \right) \]</p><p>Acelera&ccedil;&atilde;o</p><p>\[ \ddot{x} = \dot{v}_{\rm T} \cos \left( \psi + \alpha_{\rm T} \right) - v_{\rm T} \left( \dot{\psi} + \dot{\alpha}_{\rm T} \right) \sin \left( \psi + \alpha_{\rm T} \right) \]</p><p>\[ \ddot{y} = \dot{v}_{\rm T} \sin \left( \psi + \alpha_{\rm T} \right) + v_{\rm T} \left( \dot{\psi} + \dot{\alpha}_{\rm T} \right) \cos \left( \psi + \alpha_{\rm T} \right) \]</p><p>Implementando</p><pre class="codeinput">ddX = f4*cos(PSI + ALPHAT) - vT*(dPSI + f5)*sin(PSI + ALPHAT);
+ddY = f4*sin(PSI + ALPHAT) + vT*(dPSI + f5)*cos(PSI + ALPHAT);
+</pre><p>Estes valores obtidos s&atilde;o as acelera&ccedil;&otilde;es escritas na base fixa \(\{ O {\bf i} {\bf j} {\bf k} \}\). A proje&ccedil;&atilde;o destas grandezas na base m&oacute;vel \(\{ O {\bf t}_x {\bf t}_y {\bf t}_z \}\) &eacute; feita atrav&eacute;s da equa&ccedil;&atilde;o</p><p>\[ {\bf a} = \left( \ddot{x} \cos \psi - \ddot{y} \sin \psi \right) {\bf t}_x + \left( - \ddot{x} \sin \psi + \ddot{y} \sin \psi \right) {\bf t}_y \]</p><p>Implementando</p><pre class="codeinput">ACEL = [ddX*cos(PSI) - ddY*sin(PSI) ; -ddX*sin(PSI) + ddY*cos(PSI)];
+ACEL = simplify(ACEL);
+</pre><pre class="codeinput">pretty(ACEL)
+</pre><pre class="codeoutput">/ K sin(2 PSI) #1 \
+| --------------- |
+|        mT       |
+|                 |
+|        K #1     |
+|      - ----     |
+\         mT      /
+
+where
+
+             / a dPSI + vT sin(ALPHAT) \       / b dPSI - vT sin(ALPHAT) \
+   #1 == atan| ----------------------- | - atan| ----------------------- |
+             \      vT cos(ALPHAT)     /       \      vT cos(ALPHAT)     /
+
+
+</pre><p>A equa&ccedil;&atilde;o de observa&ccedil;&otilde;es n&atilde;o linear &eacute; dada por</p><p>\[ {\bf z}_k = {\bf h} ({\bf x}_k) + {\bf v}_k \]</p><p>com</p><p>\({\bf v}_k\) ~ \(N ( {\bf 0} , {\bf R}_k )\)</p><p>Linearizando termos</p><p>\[ {\bf z}_k = {\bf H} {\bf x}_k + {\bf v}_k \]</p><p>onde</p><p>\[ {\bf H} = \left[ \frac{\partial h_i}{\partial x_j} \right]_{m \times n} \]</p><p>ou seja, a matriz de sa&iacute;das {\bf H} &eacute; a matriz jacobiana da equa&ccedil;&atilde;o de ACEL em rela&ccedil;&atilde;o aos estados.</p><p>Implementando</p><pre class="codeinput">medNonlinear = [XT ; YT ; f6 ; ACEL];
+
+H = jacobian(medNonlinear,States);
+H = simplify(H);
+</pre><pre class="codeinput">pretty(H)
+</pre><pre class="codeoutput">--
+|
+|
+|
+|  [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0],
+--
+
+  --
+  |
+  |
+  |                                   2  2     2                2
+  |  0, 0, 0, (K dPSI cos(ALPHAT) (2 a  b  dPSI  - sin(ALPHAT) a  b dPSI vT
+  --
+
+        2   2                  2              2   2
+   2 + a  vT  + sin(ALPHAT) a b  dPSI vT 2 + b  vT ))/(IT #7 #6),
+
+                                2                     2                --
+    K a vT #5   K b vT #4    K a  vT cos(ALPHAT)   K b  vT cos(ALPHAT)  |
+    --------- - ---------    ------------------- + -------------------  |
+        #7          #6                #7                    #6          |
+  - ---------------------, - -----------------------------------------  |,
+              IT                                 IT                    --
+
+  --
+  |  0, 0,
+  --
+
+  /
+  | K cos(2
+  \
+
+        /     / a dPSI + vT sin(ALPHAT) \
+   PSI) | atan| ----------------------- |
+        \     \      vT cos(ALPHAT)     /
+
+         / b dPSI - vT sin(ALPHAT) \ \   \
+   - atan| ----------------------- | | 2 |/mT,
+         \      vT cos(ALPHAT)     / /   /
+
+  K dPSI sin(2 PSI) cos(ALPHAT) #1  K sin(2 PSI) #2  K sin(2 PSI) #3 --
+  --------------------------------, ---------------, ---------------  |,
+              mT #7 #6                     mT               mT       --
+
+                                                         --
+                                                          |
+                                                          |
+  --            K dPSI cos(ALPHAT) #1    K #2    K #3 --  |
+  |  0, 0, 0, - ---------------------, - ----, - ----  |  |
+  --                   mT #7 #6           mT      mT  -- --
+
+where
+
+          2       2      2     2                                   2       2
+   #1 == a  b dPSI  - a b  dPSI  + sin(ALPHAT) a b dPSI vT 4 - a vT  + b vT
+
+         vT #5   vT #4
+   #2 == ----- + -----
+           #7      #6
+
+         a vT cos(ALPHAT)   b vT cos(ALPHAT)
+   #3 == ---------------- - ----------------
+                #7                 #6
+
+   #4 == vT - b dPSI sin(ALPHAT)
+
+   #5 == vT + a dPSI sin(ALPHAT)
+
+          2     2                               2
+   #6 == b  dPSI  - sin(ALPHAT) b dPSI vT 2 + vT
+
+          2     2                               2
+   #7 == a  dPSI  + sin(ALPHAT) a dPSI vT 2 + vT
+
+
+</pre><h2>Verifica&ccedil;&atilde;o da lineariza&ccedil;&atilde;o<a name="41"></a></h2><p>Para verificar o procedimento de lineariza&ccedil;&atilde;o, um ponto de opera&ccedil;&atilde;o referente &agrave; movimenta&ccedil;&atilde;o do ve&iacute;culo em linha reta com uma velocidade prescrita \(v_0\) &eacute; utilizado. Esta escolha &eacute; t&iacute;pica e pode ser verificada facilmente na literatura.</p><p>Definindo \(v_0\)</p><pre class="codeinput">syms <span class="string">v0</span>
+</pre><p>Obtendo a matriz din&acirc;mica</p><pre class="codeinput">A = subs(F,States,[0 ; 0 ; 0 ; v0 ; 0 ; 0]);
+</pre><pre class="codeinput">pretty(A)
+</pre><pre class="codeoutput">/ 0, 0,  0, 1,      0,               0          \
+|                                               |
+| 0, 0, v0, 0,      v0,              0          |
+|                                               |
+| 0, 0,  0, 0,      0,               1          |
+|                                               |
+| 0, 0,  0, 0,      0,               0          |
+|                                               |
+|                                     K a   K b |
+|                             mT v0 + --- - --- |
+|                   2 K                v0    v0 |
+| 0, 0,  0, 0,   - -----,   - ----------------- |
+|                  mT v0            mT v0       |
+|                                               |
+|                                   2      2    |
+|                                K a    K b     |
+|                                ---- + ----    |
+|                K a - K b        v0     v0     |
+| 0, 0,  0, 0, - ---------,    - -----------    |
+\                    IT               IT        /
+
+</pre><p>Obtendo a matriz de sa&iacute;das</p><pre class="codeinput">C = subs(H,States,[0 ; 0 ; 0 ; v0 ; 0 ; 0]);
+</pre><pre class="codeinput">pretty(C)
+</pre><pre class="codeoutput">/ 1, 0, 0, 0,      0,             0        \
+|                                          |
+| 0, 1, 0, 0,      0,             0        |
+|                                          |
+|                                2      2  |
+|                             K a    K b   |
+|                             ---- + ----  |
+|               K a - K b      v0     v0   |
+| 0, 0, 0, 0, - ---------,  - -----------  |
+|                   IT             IT      |
+|                                          |
+| 0, 0, 0, 0,      0,             0        |
+|                                          |
+|                              /  a    b \ |
+|                            K | -- - -- | |
+|                  2 K         \ v0   v0 / |
+| 0, 0, 0, 0,    - ---,    - ------------- |
+\                   mT             mT      /
+
+</pre><h2>Filtro estendido de Kalman<a name="46"></a></h2><p>Implementa&ccedil;&atilde;o do algoritmo</p><p>Matriz que distribui o ru&iacute;do na equa&ccedil;&atilde;o do estado constante</p><pre class="codeinput">G = eye(6); <span class="comment">% Matriz identidade (6 x 6)</span>
+</pre><p>Matrizes de covari&acirc;ncia</p><pre class="codeinput">Q = eye(6);
+R = eye(5);
+</pre><p>Matriz</p><pre class="codeinput">P0 = eye(6);
+</pre><p>Recuperando as condi&ccedil;&otilde;es iniciais usadas acima</p><pre class="codeinput">X0Num = simulatorModel.X0;
+Y0Num = simulatorModel.Y0;
+PSI0Num = simulatorModel.PSI0;
+VEL0Num = simulatorModel.V0;
+ALPHAT0Num = simulatorModel.ALPHAT0;
+dPSI0Num = simulatorModel.dPSI0;
+
+x0 = [ X0Num ; Y0Num ; PSI0Num ; VEL0Num ; ALPHAT0Num ; dPSI0Num ];
+x0 = zeros(6,1);
+x0(4)=20;
+</pre><p>Recuperando os par&acirc;metros do ve&iacute;culo</p><pre class="codeinput">mTNum = VehicleModel.mT;
+ITNum = VehicleModel.IT;
+aNum = VehicleModel.a;
+bNum = VehicleModel.b;
+KNum = TireModel.k;
+
+parameters = [mTNum ITNum aNum bNum KNum];
+</pre><p>Obtendo e verificando a acelera&ccedil;&atilde;o que vai ser medida.</p><p>Inicializando o tempo de intervalo entre uma observa&ccedil;&atilde;o e outra.</p><pre class="codeinput">intervalo = 0.1;
+</pre><pre class="codeinput">t = 0:intervalo:T;                  <span class="comment">% Vetor com os instantes de observa&ccedil;&atilde;o</span>
+</pre><p>Prealocando</p><pre class="codeinput">XOUTopt = zeros(length(t) + 1,length(States)); <span class="comment">% Estimativa dos estados ap&oacute;s atualiza&ccedil;&atilde;o</span>
+Popt = zeros(length(t) + 1,1);                 <span class="comment">% Matriz de covari&acirc;ncia ap&oacute;s atualiza&ccedil;&atilde;o</span>
+Pantes = zeros(length(t) + 1,1);                 <span class="comment">% Matriz de covari&acirc;ncia antes da atualiza&ccedil;&atilde;o</span>
+KKalmanopt = ones(length(t) + 1,1);                 <span class="comment">% Ganho de Kalman</span>
+</pre><p>Atribuindo os primeiros valores</p><pre class="codeinput">XOUTopt(1,:) = x0';
+XOUTantes(1,:) = x0';
+Pantes(1,1) = norm(P0);
+Popt(1,1) = norm(P0);
+
+<span class="comment">% Distribui&ccedil;&atilde;o dos erros</span>
+
+pesos = [5; 5; 0.1; 0.5; 0.5];
+</pre><p>Itera&ccedil;&atilde;o</p><pre class="codeinput"><span class="keyword">for</span> j = 1:length(t)
+    <span class="comment">% &Iacute;ndice variando por todos os instantes de observa&ccedil;&atilde;o</span>
+
+    <span class="comment">% Vetor de tempo de integra&ccedil;&atilde;o para a etapa de propaga&ccedil;&atilde;o</span>
+    tspan = t(j):intervalo/100:t(j)+intervalo;
+
+    <span class="comment">% Obtendo as medidas da itera&ccedil;&atilde;o</span>
+    z = [interp1(TSPAN,XTPlant(:,1),t(j)) ; interp1(TSPAN,YTPlant(:,1),t(j)) ; interp1(TSPAN,ddPSIPlant(:,1),t(j)) ; interp1(TSPAN,ACELNumPlant(:,1),t(j)) ; interp1(TSPAN,ACELNumPlant(:,2),t(j))];
+
+    z = z + pesos.*(rand(5,1)-0.5);
+
+    Fnum = subs(F,[States.' mT IT a b K],[x0.' parameters]);
+    Fnum = double(Fnum);
+    Hnum = subs(H,[States.' mT IT a b K],[x0.' parameters]);
+    Hnum = double(Hnum);
+
+    <span class="comment">% Ciclo de propaga&ccedil;&atilde;o</span>
+    <span class="comment">% Transformando a matriz PMat0 \((6 \times 6)\) em um vetor P0 \((1 \times 36)\)</span>
+    P0 = reshape(P0',[1 36]);
+
+    [TOUT,Pout] = ode45(@(t,P) IntCov(t,P,Fnum,G,Q),tspan,P0);
+
+    Pmatrix = reshape(Pout(end,:),[6 6])';
+
+    simulatorKalman = Simulator(VehicleModel, tspan);
+    <span class="comment">% Definindo as condi&ccedil;&otilde;es iniciais</span>
+    simulatorKalman.X0 = x0(1);
+    simulatorKalman.Y0 = x0(2);
+    simulatorKalman.PSI0 = x0(3);
+    simulatorKalman.V0 = x0(4);
+    simulatorKalman.ALPHAT0 = x0(5);
+    simulatorKalman.dPSI0 = x0(6);
+    <span class="comment">% Simulando</span>
+    simulatorKalman.Simulate()
+
+    XTKalman = simulatorKalman.XT;
+    YTKalman = simulatorKalman.YT;
+    PSIKalman = simulatorKalman.PSI;
+    vTKalman = simulatorKalman.VEL;
+    ALPHATKalman = simulatorKalman.ALPHAT;
+    dPSIKalman = simulatorKalman.dPSI;
+
+    XOUTKalman = [XTKalman YTKalman PSIKalman vTKalman ALPHATKalman dPSIKalman];
+
+    <span class="comment">% Ciclo de atualiza&ccedil;&atilde;o</span>
+
+    ACELKalman = subs(medNonlinear,[States.' mT IT a b K],[XOUTKalman(end,:) parameters]);
+    ACELKalman = double(ACELKalman);
+
+    KKalman = Pmatrix*Hnum' / (Hnum*Pmatrix*Hnum' + R);
+
+    XKalman = XOUTKalman(end,:)' + KKalman*(z - ACELKalman);
+    PKalman = Pmatrix - KKalman*Hnum*Pmatrix;
+
+    x0 = XKalman;
+    P0 = PKalman;
+
+    XOUTopt(j+1,:) = XKalman';
+    XOUTantes(j+1,:) = XOUTKalman(end,:);
+    Popt(j+1) = norm(PKalman);
+    Pantes(j+1) = norm(Pmatrix);
+    KKalmanopt(j+1) = norm(KKalman);
+
+<span class="keyword">end</span>
+</pre><h2>Compara&ccedil;&atilde;o<a name="57"></a></h2><pre class="codeinput">figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,1),<span class="string">'r'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,1),<span class="string">'r--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'x [m]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,2),<span class="string">'g'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,2),<span class="string">'g--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'y [m]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,3),<span class="string">'b'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,3),<span class="string">'b--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'PSI [rad]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,4),<span class="string">'c'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,4),<span class="string">'c--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'vT [m/s]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,5),<span class="string">'m'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,5),<span class="string">'m--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'ALPHAT [rad/s]'</span>)
+
+figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+plot(TSPAN,XOUTPlant(:,6),<span class="string">'k'</span>)
+p = plot(t(2:end),XOUTopt(2:end-1,6),<span class="string">'k--'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'Plant'</span>,<span class="string">'Estim'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'SouthEast'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+ylabel(<span class="string">'dPSI [rad/s]'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_12.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_13.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_14.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_15.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_16.png" alt=""> <img vspace="5" hspace="5" src="KalmanFilter_17.png" alt=""> <p>Cov. do erro</p><pre class="codeinput">figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+p = plot(t(2:end),KKalmanopt(2:end-1),<span class="string">'r'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+ylabel(<span class="string">'ganho de kalman'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_18.png" alt=""> <pre class="codeinput">figure
+ax = gca;
+set(ax,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>,<span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'XGrid'</span>,<span class="string">'on'</span>,<span class="string">'YGrid'</span>,<span class="string">'on'</span>)
+p = plot(t(2:end),Popt(2:end-1),<span class="string">'r'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+p = plot(t(2:end),Pantes(2:end-1),<span class="string">'g'</span>);
+set(p,<span class="string">'Marker'</span>,<span class="string">'*'</span>)
+l = legend(<span class="string">'+'</span>,<span class="string">'-'</span>);
+set(l,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>)
+ylabel(<span class="string">'cov. erro'</span>)
+xlabel(<span class="string">'tempo [s]'</span>)
+</pre><img vspace="5" hspace="5" src="KalmanFilter_19.png" alt=""> <pre class="codeinput">close <span class="string">all</span>
+</pre><h2>Trajet&oacute;ria da estimativa<a name="61"></a></h2><p>Usando o simulatorPlant para inicializar o Graphics do Kalman</p><pre class="codeinput">gKalman = Graphics(simulatorKalman);
+gKalman.Simulator.TSpan = t;
+gKalman.Simulator.XT = XOUTopt(1:end-1,1);
+gKalman.Simulator.YT = XOUTopt(1:end-1,2);
+gKalman.Simulator.PSI = XOUTopt(1:end-1,3);
+gKalman.Simulator.VEL = XOUTopt(1:end-1,4);
+gKalman.Simulator.ALPHAT = XOUTopt(1:end-1,5);
+gKalman.Simulator.dPSI = XOUTopt(1:end-1,6);
+gKalman.TractorColor = <span class="string">'b'</span>;
+gKalman.Frame()
+</pre><img vspace="5" hspace="5" src="KalmanFilter_20.png" alt=""> <pre class="codeinput">close <span class="string">all</span>
+</pre><pre class="codeinput">gPlant.Frame();
+hold <span class="string">on</span>
+<span class="comment">% gModel.Frame();</span>
+gKalman.Frame();
+</pre><img vspace="5" hspace="5" src="KalmanFilter_21.png" alt=""> <h2>See Also<a name="64"></a></h2><p><a href="../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% KALMAN FILTER
+% Kalman filter application.
+%
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
+%
+%% System
+% Supondo um sistema não linear descrito por uma equação diferencial estocástica vetorial dada por:
+%
+% \[ \dot{{\bf x}} = {\bf f} ( {\bf x}(t) , t ) + {\bf G} (t) {\bf w} (t) \]
+%
+% onde
+%
+% * \({\bf w}\) é de processo branco gaussiano. \({\bf w}(t)\) ~ \(N ( {\bf 0} , {\bf Q}(t) )\)
+% * \({\bf f} ( {\bf x}(t) , t )\) é uma função vetorial de dimensão \(n\)
+% * \({\bf x}(t)\) é o vetor de estados \((n \times 1)\)
+% * \({\bf G}\) é uma matriz conhecida \((n \times s)\)
+%
+%% Plant
+% Neste exemplo, a planta é representada por um modelo dinâmico não linear baseado no modelo físico ilustrado na seguinte figura
+%
+% <<../illustrations/modelSimple.svg>>
+%
+% O modelo da planta é composto pelos modelos não lineares de maior complexidade disponível no pacote, ou seja, o modelo de veículo <../DocVehicleSimpleNonlinear.html Vehicle Simple Nonlinear> com o modelo de pneu <../DocTirePacejka.html Tire Pacejka>. A descrição das equações de movimento podem ser encontradas em <../theory/vehicleSimple.pdf Simple equations of motion>
+%
+
+% O pacote é importado com o comando:
+%
+
+import VehicleDynamicsLateral.*
+
+%%
+% O pneu escolhido <../DocTirePacejka.html Tire Pacejka> é inicializado com os parâmetros predefinidos (default).
+%
+
+TirePlant = TirePacejka;
+disp(TirePlant)
+
+%%
+% O modelo de veículo <../DocVehicleSimpleNonlinear.html Vehicle Simple Nonlinear> é inicializado, também, com os parâmetros predefinidos (default). Em seguida o pneu escolhido é passado para o veículo.
+%
+
+VehiclePlant = VehicleSimpleNonlinear;
+VehiclePlant.tire = TirePlant;
+disp(VehiclePlant)
+
+%% Maneuver
+% Este tópico apresenta a manobra do veículo (plant) que deverá ser estimada pelo Filtro de Kalman.
+%
+% Choosing simulation parameters:
+%
+
+T = 6;                      % Total simulation time [s]
+resol = 50;                 % Resolution
+TSPAN = 0:T/resol:T;        % Time span [s]
+
+%%
+% Inicializando o simulador e simulando.
+%
+
+simulatorPlant = Simulator(VehiclePlant, TSPAN);
+simulatorPlant.dPSI0 = 0.35;
+simulatorPlant.Simulate
+
+%%
+% Obtendo os parâmetros da simulação.
+%
+
+disp(simulatorPlant)
+
+%%
+% Retrieving states
+%
+
+XTPlant = simulatorPlant.XT;
+YTPlant = simulatorPlant.YT;
+PSIPlant = simulatorPlant.PSI;
+vTPlant = simulatorPlant.VEL;
+ALPHATPlant = simulatorPlant.ALPHAT;
+dPSIPlant = simulatorPlant.dPSI;
+
+
+XOUTPlant = [XTPlant YTPlant PSIPlant vTPlant ALPHATPlant dPSIPlant];
+
+%%
+% Gerando os gráficos da manobra do carro (plant)
+%
+
+gPlant = Graphics(simulatorPlant);
+gPlant.TractorColor = 'r';
+gPlant.Frame();
+
+%%
+%
+
+close all                   % Closing figures
+
+%% Modelo
+% O modelo utilizado no algoritmo de estimação é baseado no mesmo modelo físico considerado no modelo da planta. Além disso, o modelo parte da premissa de que o projetista do estimador não tem conhecimento adequado da curva característica do pneu. Logo, o modelo de veículo é igual ao utilizado na planta, porém, o modelo de pneu é dado pelo modelo linear <../DocTireLinear.html Tire linear>, resultando num modelo do sistema de menor complexidade (em relação à planta) e com mais hipóteses simplificadoras.
+%
+% Inicializando o pneu
+%
+
+TireModel = TireLinear;
+disp(TireModel)
+
+%%
+% Choosing model vehicle
+%
+
+VehicleModel = VehicleSimpleNonlinear;
+VehicleModel.tire = TireModel;
+disp(VehicleModel)
+
+%%
+% Simulador com o mesmo vetor TSPAN e simulação
+%
+
+simulatorModel = Simulator(VehicleModel, TSPAN);
+simulatorModel.dPSI0 = 0.35;
+simulatorModel.Simulate;
+
+disp(simulatorModel)
+
+%%
+% Retrieving states
+%
+
+XTModel = simulatorModel.XT;
+YTModel = simulatorModel.YT;
+PSIModel = simulatorModel.PSI;
+vTModel = simulatorModel.VEL;
+ALPHATModel = simulatorModel.ALPHAT;
+dPSIModel = simulatorModel.dPSI;
+
+%%
+% A manobra gerada pelo modelo escolhido pelo projetista a partir da mesma condição inicial é ilustrada na figura a seguir
+%
+
+gModel = Graphics(simulatorModel);
+gModel.TractorColor = 'g';
+gModel.Frame();
+
+%%
+%
+
+close all                   % Closing figures
+
+%% Plant and model comparison
+% Comparando o modelo de pneu
+%
+
+g = 9.81;
+FzF = VehiclePlant.mF0*g;
+FzR = VehiclePlant.mR0*g;
+muy = VehiclePlant.muy;
+nF = VehiclePlant.nF;
+nR = VehiclePlant.nR;
+
+alpha= 0:0.5:15;
+alpha = alpha*pi/180;
+FyLin = - TireModel.Characteristic(alpha);
+FyFPac = - TirePlant.Characteristic(alpha, FzF, muy);
+FyRPac = - TirePlant.Characteristic(alpha, FzR, muy);
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(alpha(1:floor(end/2))*180/pi,FyLin(1:floor(end/2)),'r')
+plot(alpha*180/pi,FyFPac,'g')
+plot(alpha*180/pi,FyRPac,'gREPLACE_WITH_DASH_DASH')
+xlabel('alpha [deg]')
+ylabel('Fy [N]')
+l = legend('Linear','Pacejka F','Pacejka R');
+set(l,'Location','SouthEast')
+
+%%
+% Comparando os estados
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XTPlant,'r')
+plot(TSPAN,XTModel,'rREPLACE_WITH_DASH_DASH')
+xlabel('Time [s]')
+ylabel('Distance X [m]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,YTPlant,'g')
+plot(TSPAN,YTModel,'gREPLACE_WITH_DASH_DASH')
+xlabel('Time [s]')
+ylabel('Distance Y [m]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,PSIPlant,'b')
+plot(TSPAN,PSIModel,'bREPLACE_WITH_DASH_DASH')
+xlabel('Time [s]')
+ylabel('PSI [rad]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,vTPlant,'c')
+plot(TSPAN,vTModel,'cREPLACE_WITH_DASH_DASH')
+xlabel('Time [s]')
+ylabel('vT [m/s]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,ALPHATPlant,'m'),
+plot(TSPAN,ALPHATModel,'mREPLACE_WITH_DASH_DASH'),
+xlabel('Time [s]')
+ylabel('ALPHAT [rad/s]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,dPSIPlant,'k')
+plot(TSPAN,dPSIModel,'kREPLACE_WITH_DASH_DASH')
+xlabel('Time [s]')
+ylabel('dPSI [rad/s]')
+
+%%
+% Comparando a aceleração longitudinal e transversal
+
+saidasPlant = [XTPlant YTPlant PSIPlant vTPlant ALPHATPlant dPSIPlant];
+matDerivEstadosPlant = zeros(size(saidasPlant));
+for i = 1:size(saidasPlant,1)
+    auxil = simulatorPlant.Vehicle.Model(1,saidasPlant(i,:),TSPAN);
+    matDerivEstadosPlant(i,:) = auxil';
+end
+
+dXTPlant = matDerivEstadosPlant(:,1);
+dYTPlant = matDerivEstadosPlant(:,2);
+dPSIPlant = matDerivEstadosPlant(:,3);
+dvTPlant = matDerivEstadosPlant(:,4);
+dALPHATPlant = matDerivEstadosPlant(:,5);
+ddPSIPlant = matDerivEstadosPlant(:,6);
+
+ddXPlant = dvTPlant.*cos(PSIPlant + ALPHATPlant) - vTPlant.*(dPSIPlant + dALPHATPlant).*sin(PSIPlant + ALPHATPlant);
+ddYPlant = dvTPlant.*sin(PSIPlant + ALPHATPlant) + vTPlant.*(dPSIPlant + dALPHATPlant).*cos(PSIPlant + ALPHATPlant);
+
+ACELNumPlant = [(ddXPlant.*cos(PSIPlant) - ddYPlant.*sin(PSIPlant))  (-ddXPlant.*sin(PSIPlant) + ddYPlant.*cos(PSIPlant))];
+
+saidasModel = [XTModel YTModel PSIModel vTModel ALPHATModel dPSIModel];
+matDerivEstadosModel = zeros(size(saidasModel));
+for i = 1:size(saidasModel,1)
+    auxil = simulatorModel.Vehicle.Model(1,saidasModel(i,:),TSPAN);
+    matDerivEstadosModel(i,:) = auxil';
+end
+
+dXTModel = matDerivEstadosModel(:,1);
+dYTModel = matDerivEstadosModel(:,2);
+dPSIModel = matDerivEstadosModel(:,3);
+dvTModel = matDerivEstadosModel(:,4);
+dALPHATModel = matDerivEstadosModel(:,5);
+ddPSIModel = matDerivEstadosModel(:,6);
+
+ddXModel = dvTModel.*cos(PSIModel + ALPHATModel) - vTModel.*(dPSIModel + dALPHATModel).*sin(PSIModel + ALPHATModel);
+ddYModel = dvTModel.*sin(PSIModel + ALPHATModel) + vTModel.*(dPSIModel + dALPHATModel).*cos(PSIModel + ALPHATModel);
+
+ACELNumModel = [(ddXModel.*cos(PSIModel) - ddYModel.*sin(PSIModel))  (-ddXModel.*sin(PSIModel) + ddYModel.*cos(PSIModel))];
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,ACELNumPlant(:,1),'r')
+plot(TSPAN,ACELNumPlant(:,2),'g')
+plot(TSPAN,ACELNumModel(:,1),'rREPLACE_WITH_DASH_DASH')
+plot(TSPAN,ACELNumModel(:,2),'gREPLACE_WITH_DASH_DASH')
+xlabel('time [s]')
+ylabel('acc. [m/s]')
+l = legend('AX Plant','AY Plant','AX Model','AY Model');
+set(l,'Location','NorthEast')
+
+%%
+% Comparando as derivadas dos estados
+
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,dXTPlant,'r')
+% plot(TSPAN,dXTModel,'rREPLACE_WITH_DASH_DASH')
+% xlabel('Time [s]')
+% ylabel('dX [m/s]')
+% l = legend('Plant','Model');
+% set(l,'Location','SouthWest')
+%
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,dYTPlant,'r')
+% plot(TSPAN,dYTModel,'rREPLACE_WITH_DASH_DASH')
+% xlabel('Time [s]')
+% ylabel('dY [m/s]')
+% l = legend('Plant','Model');
+% set(l,'Location','NorthWest')
+%
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,dPSIPlant,'r')
+% plot(TSPAN,dPSIModel,'rREPLACE_WITH_DASH_DASH')
+% xlabel('Time [s]')
+% ylabel('dPSI [rad/s]')
+% l = legend('Plant','Model');
+% set(l,'Location','NorthEast')
+%
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,dvTPlant,'r')
+% plot(TSPAN,dvTModel,'rREPLACE_WITH_DASH_DASH')
+% xlabel('Time [s]')
+% ylabel('dvT [m/s]')
+% l = legend('Plant','Model');
+% set(l,'Location','SouthEast')
+%
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,dALPHATPlant,'r'),
+% plot(TSPAN,dALPHATModel,'rREPLACE_WITH_DASH_DASH'),
+% xlabel('Time [s]')
+% ylabel('dALPHAT [rad/s]')
+% l = legend('Plant','Model');
+% set(l,'Location','NorthEast')
+%
+% figure
+% ax = gca;
+% set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+% plot(TSPAN,ddPSIPlant,'r')
+% plot(TSPAN,ddPSIModel,'rREPLACE_WITH_DASH_DASH')
+% xlabel('Time [s]')
+% ylabel('ddPSI [rad/s2]')
+% l = legend('Plant','Model');
+% set(l,'Location','SouthEast')
+
+%%
+% Comparação - Diferença de 10 m na direção X no momento da curva.
+%
+
+gModel.Frame();
+hold on
+gPlant.Frame();
+gModel.Frame();
+
+%%
+%
+
+close all                   % Closing figures
+
+%% Model linearization
+% A expressão geral da equação linearizada é obtida neste tópico utilizando o processador simbólico.
+%
+% Definindo os símbolos:
+%
+
+syms XT YT PSI vT ALPHAT dPSI mT IT a b K
+
+%%
+% Slip angles
+%
+
+ALPHAF = atan((vT * sin(ALPHAT) + a * dPSI)/(vT * cos(ALPHAT))); % Dianteiro
+ALPHAR = atan((vT * sin(ALPHAT) - b * dPSI)/(vT * cos(ALPHAT))); % Traseiro
+
+%%
+%
+
+pretty(ALPHAF)
+
+%%
+%
+
+pretty(ALPHAR)
+
+%%
+% Lateral forces
+%
+
+FyF = -K*ALPHAF;
+FyR = -K*ALPHAR;
+
+%%
+%
+
+pretty(FyF)
+
+%%
+%
+
+pretty(FyR)
+
+%%
+% State equations
+%
+
+f1 = vT * cos(ALPHAT + PSI);
+f2 = vT * sin(ALPHAT + PSI);
+f3 = dPSI;
+f4 = (FyF * sin(ALPHAT) + FyR * sin(ALPHAT))/(mT);
+f5 = (FyF * cos(ALPHAT) + FyR * cos(ALPHAT) - mT * vT * dPSI) / (mT * vT);
+f6 = (FyF * a - FyR * b) / IT;
+
+f = [f1 ; f2 ; f3 ; f4 ; f5 ; f6];
+
+%%
+%
+
+pretty(f)
+
+%%
+% Vetor de estados
+
+States = [XT ; YT ; PSI ; vT ; ALPHAT ; dPSI];
+
+%%
+%
+
+pretty(States)
+
+%%
+% O sistema linearizado é escrito na forma
+%
+% \[ \dot{\bf x} = {\bf F} {\bf x} \]
+%
+% onde \({\bf F}\) é a matriz dinâmica do modelo linear que é calculada a partir da equação não linear expandida em série de Taylor e truncada nos termos de primeira ordem. Logo, a matriz \({\bf F}\) é dada por
+%
+% \[ {\bf F} = \left[ \frac{\partial f_i}{\partial x_j} \right]_{n \times n} \]
+%
+% onde \(i\) e \(j\) indicam as equações e variáveis de estado utilizadas no cálculo correpondente à posição \((i,j)\) da matriz jacobiana.
+%
+
+F = jacobian(f,States);
+F = simplify(F);
+
+%%
+%
+
+pretty(F)
+
+%% Medição
+% Continuando simbolicamente, as grandezas medidas são:
+%
+% * Posição X
+% * Posição Y
+% * Aceleração angular
+% * aceleração longitudinal
+% * aceleração transversal
+%
+% Para isso, utiliza-se as relações:
+%
+% \[ \dot{x} = v_{\rm T} \cos \left( \psi + \alpha_{\rm T} \right) \]
+%
+% \[ \dot{y} = v_{\rm T} \sin \left( \psi + \alpha_{\rm T} \right) \]
+%
+% Aceleração
+%
+% \[ \ddot{x} = \dot{v}_{\rm T} \cos \left( \psi + \alpha_{\rm T} \right) - v_{\rm T} \left( \dot{\psi} + \dot{\alpha}_{\rm T} \right) \sin \left( \psi + \alpha_{\rm T} \right) \]
+%
+% \[ \ddot{y} = \dot{v}_{\rm T} \sin \left( \psi + \alpha_{\rm T} \right) + v_{\rm T} \left( \dot{\psi} + \dot{\alpha}_{\rm T} \right) \cos \left( \psi + \alpha_{\rm T} \right) \]
+%
+% Implementando
+%
+
+ddX = f4*cos(PSI + ALPHAT) - vT*(dPSI + f5)*sin(PSI + ALPHAT);
+ddY = f4*sin(PSI + ALPHAT) + vT*(dPSI + f5)*cos(PSI + ALPHAT);
+
+%%
+% Estes valores obtidos são as acelerações escritas na base fixa \(\{ O {\bf i} {\bf j} {\bf k} \}\). A projeção destas grandezas na base móvel \(\{ O {\bf t}_x {\bf t}_y {\bf t}_z \}\) é feita através da equação
+%
+% \[ {\bf a} = \left( \ddot{x} \cos \psi - \ddot{y} \sin \psi \right) {\bf t}_x + \left( - \ddot{x} \sin \psi + \ddot{y} \sin \psi \right) {\bf t}_y \]
+%
+% Implementando
+%
+
+ACEL = [ddX*cos(PSI) - ddY*sin(PSI) ; -ddX*sin(PSI) + ddY*cos(PSI)];
+ACEL = simplify(ACEL);
+
+%%
+%
+
+pretty(ACEL)
+
+%%
+% A equação de observações não linear é dada por
+%
+% \[ {\bf z}_k = {\bf h} ({\bf x}_k) + {\bf v}_k \]
+%
+% com
+%
+% \({\bf v}_k\) ~ \(N ( {\bf 0} , {\bf R}_k )\)
+%
+% Linearizando termos
+%
+% \[ {\bf z}_k = {\bf H} {\bf x}_k + {\bf v}_k \]
+%
+% onde
+%
+% \[ {\bf H} = \left[ \frac{\partial h_i}{\partial x_j} \right]_{m \times n} \]
+%
+% ou seja, a matriz de saídas {\bf H} é a matriz jacobiana da equação de ACEL em relação aos estados.
+%
+% Implementando
+%
+
+medNonlinear = [XT ; YT ; f6 ; ACEL];
+
+H = jacobian(medNonlinear,States);
+H = simplify(H);
+
+%%
+%
+
+pretty(H)
+
+%% Verificação da linearização
+% Para verificar o procedimento de linearização, um ponto de operação referente à movimentação do veículo em linha reta com uma velocidade prescrita \(v_0\) é utilizado. Esta escolha é típica e pode ser verificada facilmente na literatura.
+%
+% Definindo \(v_0\)
+%
+
+syms v0
+
+%%
+% Obtendo a matriz dinâmica
+
+A = subs(F,States,[0 ; 0 ; 0 ; v0 ; 0 ; 0]);
+
+%%
+%
+
+pretty(A)
+
+%%
+% Obtendo a matriz de saídas
+%
+
+C = subs(H,States,[0 ; 0 ; 0 ; v0 ; 0 ; 0]);
+
+%%
+%
+
+pretty(C)
+
+%% Filtro estendido de Kalman
+% Implementação do algoritmo
+%
+% Matriz que distribui o ruído na equação do estado constante
+%
+
+G = eye(6); % Matriz identidade (6 x 6)
+
+%%
+% Matrizes de covariância
+%
+
+Q = eye(6);
+R = eye(5);
+
+%%
+% Matriz
+
+P0 = eye(6);
+
+
+%%
+% Recuperando as condições iniciais usadas acima
+%
+
+X0Num = simulatorModel.X0;
+Y0Num = simulatorModel.Y0;
+PSI0Num = simulatorModel.PSI0;
+VEL0Num = simulatorModel.V0;
+ALPHAT0Num = simulatorModel.ALPHAT0;
+dPSI0Num = simulatorModel.dPSI0;
+
+x0 = [ X0Num ; Y0Num ; PSI0Num ; VEL0Num ; ALPHAT0Num ; dPSI0Num ];
+x0 = zeros(6,1);
+x0(4)=20;
+
+%%
+% Recuperando os parâmetros do veículo
+%
+
+mTNum = VehicleModel.mT;
+ITNum = VehicleModel.IT;
+aNum = VehicleModel.a;
+bNum = VehicleModel.b;
+KNum = TireModel.k;
+
+parameters = [mTNum ITNum aNum bNum KNum];
+
+%%
+% Obtendo e verificando a aceleração que vai ser medida.
+%
+
+%%
+% Inicializando o tempo de intervalo entre uma observação e outra.
+%
+
+intervalo = 0.1;
+
+%%
+%
+
+t = 0:intervalo:T;                  % Vetor com os instantes de observação
+
+%%
+% Prealocando
+%
+
+XOUTopt = zeros(length(t) + 1,length(States)); % Estimativa dos estados após atualização
+Popt = zeros(length(t) + 1,1);                 % Matriz de covariância após atualização
+Pantes = zeros(length(t) + 1,1);                 % Matriz de covariância antes da atualização
+KKalmanopt = ones(length(t) + 1,1);                 % Ganho de Kalman
+
+%%
+% Atribuindo os primeiros valores
+%
+
+XOUTopt(1,:) = x0';
+XOUTantes(1,:) = x0';
+Pantes(1,1) = norm(P0);
+Popt(1,1) = norm(P0);
+
+% Distribuição dos erros
+
+pesos = [5; 5; 0.1; 0.5; 0.5];
+
+%%
+% Iteração
+%
+
+for j = 1:length(t)
+    % Índice variando por todos os instantes de observação
+
+    % Vetor de tempo de integração para a etapa de propagação
+    tspan = t(j):intervalo/100:t(j)+intervalo;
+
+    % Obtendo as medidas da iteração
+    z = [interp1(TSPAN,XTPlant(:,1),t(j)) ; interp1(TSPAN,YTPlant(:,1),t(j)) ; interp1(TSPAN,ddPSIPlant(:,1),t(j)) ; interp1(TSPAN,ACELNumPlant(:,1),t(j)) ; interp1(TSPAN,ACELNumPlant(:,2),t(j))];
+
+    z = z + pesos.*(rand(5,1)-0.5);
+
+    Fnum = subs(F,[States.' mT IT a b K],[x0.' parameters]);
+    Fnum = double(Fnum);
+    Hnum = subs(H,[States.' mT IT a b K],[x0.' parameters]);
+    Hnum = double(Hnum);
+
+    % Ciclo de propagação
+    % Transformando a matriz PMat0 \((6 \times 6)\) em um vetor P0 \((1 \times 36)\)
+    P0 = reshape(P0',[1 36]);
+
+    [TOUT,Pout] = ode45(@(t,P) IntCov(t,P,Fnum,G,Q),tspan,P0);
+
+    Pmatrix = reshape(Pout(end,:),[6 6])';
+
+    simulatorKalman = Simulator(VehicleModel, tspan);
+    % Definindo as condições iniciais
+    simulatorKalman.X0 = x0(1);
+    simulatorKalman.Y0 = x0(2);
+    simulatorKalman.PSI0 = x0(3);
+    simulatorKalman.V0 = x0(4);
+    simulatorKalman.ALPHAT0 = x0(5);
+    simulatorKalman.dPSI0 = x0(6);
+    % Simulando
+    simulatorKalman.Simulate()
+
+    XTKalman = simulatorKalman.XT;
+    YTKalman = simulatorKalman.YT;
+    PSIKalman = simulatorKalman.PSI;
+    vTKalman = simulatorKalman.VEL;
+    ALPHATKalman = simulatorKalman.ALPHAT;
+    dPSIKalman = simulatorKalman.dPSI;
+
+    XOUTKalman = [XTKalman YTKalman PSIKalman vTKalman ALPHATKalman dPSIKalman];
+
+    % Ciclo de atualização
+
+    ACELKalman = subs(medNonlinear,[States.' mT IT a b K],[XOUTKalman(end,:) parameters]);
+    ACELKalman = double(ACELKalman);
+
+    KKalman = Pmatrix*Hnum' / (Hnum*Pmatrix*Hnum' + R);
+
+    XKalman = XOUTKalman(end,:)' + KKalman*(z - ACELKalman);
+    PKalman = Pmatrix - KKalman*Hnum*Pmatrix;
+
+    x0 = XKalman;
+    P0 = PKalman;
+
+    XOUTopt(j+1,:) = XKalman';
+    XOUTantes(j+1,:) = XOUTKalman(end,:);
+    Popt(j+1) = norm(PKalman);
+    Pantes(j+1) = norm(Pmatrix);
+    KKalmanopt(j+1) = norm(KKalman);
+
+end
+
+%% Comparação
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,1),'r')
+p = plot(t(2:end),XOUTopt(2:end-1,1),'rREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('x [m]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,2),'g')
+p = plot(t(2:end),XOUTopt(2:end-1,2),'gREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('y [m]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,3),'b')
+p = plot(t(2:end),XOUTopt(2:end-1,3),'bREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('PSI [rad]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,4),'c')
+p = plot(t(2:end),XOUTopt(2:end-1,4),'cREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('vT [m/s]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,5),'m')
+p = plot(t(2:end),XOUTopt(2:end-1,5),'mREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('ALPHAT [rad/s]')
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+plot(TSPAN,XOUTPlant(:,6),'k')
+p = plot(t(2:end),XOUTopt(2:end-1,6),'kREPLACE_WITH_DASH_DASH');
+set(p,'Marker','*')
+l = legend('Plant','Estim');
+set(l,'Location','SouthEast')
+xlabel('tempo [s]')
+ylabel('dPSI [rad/s]')
+
+%%
+% Cov. do erro
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+p = plot(t(2:end),KKalmanopt(2:end-1),'r');
+set(p,'Marker','*')
+ylabel('ganho de kalman')
+xlabel('tempo [s]')
+
+
+%%
+%
+
+figure
+ax = gca;
+set(ax,'NextPlot','add','Box','on','XGrid','on','YGrid','on')
+p = plot(t(2:end),Popt(2:end-1),'r');
+set(p,'Marker','*')
+p = plot(t(2:end),Pantes(2:end-1),'g');
+set(p,'Marker','*')
+l = legend('+','-');
+set(l,'Location','NorthEast')
+ylabel('cov. erro')
+xlabel('tempo [s]')
+
+%%
+%
+close all
+
+%% Trajetória da estimativa
+% Usando o simulatorPlant para inicializar o Graphics do Kalman
+
+gKalman = Graphics(simulatorKalman);
+gKalman.Simulator.TSpan = t;
+gKalman.Simulator.XT = XOUTopt(1:end-1,1);
+gKalman.Simulator.YT = XOUTopt(1:end-1,2);
+gKalman.Simulator.PSI = XOUTopt(1:end-1,3);
+gKalman.Simulator.VEL = XOUTopt(1:end-1,4);
+gKalman.Simulator.ALPHAT = XOUTopt(1:end-1,5);
+gKalman.Simulator.dPSI = XOUTopt(1:end-1,6);
+gKalman.TractorColor = 'b';
+gKalman.Frame()
+
+%%
+close all
+
+%%
+%
+gPlant.Frame();
+hold on
+% gModel.Frame();
+gKalman.Frame();
+
+%% See Also
+%
+% <../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

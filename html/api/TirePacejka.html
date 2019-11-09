@@ -1,0 +1,274 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>TirePacejka</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="TirePacejka.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">See Also</a></li></ul></div><pre class="codeinput"><span class="keyword">classdef</span> TirePacejka &lt; VehicleDynamicsLateral.Tire
+    <span class="comment">% TirePacejka Pacejka tire model</span>
+    <span class="comment">%</span>
+    <span class="comment">% It inherits methods from Tire.</span>
+
+    <span class="keyword">methods</span>
+        <span class="comment">% Constructor</span>
+        <span class="keyword">function</span> self = TirePacejka()
+            self.a0 = 1;
+            self.a1 = 0;
+            self.a2 = 800;
+            self.a3 = 3000;
+            self.a4 = 50;
+            self.a5 = 0;
+            self.a6 = 0;
+            self.a7 = -1;
+            self.a8 = 0;
+            self.a9 = 0;
+            self.a10 = 0;
+            self.a11 = 0;
+            self.a12 = 0;
+            self.a13 = 0;
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> p = PlotTire(self, Fz, muy)
+            <span class="comment">% Returns the handle of the curve</span>
+            alpha = (0:0.1:15)*pi/180;
+            Fy = - self.Characteristic(alpha, Fz, muy);
+            p = plot(alpha*180/pi,Fy);
+            grid <span class="string">on</span>; box <span class="string">on</span>;
+            xlabel(<span class="string">'Slip angle [deg]'</span>)
+            ylabel(<span class="string">'Lateral force [N]'</span>)
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> Fy = Characteristic(self, alpha, Fz, muy)
+            <span class="comment">% Input</span>
+            <span class="comment">% alpha - slip angle [rad]</span>
+            <span class="comment">% Fz    - Load [N]</span>
+            <span class="comment">% muy   - Lateral friction coefficient (*1000) [-]</span>
+
+            <span class="comment">% Slip angle treatment</span>
+            ALPHA = asin(sin(alpha)); <span class="comment">% [rad]</span>
+            ALPHA = 180 / pi * ALPHA; <span class="comment">% Conversion [rad] - [deg]</span>
+            <span class="comment">% Nominal parameters</span>
+            a0 = self.a0;
+            a1 = self.a1;
+            a2 = self.a2;
+            a3 = self.a3;
+            a4 = self.a4;
+            a5 = self.a5;
+            a6 = self.a6;
+            a7 = self.a7;
+            a8 = self.a8;
+            a9 = self.a9;
+            a10 = self.a10;
+            a11 = self.a11;
+            a12 = self.a12;
+            a13 = self.a13;
+
+            Fz = Fz/1000;           <span class="comment">% Conversion [N] - [kN]</span>
+
+            camber = 0;             <span class="comment">% Camber angle</span>
+
+            C = a0;                 <span class="comment">% Shape factor</span>
+            muy0 = a1 * Fz + a2;      <span class="comment">% Lateral friction coefficient nominal [-]</span>
+            muy = muy * 1000;         <span class="comment">% Lateral friction coefficient operacional</span>
+            D = muy0 * Fz;            <span class="comment">% muy = lateral friction coefficient</span>
+            BCD = a3 * sin(2 * atan(Fz/a4))*(1-a5 * abs(camber)); <span class="comment">% Cornering stiffness</span>
+            E = a6 * Fz + a7;         <span class="comment">% Curvature factor</span>
+            B = BCD/(C * D);          <span class="comment">% stiffness factor</span>
+            Sh = a8 * camber + a9 * Fz + a10;      <span class="comment">% Horizontal shift</span>
+            Sv = a11 * Fz * camber + a12 * Fz + a13; <span class="comment">% Vertical shift</span>
+            ALPHAeq = muy0/muy*(ALPHA + Sh);   <span class="comment">% Equivalent slip angle</span>
+ <span class="comment">% Reference characteristics</span>
+            fy = D * sin(C * atan(B * ALPHAeq - E*(B * ALPHAeq - atan(B * ALPHAeq))));
+ <span class="comment">% Lateral force</span>
+            Fy = -muy/muy0*(fy + Sv);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">properties</span>
+        a0 <span class="comment">% Shape factor [-]</span>
+        a1 <span class="comment">% Load dependency of lateral friction (*1000) [1/kN]</span>
+        a2 <span class="comment">% Lateral friction level (*1000) [-]</span>
+        a3 <span class="comment">% Maximum cornering stiffness [N/deg]</span>
+        a4 <span class="comment">% Load at maximum cornering stiffness [kN]</span>
+        a5 <span class="comment">% Camber sensitivity of cornering stiffness</span>
+        a6 <span class="comment">% Load dependency of curvature factor</span>
+        a7 <span class="comment">% Curvature factor level</span>
+        a8 <span class="comment">% Camber sensitivity of horizontal shift</span>
+        a9 <span class="comment">% Load dependency of horizontal shift</span>
+        a10 <span class="comment">% Horizontal shift level</span>
+        a11 <span class="comment">% Combined load and camber sensitivity of vertical shift</span>
+        a12 <span class="comment">% Load dependency of vertical shift</span>
+        a13 <span class="comment">% Vertical shift level</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre><h2>See Also<a name="2"></a></h2><p><a href="../../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+classdef TirePacejka < VehicleDynamicsLateral.Tire
+    % TirePacejka Pacejka tire model
+    %
+    % It inherits methods from Tire.
+
+    methods
+        % Constructor
+        function self = TirePacejka()
+            self.a0 = 1;
+            self.a1 = 0;
+            self.a2 = 800;
+            self.a3 = 3000;
+            self.a4 = 50;
+            self.a5 = 0;
+            self.a6 = 0;
+            self.a7 = -1;
+            self.a8 = 0;
+            self.a9 = 0;
+            self.a10 = 0;
+            self.a11 = 0;
+            self.a12 = 0;
+            self.a13 = 0;
+        end
+
+        function p = PlotTire(self, Fz, muy)
+            % Returns the handle of the curve
+            alpha = (0:0.1:15)*pi/180;
+            Fy = - self.Characteristic(alpha, Fz, muy);
+            p = plot(alpha*180/pi,Fy);
+            grid on; box on;
+            xlabel('Slip angle [deg]')
+            ylabel('Lateral force [N]')
+        end
+
+        function Fy = Characteristic(self, alpha, Fz, muy)
+            % Input
+            % alpha - slip angle [rad]
+            % Fz    - Load [N]
+            % muy   - Lateral friction coefficient (*1000) [-]
+
+            % Slip angle treatment
+            ALPHA = asin(sin(alpha)); % [rad]
+            ALPHA = 180 / pi * ALPHA; % Conversion [rad] - [deg]
+            % Nominal parameters
+            a0 = self.a0;
+            a1 = self.a1;
+            a2 = self.a2;
+            a3 = self.a3;
+            a4 = self.a4;
+            a5 = self.a5;
+            a6 = self.a6;
+            a7 = self.a7;
+            a8 = self.a8;
+            a9 = self.a9;
+            a10 = self.a10;
+            a11 = self.a11;
+            a12 = self.a12;
+            a13 = self.a13;
+
+            Fz = Fz/1000;           % Conversion [N] - [kN]
+
+            camber = 0;             % Camber angle
+
+            C = a0;                 % Shape factor
+            muy0 = a1 * Fz + a2;      % Lateral friction coefficient nominal [-]
+            muy = muy * 1000;         % Lateral friction coefficient operacional
+            D = muy0 * Fz;            % muy = lateral friction coefficient
+            BCD = a3 * sin(2 * atan(Fz/a4))*(1-a5 * abs(camber)); % Cornering stiffness
+            E = a6 * Fz + a7;         % Curvature factor
+            B = BCD/(C * D);          % stiffness factor
+            Sh = a8 * camber + a9 * Fz + a10;      % Horizontal shift
+            Sv = a11 * Fz * camber + a12 * Fz + a13; % Vertical shift
+            ALPHAeq = muy0/muy*(ALPHA + Sh);   % Equivalent slip angle
+ % Reference characteristics
+            fy = D * sin(C * atan(B * ALPHAeq - E*(B * ALPHAeq - atan(B * ALPHAeq))));
+ % Lateral force
+            Fy = -muy/muy0*(fy + Sv);
+        end
+    end
+
+    properties
+        a0 % Shape factor [-]
+        a1 % Load dependency of lateral friction (*1000) [1/kN]
+        a2 % Lateral friction level (*1000) [-]
+        a3 % Maximum cornering stiffness [N/deg]
+        a4 % Load at maximum cornering stiffness [kN]
+        a5 % Camber sensitivity of cornering stiffness
+        a6 % Load dependency of curvature factor
+        a7 % Curvature factor level
+        a8 % Camber sensitivity of horizontal shift
+        a9 % Load dependency of horizontal shift
+        a10 % Horizontal shift level
+        a11 % Combined load and camber sensitivity of vertical shift
+        a12 % Load dependency of vertical shift
+        a13 % Vertical shift level
+    end
+
+end
+
+%% See Also
+%
+% <../../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

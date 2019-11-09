@@ -1,0 +1,499 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Steering Control</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="SteeringControl.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Steering Control</h1><!--introduction--><p>Steering Control of Autonomous Vehicles in Obstacle Avoidance Maneuvers.</p><p>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Vehicle model</a></li><li><a href="#2">Tire model</a></li><li><a href="#4">Plant model</a></li><li><a href="#5">Controller design</a></li><li><a href="#17">Double Lane Change Maneuver</a></li><li><a href="#19">See Also</a></li></ul></div><h2>Vehicle model<a name="1"></a></h2><p><b>Bicycle model</b></p><p><img vspace="5" hspace="5" src="../illustrations/modelSimple.svg" alt=""> </p><p><b>Nonlinear model</b></p><p>State vector</p><p>\[ {\bf x} = \left[ \begin{array}{c} {\rm x}_1 \\ {\rm x}_2 \\ {\rm x}_3 \\ {\rm x}_4 \\ {\rm x}_5 \\ {\rm x}_6 \end{array} \right] = \left[ \begin{array}{c} x \\ y \\ \psi \\ v_{\rm T} \\ \alpha_{\rm T} \\ \dot{\psi} \end{array} \right] \]</p><p>State equations</p><p>\[ \dot{{\rm x}}_1 = {\rm x}_4 \cos \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_2 = {\rm x}_4 \sin \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_3 = {\rm x}_6 \]</p><p>\[ \dot{{\rm x}}_4 = \frac{F_{y,{\rm F}} \sin \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \sin {\rm x}_5}{m_{T}} \]</p><p>\[ \dot{{\rm x}}_5 = \frac{F_{y,{\rm F}} \cos \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \cos \alpha_{\rm T} - m_{T} {\rm x}_4 {\rm x}_6}{m_{T} {\rm x}_4} \]</p><p>\[ \dot{{\rm x}}_6 = \frac{F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{T}} \]</p><p>Slip angles</p><p>\[ \alpha_{\rm F} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} + a \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) - \delta \]</p><p>\[ \alpha_{\rm R} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} - b \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) \]</p><p><b>Linear model</b></p><p>\[ \dot{x} = v_{\rm T} \]</p><p>\[ \dot{y} = v_{{\rm T},0} \left( \psi + \alpha_{{\rm T}}\right) \]</p><p>\[ \dot{\psi} = \dot{\psi} \]</p><p>\[ \dot{v}_{\rm T} = 0 \]</p><p>\[ \dot{\alpha}_{\rm T} = \frac{F_{y,{\rm F}} + F_{y,{\rm R}}}{m_{T} v_{{\rm T},0}} - \dot{\psi} \]</p><p>\[ \ddot{\psi} = \frac{a F_{y,{\rm F}} -  b F_{y,{\rm R}}}{I_{T}} \]</p><p>Neglecting equations of \(x\) and \(v_T\)</p><p>\[ \left[ \begin{array}{c} \dot{y} \\ \dot{\psi} \\ \dot{\alpha}_T \\ \ddot{\psi} \end{array} \right] = \left[ \begin{array}{cccc} 0 &amp; v_{T,0} &amp; v_{T,0} &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; -\frac{K_F+K_R}{m_T v_{T,0}} &amp; - \frac{m_T v_{T,0} + \frac{a K_F - b K_R}{v_{T,0}}}{m_T v_{T,0}} \\ 0 &amp; 0 &amp; - \frac{a K_F - b K_R}{I_T} &amp; - \frac{a^2 K_F + b^2 K_R}{I_T v_{T,0}} \end{array} \right] \left[ \begin{array}{c} y \\ \psi \\ \alpha_T \\ \dot{\psi} \end{array} \right] + \left[ \begin{array}{c} 0 \\ 0 \\ \frac{K_F}{m_T v_{T,0}} \\ \frac{a K_F}{I_T}  \end{array} \right] \delta \]</p><p>Slip angles</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} + \frac{a}{v_{{\rm T},0}} \dot{\psi} - \delta \]</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} - \frac{b}{v_{{\rm T},0}} \dot{\psi} \]</p><h2>Tire model<a name="2"></a></h2><p>Typical characteristic curve and slip angle definition</p><p><img vspace="5" hspace="5" src="../illustrations/CurvaCaracteristica.svg" alt=""> </p><p><b>Pacejka</b></p><p>\[ F_{y} = D \sin \left[ C \arctan{B \alpha - E( B \alpha -\arctan(B \alpha))} \right] \]</p><p><b>Linear</b></p><p>\[ F_ y = K \alpha \]</p><p>Comparison of tire models</p><img vspace="5" hspace="5" src="SteeringControl_01.png" alt=""> <h2>Plant model<a name="4"></a></h2><p>Nonlinear vehicle + Pacejka tire</p><pre class="codeoutput">  VehicleSimpleNonlinear with properties:
+
+        mT: 1300
+        IT: 10000
+         a: 1.6154
+         b: 1.8846
+       mF0: 700
+       mR0: 600
+        lT: 3.5000
+        nF: 1
+        nR: 1
+        wT: 1.8000
+       muy: 1
+      tire: [1x1 VehicleDynamicsLateral.TirePacejka]
+    deltaf: @ControlLaw
+       Fxf: 0
+       Fxr: 0
+
+</pre><h2>Controller design<a name="5"></a></h2><p><b>Vehicle parameters</b></p><p><b>Linear system</b></p><p>A</p><pre class="codeoutput">         0   16.7000   16.7000         0
+         0         0         0    1.0000
+         0         0   -8.3915   -0.9324
+         0         0    2.4522   -3.3606
+
+</pre><p>B</p><pre class="codeoutput">         0
+         0
+    4.1958
+   14.7147
+
+</pre><p>C</p><pre class="codeoutput">     1     0     0     0
+
+</pre><p><b>LQR design</b></p><p>Q</p><pre class="codeoutput">     3     0     0     0
+     0     1     0     0
+     0     0     1     0
+     0     0     0     1
+
+</pre><p>R</p><pre class="codeoutput">     1
+
+</pre><p>Klqr</p><pre class="codeoutput">    1.7321    6.8987    2.5832    0.5898
+
+</pre><p><b>Pole placement design</b></p><p>Kplace</p><pre class="codeoutput">    0.7936    6.6882    1.6107    0.5090
+
+</pre><p>Control law</p><p>\[\delta = - {\bf K} {\bf z} + K_1 r \]</p><h2>Double Lane Change Maneuver<a name="17"></a></h2><p><b>Control - Step y</b></p><p>Reference - r = 2 m</p><p>\[ \delta_{max} = \pm 70 deg \]</p><img vspace="5" hspace="5" src="SteeringControl_02.png" alt=""> <img vspace="5" hspace="5" src="SteeringControl_03.png" alt=""> <p><img vspace="5" hspace="5" src="../illustrations/AnimationSteeringControl.gif" alt=""> </p><img vspace="5" hspace="5" src="SteeringControl_04.png" alt=""> <img vspace="5" hspace="5" src="SteeringControl_05.png" alt=""> <h2>See Also<a name="19"></a></h2><p><a href="../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Steering Control
+% Steering Control of Autonomous Vehicles in Obstacle Avoidance Maneuvers.
+%
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
+%
+%% Vehicle model
+% *Bicycle model*
+%
+% <<../illustrations/modelSimple.svg>>
+%
+% *Nonlinear model*
+%
+% State vector
+%
+% \[ {\bf x} = \left[ \begin{array}{c} {\rm x}_1 \\ {\rm x}_2 \\ {\rm x}_3 \\ {\rm x}_4 \\ {\rm x}_5 \\ {\rm x}_6 \end{array} \right] = \left[ \begin{array}{c} x \\ y \\ \psi \\ v_{\rm T} \\ \alpha_{\rm T} \\ \dot{\psi} \end{array} \right] \]
+%
+% State equations
+%
+% \[ \dot{{\rm x}}_1 = {\rm x}_4 \cos \left( {\rm x}_3 + {\rm x}_5 \right) \]
+%
+% \[ \dot{{\rm x}}_2 = {\rm x}_4 \sin \left( {\rm x}_3 + {\rm x}_5 \right) \]
+%
+% \[ \dot{{\rm x}}_3 = {\rm x}_6 \]
+%
+% \[ \dot{{\rm x}}_4 = \frac{F_{y,{\rm F}} \sin \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \sin {\rm x}_5}{m_{T}} \]
+%
+% \[ \dot{{\rm x}}_5 = \frac{F_{y,{\rm F}} \cos \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \cos \alpha_{\rm T} - m_{T} {\rm x}_4 {\rm x}_6}{m_{T} {\rm x}_4} \]
+%
+% \[ \dot{{\rm x}}_6 = \frac{F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{T}} \]
+%
+% Slip angles
+%
+% \[ \alpha_{\rm F} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} + a \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) - \delta \]
+%
+% \[ \alpha_{\rm R} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} - b \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) \]
+%
+%
+% *Linear model*
+%
+% \[ \dot{x} = v_{\rm T} \]
+%
+% \[ \dot{y} = v_{{\rm T},0} \left( \psi + \alpha_{{\rm T}}\right) \]
+%
+% \[ \dot{\psi} = \dot{\psi} \]
+%
+% \[ \dot{v}_{\rm T} = 0 \]
+%
+% \[ \dot{\alpha}_{\rm T} = \frac{F_{y,{\rm F}} + F_{y,{\rm R}}}{m_{T} v_{{\rm T},0}} - \dot{\psi} \]
+%
+% \[ \ddot{\psi} = \frac{a F_{y,{\rm F}} -  b F_{y,{\rm R}}}{I_{T}} \]
+%
+% Neglecting equations of \(x\) and \(v_T\)
+%
+%
+% \[ \left[ \begin{array}{c} \dot{y} \\ \dot{\psi} \\ \dot{\alpha}_T \\ \ddot{\psi} \end{array} \right] = \left[ \begin{array}{cccc} 0 & v_{T,0} & v_{T,0} & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & -\frac{K_F+K_R}{m_T v_{T,0}} & - \frac{m_T v_{T,0} + \frac{a K_F - b K_R}{v_{T,0}}}{m_T v_{T,0}} \\ 0 & 0 & - \frac{a K_F - b K_R}{I_T} & - \frac{a^2 K_F + b^2 K_R}{I_T v_{T,0}} \end{array} \right] \left[ \begin{array}{c} y \\ \psi \\ \alpha_T \\ \dot{\psi} \end{array} \right] + \left[ \begin{array}{c} 0 \\ 0 \\ \frac{K_F}{m_T v_{T,0}} \\ \frac{a K_F}{I_T}  \end{array} \right] \delta \]
+%
+% Slip angles
+%
+% \[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} + \frac{a}{v_{{\rm T},0}} \dot{\psi} - \delta \]
+%
+% \[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} - \frac{b}{v_{{\rm T},0}} \dot{\psi} \]
+%
+%% Tire model
+%
+% Typical characteristic curve and slip angle definition
+%
+% <<../illustrations/CurvaCaracteristica.svg>>
+%
+% *Pacejka*
+%
+% \[ F_{y} = D \sin \left[ C \arctan{B \alpha - E( B \alpha -\arctan(B \alpha))} \right] \]
+%
+% *Linear*
+%
+% \[ F_ y = K \alpha \]
+%
+
+deriva = (0:0.1:15)*pi/180;         % ngulo de deriva [rad]
+
+% Pacejka tire parameters
+a0 = 1;
+a1 = 0;
+a2 = 800;
+a3 = 10000;
+a4 = 50;
+a5 = 0;
+a6 = 0;
+a7 = -1;
+a8 = 0;
+a9 = 0;
+a10 = 0;
+a11 = 0;
+a12 = 0;
+a13 = 0;
+
+TirePac = VehicleDynamicsLateral.TirePacejka();
+
+Fz = 4e+03;
+camber = 0;
+TirePac.a0 = a0;
+TirePac.a1 = a1;
+TirePac.a2 = a2;
+TirePac.a3 = a3;
+TirePac.a4 = a4;
+TirePac.a5 = a5;
+TirePac.a6 = a6;
+TirePac.a7 = a7;
+TirePac.a8 = a8;
+TirePac.a9 = a9;
+TirePac.a10 = a10;
+TirePac.a11 = a11;
+TirePac.a12= a12;
+TirePac.a13 = a13;
+
+muy0 = TirePac.a1 * Fz/1000 + TirePac.a2;
+D = muy0 * Fz/1000;
+BCD = TirePac.a3 * sin(2 * atan(Fz/1000/TirePac.a4))*(1-TirePac.a5 * abs(camber));
+
+% Pneu linear equivalente
+
+Ktire = BCD * 180/pi;
+
+TireLin = VehicleDynamicsLateral.TireLinear();
+TireLin.k = Ktire;
+
+% Lateral force
+FyPac = TirePac.Characteristic(deriva, Fz, muy0/1000);
+FyLin = TireLin.Characteristic(deriva);
+
+% Graphics
+g = VehicleDynamicsLateral.Graphics(TirePac);
+
+%%
+% Comparison of tire models
+
+figure(1)
+ax = gca;
+set(ax, 'NextPlot', 'add', 'Box', 'on', 'XGrid', 'on', 'YGrid', 'on')
+p = plot(deriva * 180/pi,-FyLin, 'Color', 'g', 'Marker', 's', 'MarkerFaceColor', 'g', 'MarkeredgeColor', 'k', 'MarkerSize', 7);
+g.changeMarker(p, 10);
+p = plot(deriva * 180/pi,-FyPac, 'Color', 'r', 'Marker', 'o', 'MarkerFaceColor', 'r', 'MarkeredgeColor', 'k', 'MarkerSize', 7);
+g.changeMarker(p, 10);
+xlabel('\(\alpha\) [grau]', 'Interpreter', 'Latex')
+ylabel('\(F_y\) [N]', 'Interpreter', 'Latex')
+l = legend('Linear', 'Pacejka');
+set(l, 'Interpreter', 'Latex', 'Location', 'NorthWest')
+
+%
+%% Plant model
+% Nonlinear vehicle + Pacejka tire
+
+% Choosing vehicle
+% System = VehicleDynamicsLateral.VehicleSimpleLinear();
+VehiclePlant = VehicleDynamicsLateral.VehicleSimpleNonlinear();
+% Defining vehicle parameters
+VehiclePlant.mF0 = 700;
+VehiclePlant.mR0 = 600;
+VehiclePlant.IT = 10000;
+VehiclePlant.lT = 3.5;
+VehiclePlant.nF = 1;
+VehiclePlant.nR = 1;
+VehiclePlant.wT = 1.8;
+VehiclePlant.muy = 1;
+VehiclePlant.tire = TirePac;
+VehiclePlant.deltaf = @ControlLaw;
+
+disp(VehiclePlant)
+
+% Choosing simulation
+T = 12;                      % Total simulation time [s]
+resol = 500;                 % Resolution
+TSPAN = 0:T/resol:T;        % Time span [s]
+simulator = VehicleDynamicsLateral.Simulator(VehiclePlant, TSPAN);
+simulator.V0 = 16.7;
+
+%% Controller design
+%
+% *Vehicle parameters*
+mT = 1300;
+IT = 10000;
+a = 1.6154;
+b = 1.8846;
+vT0 = 16.7;
+KF = Ktire;
+KR = Ktire;
+
+%%
+% *Linear system*
+%
+
+A = [      0   vT0            vT0                         0                       ;...
+           0    0              0                          1                       ;...
+           0    0      -(KF+KR)/(mT*vT0)  -(mT*vT0+(a*KF-b*KR)/(vT0))/(mT*vT0)    ;...
+           0    0      -(a*KF-b*KR)/IT    -(a^2*KF+b^2*KR)/(IT*vT0)               ];
+
+B = [   0                  ;...
+        0                  ;...
+        KF/(mT*vT0)        ;...
+        a*KF/IT            ];
+
+
+C = [1 0 0 0];
+
+%%
+% A
+disp(A)
+%%
+% B
+disp(B)
+%%
+% C
+disp(C)
+
+%%
+% *LQR design*
+%
+
+Q = [   3 0 0 0 ;...
+        0 1 0 0 ;...
+        0 0 1 0 ;...
+        0 0 0 1 ];
+
+%%
+% Q
+
+disp(Q)
+
+R = 1;
+
+%%
+% R
+
+disp(R)
+
+Klqr = lqr(A,B,Q,R);
+
+%%
+% Klqr
+
+disp(Klqr)
+
+%%
+% *Pole placement design*
+%
+
+polos = [-6 -6.3 -6.7 -7];
+
+Kplace = place(A,B,polos);
+
+%%
+% Kplace
+
+disp(Kplace)
+
+%%
+% Control law
+%
+% \[\delta = - {\bf K} {\bf z} + K_1 r \]
+%
+%% Double Lane Change Maneuver
+% *Control - Step y*
+%
+% Reference - r = 2 m
+%
+% \[ \delta_{max} = \pm 70 deg \]
+
+% Simulation
+simulator.Simulate();
+
+g = VehicleDynamicsLateral.Graphics(simulator);
+g.Frame();
+
+    % Adding the double lane change track to the frame figure
+    carWidth = 2;
+    LaneOffset = 3.5;
+
+    section1width = 1.1*carWidth + 0.25;
+    section3width = 1.2*carWidth + 0.25;
+    section5width = 1.3*carWidth + 0.25;
+
+    section1Inf = -section1width/2;
+    section1Sup = section1width/2;
+
+    section3Inf = section1Inf+LaneOffset;
+    section3Sup = section3Inf+section3width;
+    section3Center = (section3Inf+section3Sup)/2;
+
+    section5Inf = -section5width/2;
+    section5Sup = section5width/2;
+
+    % Section 1
+    plot([0 15],[section1Inf section1Inf],'k')            % linha inferior
+    plot([0 15],[section1Sup section1Sup],'k')            % linha superior
+    plot([0 15],[0 0],'kREPLACE_WITH_DASH_DASH')                % linha central
+    % Section 2
+    plot([15 45],[0 section3Center],'kREPLACE_WITH_DASH_DASH')  % linha central
+    % Section 3
+    plot([45 70],[section3Inf section3Inf],'k')        % linha inferior
+    plot([45 70],[section3Sup section3Sup],'k')        % linha superior
+    plot([45 70],[section3Center section3Center],'kREPLACE_WITH_DASH_DASH')               % linha central
+    % Section 4
+    plot([70 95],[section3Center 0],'kREPLACE_WITH_DASH_DASH')
+    % Section 5
+    plot([95 130],[section5Inf section5Inf],'k')
+    plot([95 130],[section5Sup section5Sup],'k')
+    plot([95 130],[0 0],'kREPLACE_WITH_DASH_DASH')
+
+g.Animation();
+
+%%
+% <<../illustrations/AnimationSteeringControl.gif>>
+%
+
+% Retrieving states
+XT = simulator.XT;
+YT = simulator.YT;
+PSI = simulator.PSI;
+VEL = simulator.VEL;
+ALPHAT = simulator.ALPHAT;
+dPSI = simulator.dPSI;
+
+x = [YT PSI ALPHAT dPSI];
+
+u = zeros(length(TSPAN),1);
+output = zeros(length(TSPAN),1);
+
+LateralDisp = 3.6;
+
+for ii = 1:length(TSPAN)
+    if XT(ii) <= 15
+        r = 0;
+    end
+    if XT(ii) > 15 && XT(ii) <= 70
+        r = LateralDisp;
+    end
+    if XT(ii) > 70
+        r = 0;
+    end
+
+    u(ii) = - Kplace*x(ii,:)' + Kplace(1)*r;
+
+    % Saturation at 42 deg
+    if abs(u(ii)) < 42*pi/180
+        output(ii) = u(ii);
+    else
+        output(ii) = sign(u(ii))*42*pi/180;
+    end
+end
+
+% States
+f = figure;
+set(f,'PaperUnits','centimeters')
+set(f,'PaperPosition',[0 0 8.9 5])
+PaperPos = get(f,'PaperPosition');
+set(f,'PaperSize',PaperPos(3:4))
+hold on; box on; grid on
+plot(TSPAN,YT,'r')
+plot(TSPAN,PSI,'g')
+plot(TSPAN,ALPHAT,'b')
+plot(TSPAN,dPSI,'c')
+xlabel('Time [s]')
+ylabel('States')
+l = legend('\(y\)','\(\psi\)','\(\alpha_T\)','\(\dot{\psi}\)');
+set(l,'Interpreter','Latex','Location','NorthEast')
+
+% Steering input
+f = figure;
+set(f,'PaperUnits','centimeters')
+set(f,'PaperPosition',[0 0 8.9 3.5])
+PaperPos = get(f,'PaperPosition');
+set(f,'PaperSize',PaperPos(3:4))
+hold on; box on; grid on
+plot(TSPAN,output*180/pi,'k')
+xlabel('Time [s]')
+y = ylabel('\(\delta [deg]\)');
+set(y,'Interpreter','Latex')
+
+%% See Also
+%
+% <../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

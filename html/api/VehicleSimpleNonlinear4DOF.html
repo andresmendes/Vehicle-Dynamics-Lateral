@@ -1,0 +1,455 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>VehicleSimpleNonlinear4DOF</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="VehicleSimpleNonlinear4DOF.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Model</a></li><li><a href="#5">See Also</a></li></ul></div><pre class="codeinput"><span class="keyword">classdef</span> VehicleSimpleNonlinear4DOF &lt; VehicleDynamicsLateral.VehicleSimple
+    <span class="comment">% VehicleSimpleNonlinear Nonlinear simple vehicle model.</span>
+    <span class="comment">%</span>
+    <span class="comment">% It inherits properties from VehicleSimple.</span>
+
+    <span class="keyword">properties</span>
+        FXFRONTLEFT    <span class="comment">% Longitudinal force at front left tire [N]</span>
+        FXFRONTRIGHT   <span class="comment">% Longitudinal force at front right tire [N]</span>
+        FXREARLEFT     <span class="comment">% Longitudinal force at rear left tire [N]</span>
+        FXREARRIGHT    <span class="comment">% Longitudinal force at rear right tire [N]</span>
+        K             <span class="comment">% Torcional stiffness [Nm/rad]</span>
+        C              <span class="comment">% Torcional damping [Nms/rad]</span>
+        H              <span class="comment">% CG height [m]</span>
+        L              <span class="comment">% track width [m]</span>
+        <span class="comment">% Intertia properties</span>
+        IXX
+        IYY
+        IZZ
+        IXY
+        IXZ
+        IYZ
+    <span class="keyword">end</span>
+
+    <span class="keyword">methods</span>
+</pre><pre class="codeinput">        <span class="comment">% Constructor</span>
+        <span class="keyword">function</span> self = VehicleSimpleNonlinear4DOF()
+            self.mF0 = 700;
+            self.mR0 = 600;
+            self.IT = 10000;
+            self.lT = 3.5;
+            self.nF = 2;
+            self.nR = 2;
+            self.wT = 2;
+            self.muy = .8;
+            self.deltaf = 0;
+            self.FXFRONTLEFT = 0;
+            self.FXFRONTRIGHT = 0;
+            self.FXREARLEFT = 0;
+            self.FXREARRIGHT = 0;
+
+        <span class="keyword">end</span>
+</pre><h2>Model<a name="3"></a></h2><p>Fun&ccedil;&atilde;o com as equa&ccedil;&otilde;es de estado do modelo</p><pre class="codeinput">        <span class="keyword">function</span> dx = Model(self, t, states,tspan)
+            <span class="comment">% Data</span>
+            m = self.mT;
+            a = self.a;
+            b = self.b;
+            nFrontLeft = self.nF;
+            nFrontRight = self.nF;
+            nRearLeft = self.nR;
+            nRearRight = self.nR;
+            muy = self.muy;
+
+            h = self.H;                       <span class="comment">% CG height [m]</span>
+            l = self.L;                       <span class="comment">% track [m]</span>
+            Ixx = self.IXX;
+            Iyy = self.IYY;
+            Izz = self.IZZ;
+            Ixy = self.IXY;
+            Ixz = self.IXZ;
+            Iyz = self.IYZ;
+
+            KK = self.K; <span class="comment">% Rigidez torcional da massa suspensa</span>
+            CC = self.C;
+
+            g = 9.81;                 <span class="comment">% Gravity [m/s^2]</span>
+
+            <span class="comment">% Estados</span>
+            X = states(1);
+            Y = states(2);
+            PSI = states(3);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+            dPSI = states(7);
+            dTHETA = states(8);
+
+            FzRight = (m*g*l/2 + KK*THETA + CC*dTHETA)/l;
+            FzLeft = -(-m*g*l/2 + KK*THETA + CC*dTHETA)/l;
+
+            FzFrontRight = FzRight*b/(a+b);
+            FzFrontLeft = FzLeft*b/(a+b);
+            FzRearRight = FzRight*a/(a+b);
+            FzRearLeft = FzLeft*a/(a+b);
+
+            <span class="keyword">if</span> isa(self.deltaf,<span class="string">'function_handle'</span>)
+                DELTA = self.deltaf([X;Y;PSI;v;ALPHAT;dPSI],t);
+            <span class="keyword">elseif</span> length(self.deltaf)&gt;1
+                DELTA = interp1(tspan,self.deltaf,t);
+            <span class="keyword">else</span>
+                DELTA = self.deltaf;
+            <span class="keyword">end</span>
+
+            <span class="comment">% Slip angles</span>
+
+            <span class="comment">% Slip angles</span>
+            ALPHAFrontLeft = atan2((v*sin(ALPHAT) + dPSI*a),(v*cos(ALPHAT) - dPSI*l/2)) - DELTA;
+            ALPHAFrontRight = atan2((v*sin(ALPHAT) + dPSI*a),(v*cos(ALPHAT) + dPSI*l/2)) - DELTA;
+
+            ALPHARearLeft = atan2((v*sin(ALPHAT) - dPSI*b),(v*cos(ALPHAT) - dPSI*l/2));
+            ALPHARearRight = atan2((v*sin(ALPHAT) - dPSI*b),(v*cos(ALPHAT) + dPSI*l/2));
+
+            <span class="comment">% LONGITUDINAL FORCES</span>
+            <span class="keyword">if</span> isa(self.FXFRONTLEFT,<span class="string">'function_handle'</span>)
+                FxFrontLeft = self.FXFRONTLEFT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            <span class="keyword">elseif</span> length(self.FXFRONTLEFT)&gt;1
+                FxFrontLeft = interp1(tspan,self.FXFRONTLEFT,t);
+            <span class="keyword">else</span>
+                FxFrontLeft = self.FXFRONTLEFT;
+            <span class="keyword">end</span>
+
+            <span class="keyword">if</span> isa(self.FXFRONTRIGHT,<span class="string">'function_handle'</span>)
+                FxFrontRight = self.FXFRONTRIGHT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            <span class="keyword">elseif</span> length(self.FXFRONTRIGHT)&gt;1
+                FxFrontRight = interp1(tspan,self.FXFRONTRIGHT,t);
+            <span class="keyword">else</span>
+                FxFrontRight = self.FXFRONTRIGHT;
+            <span class="keyword">end</span>
+
+            <span class="keyword">if</span> isa(self.FXREARLEFT,<span class="string">'function_handle'</span>)
+                FxRearLeft = self.FXREARLEFT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            <span class="keyword">elseif</span> length(self.FXREARLEFT)&gt;1
+                FxRearLeft = interp1(tspan,self.FXREARLEFT,t);
+            <span class="keyword">else</span>
+                FxRearLeft = self.FXREARLEFT;
+            <span class="keyword">end</span>
+
+            <span class="keyword">if</span> isa(self.FXREARRIGHT,<span class="string">'function_handle'</span>)
+                FxRearRight = self.FXREARRIGHT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            <span class="keyword">elseif</span> length(self.FXREARRIGHT)&gt;1
+                FxRearRight = interp1(tspan,self.FXREARRIGHT,t);
+            <span class="keyword">else</span>
+                FxRearRight = self.FXREARRIGHT;
+            <span class="keyword">end</span>
+
+            <span class="comment">% CHARACTERISTIC CURVE</span>
+            FyFrontLeft = nFrontLeft * self.tire.Characteristic(ALPHAFrontLeft, FzFrontLeft/nFrontLeft, muy);
+            FyFrontRight = nFrontRight * self.tire.Characteristic(ALPHAFrontRight, FzFrontRight/nFrontRight, muy);
+            FyRearLeft = nRearLeft * self.tire.Characteristic(ALPHARearLeft, FzRearLeft/nRearLeft, muy);
+            FyRearRight = nRearRight * self.tire.Characteristic(ALPHARearRight, FzRearRight/nRearRight, muy);
+
+            <span class="comment">% STATE EQUATIONS</span>
+            dx(1,1) = v * cos(ALPHAT + PSI);
+            dx(2,1) = v * sin(ALPHAT + PSI);
+            dx(3,1) = dPSI;
+            dx(4,1) = dTHETA;
+
+            dx(5,1) = FxRearLeft + FxRearRight - sin(DELTA)*(FyFrontLeft + FyFrontRight) + cos(DELTA)*(FxFrontLeft + FxFrontRight) + dPSI*m*(v*sin(ALPHAT) - 2*dTHETA*h*cos(THETA));
+
+            dx(6,1) = FyRearLeft + FyRearRight + sin(DELTA)*(FxFrontLeft + FxFrontRight) - m*(h*sin(THETA)*(dTHETA^2 + dPSI^2) + dPSI*v*cos(ALPHAT)) + cos(DELTA)*(FyFrontLeft + FyFrontRight);
+
+            dx(7,1) = Iyz*dPSI^2 - CC*dTHETA - KK*THETA - 2*Iyz*dPSI^2*cos(THETA)^2 + (Iyy*dPSI^2*sin(2*THETA))/2 - (Izz*dPSI^2*sin(2*THETA))/2 + g*h*m*sin(THETA) + dPSI*h*m*v*cos(ALPHAT)*cos(THETA);
+
+            dx(8,1) = Ixy*dTHETA^2 - (Ixz*dPSI^2*sin(2*THETA))/2 - Ixy*dPSI^2*sin(THETA)^2 - FyRearLeft*b*cos(THETA) - FyRearRight*b*cos(THETA) - (FxRearLeft*l*cos(THETA))/2 + (FxRearRight*l*cos(THETA))/2 + 2*Iyz*dTHETA*dPSI*cos(THETA) + Ixx*dTHETA*dPSI*sin(THETA) - Iyy*dTHETA*dPSI*sin(THETA) + Izz*dTHETA*dPSI*sin(THETA) + FyFrontLeft*a*cos(DELTA)*cos(THETA) + FyFrontRight*a*cos(DELTA)*cos(THETA) - (FxFrontLeft*l*cos(DELTA)*cos(THETA))/2 + (FxFrontRight*l*cos(DELTA)*cos(THETA))/2 + FxFrontLeft*a*cos(THETA)*sin(DELTA) + FxFrontRight*a*cos(THETA)*sin(DELTA) + (FyFrontLeft*l*cos(THETA)*sin(DELTA))/2 - (FyFrontRight*l*cos(THETA)*sin(DELTA))/2;
+
+
+        <span class="keyword">end</span>
+
+
+
+        <span class="keyword">function</span> M = MassMatrix(self,~,states)
+            <span class="comment">% Data</span>
+            m = self.mT;
+            h = self.H;                       <span class="comment">% CG height [m]</span>
+            Ixx = self.IXX;
+            Izz = self.IZZ;
+            Ixy = self.IXY;
+            Ixz = self.IXZ;
+            Iyz = self.IYZ;
+
+
+            <span class="comment">% Estados</span>
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+
+            M = [1 0 0 0 0 0 0 0;<span class="keyword">...</span>
+                 0 1 0 0 0 0 0 0;<span class="keyword">...</span>
+                 0 0 1 0 0 0 0 0;<span class="keyword">...</span>
+                 0 0 0 1 0 0 0 0;<span class="keyword">...</span>
+                 0 0 0 0             m*cos(ALPHAT)            -m*v*sin(ALPHAT)                  h*m*sin(THETA)             0;<span class="keyword">...</span>
+                 0 0 0 0             m*sin(ALPHAT)             m*v*cos(ALPHAT)                             0 -h*m*cos(THETA);<span class="keyword">...</span>
+                 0 0 0 0 -h*m*cos(THETA)*sin(ALPHAT) -h*m*v*cos(ALPHAT)*cos(THETA) -Ixz*cos(THETA)-Ixy*sin(THETA)           Ixx;<span class="keyword">...</span>
+                 0 0 0 0                         0                           0   Izz*cos(THETA)-Iyz*sin(THETA)          -Ixz];
+
+        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2>See Also<a name="5"></a></h2><p><a href="../../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+classdef VehicleSimpleNonlinear4DOF < VehicleDynamicsLateral.VehicleSimple
+    % VehicleSimpleNonlinear Nonlinear simple vehicle model.
+    %
+    % It inherits properties from VehicleSimple.
+
+    properties
+        FXFRONTLEFT    % Longitudinal force at front left tire [N]
+        FXFRONTRIGHT   % Longitudinal force at front right tire [N]
+        FXREARLEFT     % Longitudinal force at rear left tire [N]
+        FXREARRIGHT    % Longitudinal force at rear right tire [N]
+        K             % Torcional stiffness [Nm/rad]
+        C              % Torcional damping [Nms/rad]
+        H              % CG height [m]
+        L              % track width [m]
+        % Intertia properties
+        IXX
+        IYY
+        IZZ
+        IXY
+        IXZ
+        IYZ
+    end
+
+    methods
+        % Constructor
+        function self = VehicleSimpleNonlinear4DOF()
+            self.mF0 = 700;
+            self.mR0 = 600;
+            self.IT = 10000;
+            self.lT = 3.5;
+            self.nF = 2;
+            self.nR = 2;
+            self.wT = 2;
+            self.muy = .8;
+            self.deltaf = 0;
+            self.FXFRONTLEFT = 0;
+            self.FXFRONTRIGHT = 0;
+            self.FXREARLEFT = 0;
+            self.FXREARRIGHT = 0;
+
+        end
+
+        %% Model
+        % Função com as equações de estado do modelo
+        function dx = Model(self, t, states,tspan)
+            % Data
+            m = self.mT;
+            a = self.a;
+            b = self.b;
+            nFrontLeft = self.nF;
+            nFrontRight = self.nF;
+            nRearLeft = self.nR;
+            nRearRight = self.nR;
+            muy = self.muy;
+
+            h = self.H;                       % CG height [m]
+            l = self.L;                       % track [m]
+            Ixx = self.IXX;
+            Iyy = self.IYY;
+            Izz = self.IZZ;
+            Ixy = self.IXY;
+            Ixz = self.IXZ;
+            Iyz = self.IYZ;
+
+            KK = self.K; % Rigidez torcional da massa suspensa
+            CC = self.C;
+
+            g = 9.81;                 % Gravity [m/s^2]
+
+            % Estados
+            X = states(1);
+            Y = states(2);
+            PSI = states(3);
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+            dPSI = states(7);
+            dTHETA = states(8);
+
+            FzRight = (m*g*l/2 + KK*THETA + CC*dTHETA)/l;
+            FzLeft = -(-m*g*l/2 + KK*THETA + CC*dTHETA)/l;
+
+            FzFrontRight = FzRight*b/(a+b);
+            FzFrontLeft = FzLeft*b/(a+b);
+            FzRearRight = FzRight*a/(a+b);
+            FzRearLeft = FzLeft*a/(a+b);
+
+            if isa(self.deltaf,'function_handle')
+                DELTA = self.deltaf([X;Y;PSI;v;ALPHAT;dPSI],t);
+            elseif length(self.deltaf)>1
+                DELTA = interp1(tspan,self.deltaf,t);
+            else
+                DELTA = self.deltaf;
+            end
+
+            % Slip angles
+
+            % Slip angles
+            ALPHAFrontLeft = atan2((v*sin(ALPHAT) + dPSI*a),(v*cos(ALPHAT) - dPSI*l/2)) - DELTA;
+            ALPHAFrontRight = atan2((v*sin(ALPHAT) + dPSI*a),(v*cos(ALPHAT) + dPSI*l/2)) - DELTA;
+
+            ALPHARearLeft = atan2((v*sin(ALPHAT) - dPSI*b),(v*cos(ALPHAT) - dPSI*l/2));
+            ALPHARearRight = atan2((v*sin(ALPHAT) - dPSI*b),(v*cos(ALPHAT) + dPSI*l/2));
+
+            % LONGITUDINAL FORCES
+            if isa(self.FXFRONTLEFT,'function_handle')
+                FxFrontLeft = self.FXFRONTLEFT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            elseif length(self.FXFRONTLEFT)>1
+                FxFrontLeft = interp1(tspan,self.FXFRONTLEFT,t);
+            else
+                FxFrontLeft = self.FXFRONTLEFT;
+            end
+
+            if isa(self.FXFRONTRIGHT,'function_handle')
+                FxFrontRight = self.FXFRONTRIGHT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            elseif length(self.FXFRONTRIGHT)>1
+                FxFrontRight = interp1(tspan,self.FXFRONTRIGHT,t);
+            else
+                FxFrontRight = self.FXFRONTRIGHT;
+            end
+
+            if isa(self.FXREARLEFT,'function_handle')
+                FxRearLeft = self.FXREARLEFT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            elseif length(self.FXREARLEFT)>1
+                FxRearLeft = interp1(tspan,self.FXREARLEFT,t);
+            else
+                FxRearLeft = self.FXREARLEFT;
+            end
+
+            if isa(self.FXREARRIGHT,'function_handle')
+                FxRearRight = self.FXREARRIGHT([X;Y;PSI;THETA;v;ALPHAT;dPSI;dTHETA],t);
+            elseif length(self.FXREARRIGHT)>1
+                FxRearRight = interp1(tspan,self.FXREARRIGHT,t);
+            else
+                FxRearRight = self.FXREARRIGHT;
+            end
+
+            % CHARACTERISTIC CURVE
+            FyFrontLeft = nFrontLeft * self.tire.Characteristic(ALPHAFrontLeft, FzFrontLeft/nFrontLeft, muy);
+            FyFrontRight = nFrontRight * self.tire.Characteristic(ALPHAFrontRight, FzFrontRight/nFrontRight, muy);
+            FyRearLeft = nRearLeft * self.tire.Characteristic(ALPHARearLeft, FzRearLeft/nRearLeft, muy);
+            FyRearRight = nRearRight * self.tire.Characteristic(ALPHARearRight, FzRearRight/nRearRight, muy);
+
+            % STATE EQUATIONS
+            dx(1,1) = v * cos(ALPHAT + PSI);
+            dx(2,1) = v * sin(ALPHAT + PSI);
+            dx(3,1) = dPSI;
+            dx(4,1) = dTHETA;
+
+            dx(5,1) = FxRearLeft + FxRearRight - sin(DELTA)*(FyFrontLeft + FyFrontRight) + cos(DELTA)*(FxFrontLeft + FxFrontRight) + dPSI*m*(v*sin(ALPHAT) - 2*dTHETA*h*cos(THETA));
+
+            dx(6,1) = FyRearLeft + FyRearRight + sin(DELTA)*(FxFrontLeft + FxFrontRight) - m*(h*sin(THETA)*(dTHETA^2 + dPSI^2) + dPSI*v*cos(ALPHAT)) + cos(DELTA)*(FyFrontLeft + FyFrontRight);
+
+            dx(7,1) = Iyz*dPSI^2 - CC*dTHETA - KK*THETA - 2*Iyz*dPSI^2*cos(THETA)^2 + (Iyy*dPSI^2*sin(2*THETA))/2 - (Izz*dPSI^2*sin(2*THETA))/2 + g*h*m*sin(THETA) + dPSI*h*m*v*cos(ALPHAT)*cos(THETA);
+
+            dx(8,1) = Ixy*dTHETA^2 - (Ixz*dPSI^2*sin(2*THETA))/2 - Ixy*dPSI^2*sin(THETA)^2 - FyRearLeft*b*cos(THETA) - FyRearRight*b*cos(THETA) - (FxRearLeft*l*cos(THETA))/2 + (FxRearRight*l*cos(THETA))/2 + 2*Iyz*dTHETA*dPSI*cos(THETA) + Ixx*dTHETA*dPSI*sin(THETA) - Iyy*dTHETA*dPSI*sin(THETA) + Izz*dTHETA*dPSI*sin(THETA) + FyFrontLeft*a*cos(DELTA)*cos(THETA) + FyFrontRight*a*cos(DELTA)*cos(THETA) - (FxFrontLeft*l*cos(DELTA)*cos(THETA))/2 + (FxFrontRight*l*cos(DELTA)*cos(THETA))/2 + FxFrontLeft*a*cos(THETA)*sin(DELTA) + FxFrontRight*a*cos(THETA)*sin(DELTA) + (FyFrontLeft*l*cos(THETA)*sin(DELTA))/2 - (FyFrontRight*l*cos(THETA)*sin(DELTA))/2;
+
+
+        end
+
+
+
+        function M = MassMatrix(self,~,states)
+            % Data
+            m = self.mT;
+            h = self.H;                       % CG height [m]
+            Ixx = self.IXX;
+            Izz = self.IZZ;
+            Ixy = self.IXY;
+            Ixz = self.IXZ;
+            Iyz = self.IYZ;
+
+
+            % Estados
+            THETA = states(4);
+            v = states(5);
+            ALPHAT = states(6);
+
+            M = [1 0 0 0 0 0 0 0;...
+                 0 1 0 0 0 0 0 0;...
+                 0 0 1 0 0 0 0 0;...
+                 0 0 0 1 0 0 0 0;...
+                 0 0 0 0             m*cos(ALPHAT)            -m*v*sin(ALPHAT)                  h*m*sin(THETA)             0;...
+                 0 0 0 0             m*sin(ALPHAT)             m*v*cos(ALPHAT)                             0 -h*m*cos(THETA);...
+                 0 0 0 0 -h*m*cos(THETA)*sin(ALPHAT) -h*m*v*cos(ALPHAT)*cos(THETA) -Ixz*cos(THETA)-Ixy*sin(THETA)           Ixx;...
+                 0 0 0 0                         0                           0   Izz*cos(THETA)-Iyz*sin(THETA)          -Ixz];
+
+        end
+    end
+end
+
+%% See Also
+%
+% <../../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,336 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Simulator</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="Simulator.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">See Also</a></li></ul></div><pre class="codeinput"><span class="keyword">classdef</span> Simulator&lt;handle
+    <span class="comment">% Simulator Vehicle dynamics simulator</span>
+    <span class="comment">% The simulator receives a vehicle object that inherits from VehicleSimple, simulates its behavior during a given time span and provides its behavior during time via its properties. Each property is a (timespan, 1) vector in which each value represents that parameter's value in time.</span>
+    <span class="keyword">methods</span>
+        <span class="comment">% Constructor</span>
+        <span class="keyword">function</span> self = Simulator(vehicle, tspan)
+            self.Vehicle = vehicle;
+            self.TSpan = tspan;
+            <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleArticulated'</span>)
+                self.X0 = 0;
+                self.Y0 = 0;
+                self.PSI0 = 0;
+                self.PHI0 = 0;
+                self.V0 = 20;
+                self.ALPHAT0 = 0;
+                self.dPSI0 = 0;
+                self.dPHI0 = 0;
+            <span class="keyword">else</span>
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.THETA0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                    self.dTHETA0 = 0;
+                <span class="keyword">else</span>
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> f = getInitialState(self)
+            <span class="comment">% Transforms properties into a vector so it can be used by the integrator</span>
+            <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleArticulated'</span>)
+                f = [self.X0 self.Y0 self.PSI0 self.PHI0 self.V0 self.ALPHAT0 self.dPSI0 self.dPHI0];
+            <span class="keyword">else</span>
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    f = [self.X0 self.Y0 self.PSI0 self.THETA0 self.V0 self.ALPHAT0 self.dPSI0 self.dTHETA0];
+                <span class="keyword">else</span>
+                    f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+
+
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> Simulate(self)
+            <span class="comment">% TODO: gravity can be passed to the simulator so vertical load and other forces are calculated here</span>
+
+            <span class="comment">% integration</span>
+            <span class="comment">% if vehicle is articulated, adds mass matrix as an integration option</span>
+            <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleArticulated'</span>)
+                fun = self.Vehicle;
+                options = odeset(<span class="string">'Mass'</span>, @fun.MassMatrix,<span class="string">'Events'</span>, @fun.velocity);
+                [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
+                <span class="comment">% retrieve states exclusive to the articulated vehicle</span>
+                self.XT = XOUT(:, 1);
+                self.YT = XOUT(:, 2);
+                self.PSI = XOUT(:, 3);
+                self.PHI = XOUT(:, 4);
+                self.VEL = XOUT(:, 5);
+                self.ALPHAT = XOUT(:, 6);
+                self.dPSI = XOUT(:, 7);
+                self.dPHI = XOUT(:, 8);
+            <span class="keyword">else</span>
+                <span class="keyword">if</span> isa(self.Vehicle, <span class="string">'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF'</span>)
+                    fun = self.Vehicle;
+                    options = odeset(<span class="string">'Mass'</span>, @fun.MassMatrix);
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
+
+                    <span class="comment">% Retrieving states post integration</span>
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.THETA = XOUT(:, 4);
+                    self.VEL = XOUT(:, 5);
+                    self.ALPHAT = XOUT(:, 6);
+                    self.dPSI = XOUT(:, 7);
+                    self.dTHETA = XOUT(:, 8);
+                <span class="keyword">else</span>
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+
+                    <span class="comment">% Retrieving states post integration</span>
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.VEL = XOUT(:, 4);
+                    self.ALPHAT = XOUT(:, 5);
+                    self.dPSI = XOUT(:, 6);
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+
+            <span class="comment">% TSpan and TOUT contain the same values, but the first is passed in columns, while the second is a vector</span>
+            self.TSpan = TOUT;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">properties</span>
+        Vehicle <span class="comment">% Vehicle model to be used inthe simulation</span>
+        TSpan <span class="comment">% a vector indicating the intervals in which the simulation steps will be conducted</span>
+        X0 <span class="comment">% Initial CG horizontal position [m]</span>
+        Y0 <span class="comment">% Initial CG vertical position [m]</span>
+        PSI0 <span class="comment">% Initial yaw angle [rad]</span>
+        PHI0 <span class="comment">% Initial articulation angle [rad]</span>
+        THETA0 <span class="comment">% Initial roll angle [rad]</span>
+        V0 <span class="comment">% Initial CG velocity [m/s]</span>
+        ALPHAT0 <span class="comment">% Initial side slip angle [rad]</span>
+        dPSI0 <span class="comment">% Initial yaw rate [rad/s]</span>
+        dPHI0 <span class="comment">% Initial articulation rate [rad/s]</span>
+        dTHETA0 <span class="comment">% Initial roll rate [rad/s]</span>
+        XT <span class="comment">% CG horizontal position [m]</span>
+        YT <span class="comment">% CG vertical position [m]</span>
+        PSI <span class="comment">% Yaw angle [rad]</span>
+        PHI <span class="comment">% Relative yaw angle [rad]</span>
+        THETA <span class="comment">% Roll angle [rad]</span>
+        VEL <span class="comment">% CG velocity [m/s]</span>
+        ALPHAT <span class="comment">% Side slip angle [rad]</span>
+        dPSI <span class="comment">% Yaw rate [rad/s]</span>
+        dPHI <span class="comment">% Relative yaw rate [rad/s]</span>
+        dTHETA <span class="comment">% Roll rate [rad/s]</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2>See Also<a name="2"></a></h2><p><a href="../../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+classdef Simulator<handle
+    % Simulator Vehicle dynamics simulator
+    % The simulator receives a vehicle object that inherits from VehicleSimple, simulates its behavior during a given time span and provides its behavior during time via its properties. Each property is a (timespan, 1) vector in which each value represents that parameter's value in time.
+    methods
+        % Constructor
+        function self = Simulator(vehicle, tspan)
+            self.Vehicle = vehicle;
+            self.TSpan = tspan;
+            if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated')
+                self.X0 = 0;
+                self.Y0 = 0;
+                self.PSI0 = 0;
+                self.PHI0 = 0;
+                self.V0 = 20;
+                self.ALPHAT0 = 0;
+                self.dPSI0 = 0;
+                self.dPHI0 = 0;
+            else
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.THETA0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                    self.dTHETA0 = 0;
+                else
+                    self.X0 = 0;
+                    self.Y0 = 0;
+                    self.PSI0 = 0;
+                    self.V0 = 20;
+                    self.ALPHAT0 = 0;
+                    self.dPSI0 = 0;
+                end
+            end
+        end
+
+        function f = getInitialState(self)
+            % Transforms properties into a vector so it can be used by the integrator
+            if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated')
+                f = [self.X0 self.Y0 self.PSI0 self.PHI0 self.V0 self.ALPHAT0 self.dPSI0 self.dPHI0];
+            else
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    f = [self.X0 self.Y0 self.PSI0 self.THETA0 self.V0 self.ALPHAT0 self.dPSI0 self.dTHETA0];
+                else
+                    f = [self.X0 self.Y0 self.PSI0 self.V0 self.ALPHAT0 self.dPSI0];
+                end
+            end
+
+
+        end
+
+        function Simulate(self)
+            % TODO: gravity can be passed to the simulator so vertical load and other forces are calculated here
+
+            % integration
+            % if vehicle is articulated, adds mass matrix as an integration option
+            if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated')
+                fun = self.Vehicle;
+                options = odeset('Mass', @fun.MassMatrix,'Events', @fun.velocity);
+                [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
+                % retrieve states exclusive to the articulated vehicle
+                self.XT = XOUT(:, 1);
+                self.YT = XOUT(:, 2);
+                self.PSI = XOUT(:, 3);
+                self.PHI = XOUT(:, 4);
+                self.VEL = XOUT(:, 5);
+                self.ALPHAT = XOUT(:, 6);
+                self.dPSI = XOUT(:, 7);
+                self.dPHI = XOUT(:, 8);
+            else
+                if isa(self.Vehicle, 'VehicleDynamicsLateral.VehicleSimpleNonlinear4DOF')
+                    fun = self.Vehicle;
+                    options = odeset('Mass', @fun.MassMatrix);
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState(), options);
+
+                    % Retrieving states post integration
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.THETA = XOUT(:, 4);
+                    self.VEL = XOUT(:, 5);
+                    self.ALPHAT = XOUT(:, 6);
+                    self.dPSI = XOUT(:, 7);
+                    self.dTHETA = XOUT(:, 8);
+                else
+                    [TOUT, XOUT] = ode45(@(t, estados) self.Vehicle.Model(t, estados,self.TSpan), self.TSpan, self.getInitialState());
+
+                    % Retrieving states post integration
+                    self.XT = XOUT(:, 1);
+                    self.YT = XOUT(:, 2);
+                    self.PSI = XOUT(:, 3);
+                    self.VEL = XOUT(:, 4);
+                    self.ALPHAT = XOUT(:, 5);
+                    self.dPSI = XOUT(:, 6);
+                end
+            end
+
+            % TSpan and TOUT contain the same values, but the first is passed in columns, while the second is a vector
+            self.TSpan = TOUT;
+        end
+    end
+
+    properties
+        Vehicle % Vehicle model to be used inthe simulation
+        TSpan % a vector indicating the intervals in which the simulation steps will be conducted
+        X0 % Initial CG horizontal position [m]
+        Y0 % Initial CG vertical position [m]
+        PSI0 % Initial yaw angle [rad]
+        PHI0 % Initial articulation angle [rad]
+        THETA0 % Initial roll angle [rad]
+        V0 % Initial CG velocity [m/s]
+        ALPHAT0 % Initial side slip angle [rad]
+        dPSI0 % Initial yaw rate [rad/s]
+        dPHI0 % Initial articulation rate [rad/s]
+        dTHETA0 % Initial roll rate [rad/s]
+        XT % CG horizontal position [m]
+        YT % CG vertical position [m]
+        PSI % Yaw angle [rad]
+        PHI % Relative yaw angle [rad]
+        THETA % Roll angle [rad]
+        VEL % CG velocity [m/s]
+        ALPHAT % Side slip angle [rad]
+        dPSI % Yaw rate [rad/s]
+        dPHI % Relative yaw rate [rad/s]
+        dTHETA % Roll rate [rad/s]
+    end
+end
+
+%% See Also
+%
+% <../../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,361 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Documentation Generator</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-12-13"><meta name="DC.source" content="makeDoc.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Documentation Generator</h1><!--introduction--><p>This script generates the whole documentation of the package.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description</a></li><li><a href="#2">Code start</a></li><li><a href="#3">Adding paths</a></li><li><a href="#4">Deleting</a></li><li><a href="#5">Publishing documentation</a></li><li><a href="#6">Code end</a></li><li><a href="#7">See Also</a></li></ul></div><h2>Description<a name="1"></a></h2><p>The documentation of the package is written within the code of all .m files as comments.</p><p>Running this script all the .html files are generated through the command <a href="http://www.mathworks.com/help/matlab/ref/publish.html">publish</a> and saved in the folder "../Vehicle-Dynamics-Lateral-Documentation/".</p><h2>Code start<a name="2"></a></h2><pre class="codeinput">clear <span class="string">all</span>                   <span class="comment">% Clear workspace</span>
+close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
+clc
+
+docPath = <span class="string">'../Documentation/html/'</span>;                      <span class="comment">% Folder where html doc files are saved</span>
+apiDocPath = strcat(docPath, <span class="string">'api/'</span>);
+</pre><h2>Adding paths<a name="3"></a></h2><p>Adding the folder of all files to the Matlab path (only the ones that 'evalCode' is true)</p><pre class="codeinput"><span class="comment">% Examples</span>
+addpath(<span class="string">'../Examples/KalmanFilter/'</span>)
+addpath(<span class="string">'../Examples/SinusoidalSteering/'</span>)
+addpath(<span class="string">'../Examples/SkidPad/'</span>)
+addpath(<span class="string">'../Examples/SkidPad4DOF/'</span>)
+addpath(<span class="string">'../Examples/SteeringControl/'</span>)
+addpath(<span class="string">'../Examples/TemplateArticulated/'</span>)
+addpath(<span class="string">'../Examples/TemplateArticulatedSimulink/'</span>)
+addpath(<span class="string">'../Examples/TemplateSimple/'</span>)
+addpath(<span class="string">'../Examples/TemplateSimpleSimulink/'</span>)
+addpath(<span class="string">'../Examples/TireComparison/'</span>)
+</pre><h2>Deleting<a name="4"></a></h2><p>Deleting old documentation</p><pre class="codeinput"><span class="comment">% Old gifs</span>
+delete(<span class="string">'../Documentation/illustrations/*.gif'</span>)
+
+<span class="comment">% Old html</span>
+delete(<span class="string">'../Documentation/html/*.*'</span>)
+delete(<span class="string">'../Documentation/html/api/*.*'</span>)
+</pre><h2>Publishing documentation<a name="5"></a></h2><pre class="codeinput"><span class="comment">% Index</span>
+publish(<span class="string">'index.m'</span>, <span class="string">'outputDir'</span>, <span class="string">'../Documentation'</span>, <span class="string">'evalCode'</span>, true,<span class="string">'showCode'</span>,false);
+
+<span class="comment">% Tire models</span>
+publish(<span class="string">'DocTireLinear.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocTirePacejka.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocTirePolynomial.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+
+<span class="comment">% Vehicle models</span>
+publish(<span class="string">'DocVehicleArticulatedLinear.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocVehicleArticulatedNonlinear.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocVehicleSimpleLinear.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocVehicleSimpleNonlinear.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'DocVehicleSimpleNonlinear4DOF.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+
+<span class="comment">% Graphics</span>
+publish(<span class="string">'DocGraphics.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+
+<span class="comment">% API</span>
+publish(<span class="string">'api.m'</span>, <span class="string">'outputDir'</span>, apiDocPath,<span class="string">'evalCode'</span>, false);
+
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleSimple/VehicleSimple.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleArticulated/VehicleArticulated.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleSimpleLinear/VehicleSimpleLinear.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleSimpleNonlinear/VehicleSimpleNonlinear.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleSimpleNonlinear4DOF/VehicleSimpleNonlinear4DOF.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleArticulatedLinear/VehicleArticulatedLinear.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@VehicleArticulatedNonlinear/VehicleArticulatedNonlinear.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+
+publish(<span class="string">'../+VehicleDynamicsLateral/@Tire/Tire.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@TireLinear/TireLinear.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@TirePolynomial/TirePolynomial.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'../+VehicleDynamicsLateral/@TirePacejka/TirePacejka.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+
+publish(<span class="string">'../+VehicleDynamicsLateral/@Simulator/Simulator.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+
+publish(<span class="string">'../+VehicleDynamicsLateral/@Graphics/Graphics.m'</span>, <span class="string">'outputDir'</span>, apiDocPath, <span class="string">'evalCode'</span>, false);
+
+<span class="comment">% EXAMPLES</span>
+<span class="comment">% Kalman Filter</span>
+publish(<span class="string">'KalmanFilter.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% Sinusoidal Steering</span>
+publish(<span class="string">'SinusoidalSteering.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationSinusoidalSteering'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% Skid Pad</span>
+publish(<span class="string">'SkidPad.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true,<span class="string">'showCode'</span>,true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationSkidPad'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% Skid Pad 4DOF</span>
+publish(<span class="string">'SkidPad4DOF.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true,<span class="string">'showCode'</span>,true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationSkidPad4DOF'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% SteeringControl</span>
+publish(<span class="string">'SteeringControl.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true,<span class="string">'showCode'</span>,false);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationSteeringControl'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% TemplateArticulated</span>
+publish(<span class="string">'TemplateArticulated.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationTemplateArticulated'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% Template Articulated Simulink</span>
+publish(<span class="string">'ArticulatedVehicleSFunction.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'TemplateArticulatedSimulink.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationTemplateArticulatedSimulink'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% TemplateSimple</span>
+publish(<span class="string">'TemplateSimple.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationTemplateSimple'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% Template Simple Simulink</span>
+publish(<span class="string">'SimpleVehicleSFunction.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+publish(<span class="string">'TemplateSimpleSimulink.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+g.Animation(<span class="string">'../Documentation/illustrations/AnimationTemplateSimpleSimulink'</span>);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% TireComparison</span>
+publish(<span class="string">'TireComparison.m'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, true);
+close <span class="string">all</span>
+clearvars <span class="string">-except</span> <span class="string">docPath</span> <span class="string">apiDocPath</span>
+
+<span class="comment">% DocGen</span>
+publish(<span class="string">'makeDoc'</span>, <span class="string">'outputDir'</span>, docPath, <span class="string">'evalCode'</span>, false);
+</pre><h2>Code end<a name="6"></a></h2><pre class="codeinput">clear <span class="string">all</span>                   <span class="comment">% Clear workspace</span>
+close <span class="string">all</span>                   <span class="comment">% Closing figures</span>
+clc                         <span class="comment">% Clear command window</span>
+</pre><h2>See Also<a name="7"></a></h2><p><a href="../index.html">Home</a></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Documentation Generator
+%
+% This script generates the whole documentation of the package.
+%
+%% Description
+%
+% The documentation of the package is written within the code of all .m files as comments.
+%
+% Running this script all the .html files are generated through the command <http://www.mathworks.com/help/matlab/ref/publish.html publish> and saved in the folder "../Vehicle-Dynamics-Lateral-Documentation/".
+%
+%% Code start
+
+clear all                   % Clear workspace
+close all                   % Closing figures
+clc
+
+docPath = '../Documentation/html/';                      % Folder where html doc files are saved
+apiDocPath = strcat(docPath, 'api/');
+
+%% Adding paths
+% Adding the folder of all files to the Matlab path (only the ones that 'evalCode' is true)
+%
+
+% Examples
+addpath('../Examples/KalmanFilter/')
+addpath('../Examples/SinusoidalSteering/')
+addpath('../Examples/SkidPad/')
+addpath('../Examples/SkidPad4DOF/')
+addpath('../Examples/SteeringControl/')
+addpath('../Examples/TemplateArticulated/')
+addpath('../Examples/TemplateArticulatedSimulink/')
+addpath('../Examples/TemplateSimple/')
+addpath('../Examples/TemplateSimpleSimulink/')
+addpath('../Examples/TireComparison/')
+
+%% Deleting
+% Deleting old documentation
+
+% Old gifs
+delete('../Documentation/illustrations/*.gif')
+
+% Old html
+delete('../Documentation/html/*.*')
+delete('../Documentation/html/api/*.*')
+
+%% Publishing documentation
+%
+
+% Index
+publish('index.m', 'outputDir', '../Documentation', 'evalCode', true,'showCode',false);
+
+% Tire models
+publish('DocTireLinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocTirePacejka.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocTirePolynomial.m', 'outputDir', docPath, 'evalCode', false);
+
+% Vehicle models
+publish('DocVehicleArticulatedLinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocVehicleArticulatedNonlinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocVehicleSimpleLinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocVehicleSimpleNonlinear.m', 'outputDir', docPath, 'evalCode', false);
+publish('DocVehicleSimpleNonlinear4DOF.m', 'outputDir', docPath, 'evalCode', false);
+
+% Graphics
+publish('DocGraphics.m', 'outputDir', docPath, 'evalCode', false);
+
+% API
+publish('api.m', 'outputDir', apiDocPath,'evalCode', false);
+
+publish('../+VehicleDynamicsLateral/@VehicleSimple/VehicleSimple.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@VehicleArticulated/VehicleArticulated.m', 'outputDir', apiDocPath, 'evalCode', false);
+
+publish('../+VehicleDynamicsLateral/@VehicleSimpleLinear/VehicleSimpleLinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@VehicleSimpleNonlinear/VehicleSimpleNonlinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@VehicleSimpleNonlinear4DOF/VehicleSimpleNonlinear4DOF.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@VehicleArticulatedLinear/VehicleArticulatedLinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@VehicleArticulatedNonlinear/VehicleArticulatedNonlinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+
+publish('../+VehicleDynamicsLateral/@Tire/Tire.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@TireLinear/TireLinear.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@TirePolynomial/TirePolynomial.m', 'outputDir', apiDocPath, 'evalCode', false);
+publish('../+VehicleDynamicsLateral/@TirePacejka/TirePacejka.m', 'outputDir', apiDocPath, 'evalCode', false);
+
+publish('../+VehicleDynamicsLateral/@Simulator/Simulator.m', 'outputDir', apiDocPath, 'evalCode', false);
+
+publish('../+VehicleDynamicsLateral/@Graphics/Graphics.m', 'outputDir', apiDocPath, 'evalCode', false);
+
+% EXAMPLES
+% Kalman Filter
+publish('KalmanFilter.m', 'outputDir', docPath, 'evalCode', true);
+close all
+clearvars -except docPath apiDocPath
+
+% Sinusoidal Steering
+publish('SinusoidalSteering.m', 'outputDir', docPath, 'evalCode', true);
+g.Animation('../Documentation/illustrations/AnimationSinusoidalSteering');
+close all
+clearvars -except docPath apiDocPath
+
+% Skid Pad
+publish('SkidPad.m', 'outputDir', docPath, 'evalCode', true,'showCode',true);
+g.Animation('../Documentation/illustrations/AnimationSkidPad');
+close all
+clearvars -except docPath apiDocPath
+
+% Skid Pad 4DOF
+publish('SkidPad4DOF.m', 'outputDir', docPath, 'evalCode', true,'showCode',true);
+g.Animation('../Documentation/illustrations/AnimationSkidPad4DOF');
+close all
+clearvars -except docPath apiDocPath
+
+% SteeringControl
+publish('SteeringControl.m', 'outputDir', docPath, 'evalCode', true,'showCode',false);
+g.Animation('../Documentation/illustrations/AnimationSteeringControl');
+close all
+clearvars -except docPath apiDocPath
+
+% TemplateArticulated
+publish('TemplateArticulated.m', 'outputDir', docPath, 'evalCode', true);
+g.Animation('../Documentation/illustrations/AnimationTemplateArticulated');
+close all
+clearvars -except docPath apiDocPath
+
+% Template Articulated Simulink
+publish('ArticulatedVehicleSFunction.m', 'outputDir', docPath, 'evalCode', false);
+publish('TemplateArticulatedSimulink.m', 'outputDir', docPath, 'evalCode', true);
+g.Animation('../Documentation/illustrations/AnimationTemplateArticulatedSimulink');
+close all
+clearvars -except docPath apiDocPath
+
+% TemplateSimple
+publish('TemplateSimple.m', 'outputDir', docPath, 'evalCode', true);
+g.Animation('../Documentation/illustrations/AnimationTemplateSimple');
+close all
+clearvars -except docPath apiDocPath
+
+% Template Simple Simulink
+publish('SimpleVehicleSFunction.m', 'outputDir', docPath, 'evalCode', false);
+publish('TemplateSimpleSimulink.m', 'outputDir', docPath, 'evalCode', true);
+g.Animation('../Documentation/illustrations/AnimationTemplateSimpleSimulink');
+close all
+clearvars -except docPath apiDocPath
+
+% TireComparison
+publish('TireComparison.m', 'outputDir', docPath, 'evalCode', true);
+close all
+clearvars -except docPath apiDocPath
+
+% DocGen
+publish('makeDoc', 'outputDir', docPath, 'evalCode', false);
+
+%% Code end
+clear all                   % Clear workspace
+close all                   % Closing figures
+clc                         % Clear command window
+
+%% See Also
+%
+% <../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>
