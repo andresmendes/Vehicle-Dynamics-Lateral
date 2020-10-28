@@ -1,3 +1,5 @@
+[![View Vehicle Dynamics - Lateral on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/58683-vehicle-dynamics-lateral)
+
 # Vehicle Dynamics - Lateral: Open Source Simulation Package for MATLAB
 
 Vehicle Dynamics - Lateral is part of the [OpenVD Project](https://github.com/andresmendes/openvd).
