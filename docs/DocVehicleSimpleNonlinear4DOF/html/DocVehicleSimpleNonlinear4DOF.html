@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Template Simple Simulink</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="TemplateSimpleSimulink.m"><style type="text/css">
+      --><title>Vehicle Simple Nonlinear 4DOF</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="DocVehicleSimpleNonlinear4DOF.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,78 +66,41 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Template Simple Simulink</h1><!--introduction--><p>This template shows how to simulate an articulated vehicle in Simulink using a s-function.</p><p><img vspace="5" hspace="5" src="TemplateSimpleSimulink.gif" alt=""> </p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simulink model</a></li><li><a href="#2">Running Simulink model</a></li><li><a href="#3">Results</a></li><li><a href="#4">See Also</a></li></ul></div><h2 id="1">Simulink model</h2><p>Models, parameters and initial conditions are defined in s-function.</p><h2 id="2">Running Simulink model</h2><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
-
-simulation  = sim(<span class="string">'DiagramSimpleSimulink'</span>,<span class="string">'StopTime'</span>,<span class="string">'10'</span>);
-simout      = simulation.simout;
-tout        = simout.time;
-</pre><h2 id="3">Results</h2><pre class="codeinput"><span class="comment">% Retrieving vehicle model defined in s-function</span>
-[VehicleModel,~,~,~]    = SimpleVehicleSFunction(0,0,0,5);
-
-simulator = VehicleDynamicsLateral.Simulator(VehicleModel, tout);
-
-<span class="comment">% Retrieving states from simulation</span>
-simulator.XT            = simout.Data(:,1);
-simulator.YT            = simout.Data(:,2);
-simulator.PSI           = simout.Data(:,3);
-simulator.VEL           = simout.Data(:,4);
-simulator.ALPHAT        = simout.Data(:,5);
-simulator.dPSI          = simout.Data(:,6);
-
-<span class="comment">% Graphics</span>
-g = VehicleDynamicsLateral.Graphics(simulator);
-
-g.Frame();
-g.Animation();
-<span class="comment">% g.Animation('html/TemplateSimpleSimulink');       % Uncomment to save animation gif</span>
-</pre><img vspace="5" hspace="5" src="TemplateSimpleSimulink_01.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimpleSimulink_02.png" alt=""> <h2 id="4">See Also</h2><p><a href="../../../index.html">Home</a> | <a href="../../TemplateArticulatedSimulink/html/TemplateArticulatedSimulink.html">Template Articulated Simulink</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+  </style></head><body><div class="content"><h1>Vehicle Simple Nonlinear 4DOF</h1><!--introduction--><p>Nonlinear bicycle model nonlinear with 4 degrees of freedom.</p><p>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Theory</a></li><li><a href="#2">Sintax</a></li><li><a href="#3">Arguments</a></li><li><a href="#4">See Also</a></li></ul></div><h2 id="1">Theory</h2><p>The development of the equations of motion of this model can be found in <a href="../theory/vehicleSimple4DOF.pdf">TheoryVehicleSimple4DOF</a>.</p><h2 id="2">Sintax</h2><p><tt>dx = <i>VehicleModel</i>.Model(t,states,tspan)</tt></p><p><tt>dx = <i>VehicleModel</i>.MassMatrix(t,states,tspan)</tt></p><h2 id="3">Arguments</h2><p>The following table describes the input arguments:</p><p> <table border=1 width="97%">
+<tr> <td width="30%"><tt>t</tt></td> <td width="70%">Time</td> </tr>
+<tr> <td width="30%"><tt>states</tt></td> <td width="70%">Model state variables: [XT YT PSI VT ALPHAT dPSI]</td> </tr>
+<tr> <td width="30%"><tt>tspan</tt></td> <td width="70%">Time span</td> </tr>
+</table> </p><h2 id="4">See Also</h2><p><a href="../../../index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Template Simple Simulink
-% This template shows how to simulate an articulated vehicle in Simulink
-% using a s-function. 
+%% Vehicle Simple Nonlinear 4DOF
+% Nonlinear bicycle model nonlinear with 4 degrees of freedom.
 %
-% <<TemplateSimpleSimulink.gif>>
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
 %
-%% Simulink model
-% Models, parameters and initial conditions are defined in s-function.
+%% Theory
+% The development of the equations of motion of this model can be found in <../theory/vehicleSimple4DOF.pdf TheoryVehicleSimple4DOF>.
 %
-%% Running Simulink model
+%% Sintax
+% |dx = _VehicleModel_.Model(t,states,tspan)|
 %
-
-clear ; close all ; clc
-
-simulation  = sim('DiagramSimpleSimulink','StopTime','10');
-simout      = simulation.simout;
-tout        = simout.time;
-
-%% Results
-% 
-
-% Retrieving vehicle model defined in s-function
-[VehicleModel,~,~,~]    = SimpleVehicleSFunction(0,0,0,5);
-
-simulator = VehicleDynamicsLateral.Simulator(VehicleModel, tout);
-
-% Retrieving states from simulation
-simulator.XT            = simout.Data(:,1);
-simulator.YT            = simout.Data(:,2);
-simulator.PSI           = simout.Data(:,3);
-simulator.VEL           = simout.Data(:,4);
-simulator.ALPHAT        = simout.Data(:,5);
-simulator.dPSI          = simout.Data(:,6);
-
-% Graphics
-g = VehicleDynamicsLateral.Graphics(simulator);
-
-g.Frame();
-g.Animation();
-% g.Animation('html/TemplateSimpleSimulink');       % Uncomment to save animation gif
-
+% |dx = _VehicleModel_.MassMatrix(t,states,tspan)|
+%
+%% Arguments
+% The following table describes the input arguments:
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>t</tt></td> <td width="70%">Time</td> </tr>
+% <tr> <td width="30%"><tt>states</tt></td> <td width="70%">Model state variables: [XT YT PSI VT ALPHAT dPSI]</td> </tr>
+% <tr> <td width="30%"><tt>tspan</tt></td> <td width="70%">Time span</td> </tr>
+% </table> </html>
+%
 %% See Also
 %
-% <../../../index.html Home> |
-% <../../TemplateArticulatedSimulink/html/TemplateArticulatedSimulink.html
-% Template Articulated Simulink>
+% <../../../index.html Home>
 %
 
 ##### SOURCE END #####

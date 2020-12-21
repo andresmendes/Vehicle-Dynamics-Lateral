@@ -125,7 +125,7 @@ disp(num2str(R))
 
 %% See Also
 %
-% <../../../docs/index.html Home> |
+% <../../../index.html Home> |
 % <../../SkidPadSimple4DOF/html/SkidPadSimple4DOF.html
 % SkidPad Simple 4DOF>
 %

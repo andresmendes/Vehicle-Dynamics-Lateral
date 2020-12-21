@@ -41,7 +41,7 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> |
+% <../../../index.html Home> |
 % <../../TemplateArticulatedSimulink/html/TemplateArticulatedSimulink.html
 % Template Articulated Simulink>
 %

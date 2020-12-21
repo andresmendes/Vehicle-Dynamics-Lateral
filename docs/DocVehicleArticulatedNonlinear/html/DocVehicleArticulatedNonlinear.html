@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Articulated Vehicle Modeling</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-20"><meta name="DC.source" content="DocArticulatedVehicle.m"><style type="text/css">
+      --><title>Vehicle Articulated Modeling</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="DocVehicleArticulatedNonlinear.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Articulated Vehicle Modeling</h1><!--introduction--><p>This scipt derives the equations of motion from the nonlinear articulated vehicle model.</p><p>
+  </style></head><body><div class="content"><h1>Vehicle Articulated Modeling</h1><!--introduction--><p>This scipt derives the equations of motion from the nonlinear articulated vehicle model.</p><p>For class documentation, run:</p><p><tt>doc VehicleDynamicsLateral.VehicleArticulatedNonlinear</tt></p><p>
 <!--
 MathJax
 Source: http://docs.mathjax.org/en/latest/start.html
@@ -83,7 +83,7 @@ MathJax.Hub.Config({
 TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Bicycle model</a></li><li><a href="#2">Initialization</a></li><li><a href="#3">Generalized coordinates and time derivatives</a></li><li><a href="#4">Alternative velocity related variables</a></li><li><a href="#5">Conversion variables</a></li><li><a href="#6">Position</a></li><li><a href="#7">Velocity</a></li><li><a href="#8">Slip angles</a></li><li><a href="#12">Forces</a></li><li><a href="#16">Kinetic Energy</a></li><li><a href="#17">Euler-Lagrange</a></li><li><a href="#19">State equations</a></li><li><a href="#21">Model functions</a></li></ul></div><h2 id="1">Bicycle model</h2><p>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Bicycle model</a></li><li><a href="#2">Initialization</a></li><li><a href="#3">Generalized coordinates and time derivatives</a></li><li><a href="#4">Alternative velocity related variables</a></li><li><a href="#5">Conversion variables</a></li><li><a href="#6">Position</a></li><li><a href="#7">Velocity</a></li><li><a href="#8">Slip angles</a></li><li><a href="#12">Forces</a></li><li><a href="#16">Kinetic Energy</a></li><li><a href="#17">Euler-Lagrange</a></li><li><a href="#19">State equations</a></li><li><a href="#21">Model functions</a></li><li><a href="#22">See Also</a></li></ul></div><h2 id="1">Bicycle model</h2><p>
 <p>The single track (bicycle) approximation is illustrated below</p>
 <p><img vspace="5" hspace="5" src="modelArticulatedBicycleApprox.svg" alt=""> </p>
 <p>The articulated vehicle model is illustrated below</p>
@@ -592,11 +592,15 @@ ans =
 
     @M_function
 
-</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+</pre><h2 id="22">See Also</h2><p><a href="../../../index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Articulated Vehicle Modeling
+%% Vehicle Articulated Modeling
 % This scipt derives the equations of motion from the nonlinear articulated
 % vehicle model.
+%
+% For class documentation, run:
+%
+% |doc VehicleDynamicsLateral.VehicleArticulatedNonlinear|
 %
 % <html>
 % <!REPLACE_WITH_DASH_DASH
@@ -1164,5 +1168,9 @@ disp(f)
 matlabFunction(f,'File','f_function','Comments','Version: 1.1')
 matlabFunction(M,'File','M_function','Comments','Version: 1.1')
 
+%% See Also
+%
+% <../../../index.html Home>
+%
 ##### SOURCE END #####
 --></body></html>

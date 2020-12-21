@@ -1,6 +1,10 @@
-%% Articulated Vehicle Modeling
+%% Vehicle Articulated Modeling
 % This scipt derives the equations of motion from the nonlinear articulated
 % vehicle model.
+%
+% For class documentation, run:
+%
+% |doc VehicleDynamicsLateral.VehicleArticulatedNonlinear|
 %
 % <html>
 % <!--
@@ -567,3 +571,8 @@ disp(f)
 
 matlabFunction(f,'File','f_function','Comments','Version: 1.1')
 matlabFunction(M,'File','M_function','Comments','Version: 1.1')
+
+%% See Also
+%
+% <../../../index.html Home>
+%

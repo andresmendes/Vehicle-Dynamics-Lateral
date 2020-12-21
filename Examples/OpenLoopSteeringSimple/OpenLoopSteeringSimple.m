@@ -74,5 +74,5 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> | <../../OpenLoopSteeringArticulated/html/OpenLoopSteeringArticulated.html Open-Loop Steering Articulated>
+% <../../../index.html Home> | <../../OpenLoopSteeringArticulated/html/OpenLoopSteeringArticulated.html Open-Loop Steering Articulated>
 %

@@ -1,5 +1,5 @@
 %% Tire comparison
-% Comparison between tire models: <DocTireLinear.html TireLinear>, <DocTirePacejka.html TirePacejka> and <DocTirePolynomial.html TirePolynomial>.
+% Comparison between tire models.
 %
 % <html>
 % <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -8,7 +8,7 @@
 %% Description
 % The typical relation between the lateral force and the slip angle can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.
 %
-% <<../../../docs/illustrations/CurvaCaracteristica.svg>>
+% <<CurvaCaracteristica.svg>>
 %
 %% Equivalence
 % Given a reference Pacejka tire model it is possible to obtain an equivalent linear and polynomial model. The cornering stiffness of all models must be equal and the maximal lateral force of the Pacejka and Polynomial models must be the same.
@@ -36,19 +36,19 @@ clear ; close all ; clc
 
 deriva = (0:0.1:15)*pi/180;         % ngulo de deriva [rad]
 
-a0 = 1.3;
-a1 = 2.014156;
-a2 = 710.5013;
-a3 = 5226.341;
-a4 = 78.87699;
-a5 = 0.01078379;
-a6 = -0.004759443;
-a7 = -1.8572;
-a8 = 0;
-a9 = 0;
+a0  = 1.3;
+a1  = 2.014156;
+a2  = 710.5013;
+a3  = 5226.341;
+a4  = 78.87699;
+a5  = 0.01078379;
+a6  = -0.004759443;
+a7  = -1.8572;
+a8  = 0;
+a9  = 0;
 a10 = 0;
 a11 = 0;
-a12= 0;
+a12 = 0;
 a13 = 0;
 
 TirePac = VehicleDynamicsLateral.TirePacejka();
@@ -158,5 +158,5 @@ set(l, 'Interpreter', 'Latex', 'Location', 'SouthEast')
 %
 %% See Also
 %
-% <../../../docs/index.html Home>
+% <../../../index.html Home>
 %

@@ -380,5 +380,5 @@ set(y,'Interpreter','Latex')
 
 %% See Also
 %
-% <../../../docs/index.html Home>
+% <../../../index.html Home>
 %

@@ -94,7 +94,7 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> |
+% <../../../index.html Home> |
 % <../../TemplateSimple/html/TemplateSimple.html
 % Template Simple>
 %

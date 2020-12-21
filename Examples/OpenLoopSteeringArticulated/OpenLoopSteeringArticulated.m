@@ -142,5 +142,5 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> | <../../OpenLoopSteeringSimple/html/OpenLoopSteeringSimple.html Open-Loop Steering Simple>
+% <../../../index.html Home> | <../../OpenLoopSteeringSimple/html/OpenLoopSteeringSimple.html Open-Loop Steering Simple>
 %

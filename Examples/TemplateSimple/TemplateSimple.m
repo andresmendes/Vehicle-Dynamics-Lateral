@@ -114,7 +114,7 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> |
+% <../../../index.html Home> |
 % <../../TemplateArticulated/html/TemplateArticulated.html
 % Template Articulated>
 %

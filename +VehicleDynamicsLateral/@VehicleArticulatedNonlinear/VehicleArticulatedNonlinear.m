@@ -33,7 +33,19 @@ classdef VehicleArticulatedNonlinear < VehicleDynamicsLateral.VehicleArticulated
         function dx = Model(self,t, states,tspan)
             % dx = VehicleModel.Model(t,states,tspan)
             % dx = VehicleModel.MassMatrix(t,states,tspan)
-            
+            %
+            % Sintax
+            % |dx = _VehicleModel_.Model(t,states,tspan)|
+            %
+            % |dx = _VehicleModel_.MassMatrix(t,states,tspan)|
+            %
+            % Arguments
+            % The following table describes the input arguments:
+            %
+            % t - Time
+            % states - Model state variables: [XT YT PSI PHI VT ALPHAT dPSI dPHI]
+            % tspan - Time span
+
             % Vehicle parameters
             mT  = self.mT;
             mS  = self.mS;

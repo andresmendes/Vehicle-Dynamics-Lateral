@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Tire comparison</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-11"><meta name="DC.source" content="TireComparison.m"><style type="text/css">
+      --><title>Tire comparison</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="TireComparison.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,27 +66,27 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Tire comparison</h1><!--introduction--><p>Comparison between tire models: <a href="DocTireLinear.html">TireLinear</a>, <a href="DocTirePacejka.html">TirePacejka</a> and <a href="DocTirePolynomial.html">TirePolynomial</a>.</p><p>
+  </style></head><body><div class="content"><h1>Tire comparison</h1><!--introduction--><p>Comparison between tire models.</p><p>
 <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
-</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description</a></li><li><a href="#2">Equivalence</a></li><li><a href="#3">Model comparison</a></li><li><a href="#5">Comparison treatment slip angle</a></li><li><a href="#7">References</a></li><li><a href="#8">See Also</a></li></ul></div><h2 id="1">Description</h2><p>The typical relation between the lateral force and the slip angle can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.</p><p><img vspace="5" hspace="5" src="../../../docs/illustrations/CurvaCaracteristica.svg" alt=""> </p><h2 id="2">Equivalence</h2><p>Given a reference Pacejka tire model it is possible to obtain an equivalent linear and polynomial model. The cornering stiffness of all models must be equal and the maximal lateral force of the Pacejka and Polynomial models must be the same.</p><p>The Pacejka model depends on the parameters \(a_0\), \(a_1\), \(a_2\), \(a_3\), \(a_4\), \(a_5\), \(a_6\) e \(a_7\) that defines the constants \(B\), \(C\), \(D\) and \(E\) wich can be used to define the constants of the equivalent models.</p><p>The equivalent linear tire model has cornering stiffness \(K\) given by</p><p>\[ K = B C D \]</p><p>The equivalent polynomial tire model has coeficients \(k_1\) and \(k_2\) given by</p><p>\[ k_1 = B C D \]</p><p>\[ k_2 = (4 k_1^3)/(27 F_{y, Max}^2) \]</p><p>where \(F_{y, Max}\) is the maximal lateral force of the reference characteristic curve.</p><h2 id="3">Model comparison</h2><pre class="codeinput"><span class="comment">% Code start</span>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description</a></li><li><a href="#2">Equivalence</a></li><li><a href="#3">Model comparison</a></li><li><a href="#5">Comparison treatment slip angle</a></li><li><a href="#7">References</a></li><li><a href="#8">See Also</a></li></ul></div><h2 id="1">Description</h2><p>The typical relation between the lateral force and the slip angle can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.</p><p><img vspace="5" hspace="5" src="CurvaCaracteristica.svg" alt=""> </p><h2 id="2">Equivalence</h2><p>Given a reference Pacejka tire model it is possible to obtain an equivalent linear and polynomial model. The cornering stiffness of all models must be equal and the maximal lateral force of the Pacejka and Polynomial models must be the same.</p><p>The Pacejka model depends on the parameters \(a_0\), \(a_1\), \(a_2\), \(a_3\), \(a_4\), \(a_5\), \(a_6\) e \(a_7\) that defines the constants \(B\), \(C\), \(D\) and \(E\) wich can be used to define the constants of the equivalent models.</p><p>The equivalent linear tire model has cornering stiffness \(K\) given by</p><p>\[ K = B C D \]</p><p>The equivalent polynomial tire model has coeficients \(k_1\) and \(k_2\) given by</p><p>\[ k_1 = B C D \]</p><p>\[ k_2 = (4 k_1^3)/(27 F_{y, Max}^2) \]</p><p>where \(F_{y, Max}\) is the maximal lateral force of the reference characteristic curve.</p><h2 id="3">Model comparison</h2><pre class="codeinput"><span class="comment">% Code start</span>
 
 clear ; close <span class="string">all</span> ; clc
 
 deriva = (0:0.1:15)*pi/180;         <span class="comment">% ngulo de deriva [rad]</span>
 
-a0 = 1.3;
-a1 = 2.014156;
-a2 = 710.5013;
-a3 = 5226.341;
-a4 = 78.87699;
-a5 = 0.01078379;
-a6 = -0.004759443;
-a7 = -1.8572;
-a8 = 0;
-a9 = 0;
+a0  = 1.3;
+a1  = 2.014156;
+a2  = 710.5013;
+a3  = 5226.341;
+a4  = 78.87699;
+a5  = 0.01078379;
+a6  = -0.004759443;
+a7  = -1.8572;
+a8  = 0;
+a9  = 0;
 a10 = 0;
 a11 = 0;
-a12= 0;
+a12 = 0;
 a13 = 0;
 
 TirePac = VehicleDynamicsLateral.TirePacejka();
@@ -180,10 +180,10 @@ xlabel(<span class="string">'\(\alpha\) [grau]'</span>, <span class="string">'In
 ylabel(<span class="string">'\(F_y\) [N]'</span>, <span class="string">'Interpreter'</span>, <span class="string">'Latex'</span>)
 l = legend(<span class="string">'Pacejka without treatment'</span>, <span class="string">'Pacejka with treatment '</span>);
 set(l, <span class="string">'Interpreter'</span>, <span class="string">'Latex'</span>, <span class="string">'Location'</span>, <span class="string">'SouthEast'</span>)
-</pre><img vspace="5" hspace="5" src="TireComparison_02.png" alt=""> <p>In the above figure we can see that the curve is symmetric to a vertical line positioned at \(\alpha = 90 [graus]\).</p><h2 id="7">References</h2><p>[1] GILLESPIE, T. D. Fundamentals of vehicle dynamics. [S.l.]: Society of Automotive Engineers Warrendale, PA, 1992.</p><h2 id="8">See Also</h2><p><a href="../../../docs/index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="TireComparison_02.png" alt=""> <p>In the above figure we can see that the curve is symmetric to a vertical line positioned at \(\alpha = 90 [graus]\).</p><h2 id="7">References</h2><p>[1] GILLESPIE, T. D. Fundamentals of vehicle dynamics. [S.l.]: Society of Automotive Engineers Warrendale, PA, 1992.</p><h2 id="8">See Also</h2><p><a href="../../../index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Tire comparison
-% Comparison between tire models: <DocTireLinear.html TireLinear>, <DocTirePacejka.html TirePacejka> and <DocTirePolynomial.html TirePolynomial>.
+% Comparison between tire models.
 %
 % <html>
 % <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -192,7 +192,7 @@ set(l, <span class="string">'Interpreter'</span>, <span class="string">'Latex'</
 %% Description
 % The typical relation between the lateral force and the slip angle can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.
 %
-% <<../../../docs/illustrations/CurvaCaracteristica.svg>>
+% <<CurvaCaracteristica.svg>>
 %
 %% Equivalence
 % Given a reference Pacejka tire model it is possible to obtain an equivalent linear and polynomial model. The cornering stiffness of all models must be equal and the maximal lateral force of the Pacejka and Polynomial models must be the same.
@@ -220,19 +220,19 @@ clear ; close all ; clc
 
 deriva = (0:0.1:15)*pi/180;         % ngulo de deriva [rad]
 
-a0 = 1.3;
-a1 = 2.014156;
-a2 = 710.5013;
-a3 = 5226.341;
-a4 = 78.87699;
-a5 = 0.01078379;
-a6 = -0.004759443;
-a7 = -1.8572;
-a8 = 0;
-a9 = 0;
+a0  = 1.3;
+a1  = 2.014156;
+a2  = 710.5013;
+a3  = 5226.341;
+a4  = 78.87699;
+a5  = 0.01078379;
+a6  = -0.004759443;
+a7  = -1.8572;
+a8  = 0;
+a9  = 0;
 a10 = 0;
 a11 = 0;
-a12= 0;
+a12 = 0;
 a13 = 0;
 
 TirePac = VehicleDynamicsLateral.TirePacejka();
@@ -342,7 +342,7 @@ set(l, 'Interpreter', 'Latex', 'Location', 'SouthEast')
 %
 %% See Also
 %
-% <../../../docs/index.html Home>
+% <../../../index.html Home>
 %
 
 ##### SOURCE END #####

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Template Simple Simulink</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="TemplateSimpleSimulink.m"><style type="text/css">
+      --><title>Linear tire model</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="DocTireLinear.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,78 +66,57 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Template Simple Simulink</h1><!--introduction--><p>This template shows how to simulate an articulated vehicle in Simulink using a s-function.</p><p><img vspace="5" hspace="5" src="TemplateSimpleSimulink.gif" alt=""> </p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simulink model</a></li><li><a href="#2">Running Simulink model</a></li><li><a href="#3">Results</a></li><li><a href="#4">See Also</a></li></ul></div><h2 id="1">Simulink model</h2><p>Models, parameters and initial conditions are defined in s-function.</p><h2 id="2">Running Simulink model</h2><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
-
-simulation  = sim(<span class="string">'DiagramSimpleSimulink'</span>,<span class="string">'StopTime'</span>,<span class="string">'10'</span>);
-simout      = simulation.simout;
-tout        = simout.time;
-</pre><h2 id="3">Results</h2><pre class="codeinput"><span class="comment">% Retrieving vehicle model defined in s-function</span>
-[VehicleModel,~,~,~]    = SimpleVehicleSFunction(0,0,0,5);
-
-simulator = VehicleDynamicsLateral.Simulator(VehicleModel, tout);
-
-<span class="comment">% Retrieving states from simulation</span>
-simulator.XT            = simout.Data(:,1);
-simulator.YT            = simout.Data(:,2);
-simulator.PSI           = simout.Data(:,3);
-simulator.VEL           = simout.Data(:,4);
-simulator.ALPHAT        = simout.Data(:,5);
-simulator.dPSI          = simout.Data(:,6);
-
-<span class="comment">% Graphics</span>
-g = VehicleDynamicsLateral.Graphics(simulator);
-
-g.Frame();
-g.Animation();
-<span class="comment">% g.Animation('html/TemplateSimpleSimulink');       % Uncomment to save animation gif</span>
-</pre><img vspace="5" hspace="5" src="TemplateSimpleSimulink_01.png" alt=""> <img vspace="5" hspace="5" src="TemplateSimpleSimulink_02.png" alt=""> <h2 id="4">See Also</h2><p><a href="../../../index.html">Home</a> | <a href="../../TemplateArticulatedSimulink/html/TemplateArticulatedSimulink.html">Template Articulated Simulink</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+  </style></head><body><div class="content"><h1>Linear tire model</h1><!--introduction--><p>Linear relationship between tire lateral force and slip angle.</p><p>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Sintax</a></li><li><a href="#2">Arguments</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">Description</a></li><li><a href="#5">See Also</a></li></ul></div><h2 id="1">Sintax</h2><p>The class LinearTire has two methods</p><p><tt>Fy = <i>TireModel</i>.Characteristic(alpha)</tt></p><p><tt><i>TireModel</i>.PlotTire()</tt></p><h2 id="2">Arguments</h2><p>The following table describes the input arguments</p><p> <table border=1 width="97%">
+<tr> <td width="30%"><tt>alpha</tt></td> <td width="70%">Tire slip angle [rad]</td> </tr>
+</table> </p><h2 id="3">Outputs</h2><p> <table border=1 width="97%">
+<tr> <td width="30%"><tt>Fy</tt></td> <td width="70%">Tire lateral force [N]</td> </tr>
+</table> </p><h2 id="4">Description</h2><p>The lateral force of the tire can be calculated as</p><p>\[ F_y = K \alpha \]</p><p>where \(F_y\) is the lateral force, \(K\) is the cornering stiffness and \(\alpha\) is the tire slip angle.</p><p><b>Hypothesis</b></p><div><ul><li>Linear tire model</li><li>Valid only for small values of slip angle</li></ul></div><h2 id="5">See Also</h2><p><a href="../../../index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Template Simple Simulink
-% This template shows how to simulate an articulated vehicle in Simulink
-% using a s-function. 
+%% Linear tire model
+% Linear relationship between tire lateral force and slip angle.
 %
-% <<TemplateSimpleSimulink.gif>>
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
 %
-%% Simulink model
-% Models, parameters and initial conditions are defined in s-function.
+%% Sintax
+% The class LinearTire has two methods
 %
-%% Running Simulink model
+% |Fy = _TireModel_.Characteristic(alpha)|
 %
-
-clear ; close all ; clc
-
-simulation  = sim('DiagramSimpleSimulink','StopTime','10');
-simout      = simulation.simout;
-tout        = simout.time;
-
-%% Results
-% 
-
-% Retrieving vehicle model defined in s-function
-[VehicleModel,~,~,~]    = SimpleVehicleSFunction(0,0,0,5);
-
-simulator = VehicleDynamicsLateral.Simulator(VehicleModel, tout);
-
-% Retrieving states from simulation
-simulator.XT            = simout.Data(:,1);
-simulator.YT            = simout.Data(:,2);
-simulator.PSI           = simout.Data(:,3);
-simulator.VEL           = simout.Data(:,4);
-simulator.ALPHAT        = simout.Data(:,5);
-simulator.dPSI          = simout.Data(:,6);
-
-% Graphics
-g = VehicleDynamicsLateral.Graphics(simulator);
-
-g.Frame();
-g.Animation();
-% g.Animation('html/TemplateSimpleSimulink');       % Uncomment to save animation gif
-
+% |_TireModel_.PlotTire()|
+%
+%% Arguments
+% The following table describes the input arguments
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>alpha</tt></td> <td width="70%">Tire slip angle [rad]</td> </tr>
+% </table> </html>
+%
+%% Outputs
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>Fy</tt></td> <td width="70%">Tire lateral force [N]</td> </tr>
+% </table> </html>
+%
+%% Description
+%
+% The lateral force of the tire can be calculated as
+%
+% \[ F_y = K \alpha \]
+%
+% where \(F_y\) is the lateral force, \(K\) is the cornering stiffness and \(\alpha\) is the tire slip angle.
+%
+% *Hypothesis*
+%
+% * Linear tire model
+% * Valid only for small values of slip angle
+%
 %% See Also
 %
-% <../../../index.html Home> |
-% <../../TemplateArticulatedSimulink/html/TemplateArticulatedSimulink.html
-% Template Articulated Simulink>
+% <../../../index.html Home>
 %
 
 ##### SOURCE END #####

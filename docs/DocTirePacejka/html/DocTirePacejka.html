@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pacejka tire model</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="DocTirePacejka.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Pacejka tire model</h1><!--introduction--><p>Nonlinear relationship between tire lateral force and slip angle expressed by a semi-empirical model with experimental coefficients [1].</p><p>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Sintax</a></li><li><a href="#2">Arguments</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">Description</a></li><li><a href="#5">References</a></li><li><a href="#6">See Also</a></li></ul></div><h2 id="1">Sintax</h2><p><tt>Fy = <i>TireModel</i>.Characteristic(alpha, Fz, muy)</tt></p><p><tt><i>TireModel</i>.PlotTire()</tt></p><h2 id="2">Arguments</h2><p>The following table describes the input arguments</p><p> <table border=1 width="97%">
+<tr> <td width="30%"><tt>alpha</tt></td> <td width="70%">Tire slip angle [rad]</td> </tr>
+<tr> <td width="30%"><tt>Fz</tt></td> <td width="70%">Vertical force [N]</td> </tr>
+<tr> <td width="30%"><tt>muy</tt></td> <td width="70%">Friction coefficient [-]</td> </tr>
+</table> </p><h2 id="3">Outputs</h2><p> <table border=1 width="97%">
+<tr> <td width="30%"><tt>Fy</tt></td> <td width="70%">Tire lateral force [N]</td> </tr>
+</table> </p><h2 id="4">Description</h2><p>The lateral force can be written as</p><p>\[ F_y = - \frac{\mu_y}{\mu_{y, n}} (F_{y, n}(\alpha_{eq}) + S_v) \]</p><p>where \(\alpha_{eq}\) is the equivalent slip angle</p><p>\[ \alpha_{eq} = \frac{\mu_{y0}}{\mu_y} \frac{F_{z0}}{F_z} (\alpha + S_h) \]</p><p>and \(F_{y, n}\) is the reference function of the lateral force</p><p>\[ F_{y, n} = D \sin(C \arctan(B \alpha - E (B \alpha - \arctan(B \alpha)))) \]</p><p>The coefficients \(B\), \(C\), \(D\) and \(E\) can be written as</p><p>\[ C = a_0 \]</p><p>\[ D = \mu_{y, n} F_z = (a_1 F_z + a_2) F_z \]</p><p>\[ B = \frac{B C D}{C D} = a_3 \sin \left\{ 2 \arctan \left( \frac{F_z}{a_4} \right) \right\} (1 - a_5 | \gamma |) \]</p><p>\[ E = a_6 F_z + a_7 \]</p><p>The horizontal and vertical shifts of the curve are calculated as</p><p>\[ S_h = a_8 \gamma + a_9 F_z + a_{10} \]</p><p>\[ S_v = a_{11} F_z \gamma + a_{12} F_z + a_{13} \]</p><p>The model implemented here converts the slip angle using the following equation</p><p><i>ALPHA = asin(sin(alpha));</i></p><p>This equation alters the slip angle in such way that the characteristic equation becames symmetric in relation to the vertical line at 90 degrees and the lateral force becomes zero at 180 degrees. The same analogy can be made with negative values of the slip angle</p><p><b>Hypothesis</b></p><div><ul><li>Nonlinear tire model</li><li>Covers the whole range of slip angles (-180 to 180 degrees)</li></ul></div><h2 id="5">References</h2><p>[1] BAKKER, E.; PACEJKA, H. B.; LIDNER, L. A new tire model with an application in vehicle dynamics studies. [S.l.], 1989</p><h2 id="6">See Also</h2><p><a href="../../../index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Pacejka tire model
+% Nonlinear relationship between tire lateral force and slip angle expressed by a semi-empirical model with experimental coefficients [1].
+%
+% <html>
+% <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+% </html>
+%
+%% Sintax
+% |Fy = _TireModel_.Characteristic(alpha, Fz, muy)|
+%
+%
+% |_TireModel_.PlotTire()|
+%
+%% Arguments
+% The following table describes the input arguments
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>alpha</tt></td> <td width="70%">Tire slip angle [rad]</td> </tr>
+% <tr> <td width="30%"><tt>Fz</tt></td> <td width="70%">Vertical force [N]</td> </tr>
+% <tr> <td width="30%"><tt>muy</tt></td> <td width="70%">Friction coefficient [-]</td> </tr>
+% </table> </html>
+%
+%% Outputs
+%
+% <html> <table border=1 width="97%">
+% <tr> <td width="30%"><tt>Fy</tt></td> <td width="70%">Tire lateral force [N]</td> </tr>
+% </table> </html>
+%
+%% Description
+% The lateral force can be written as
+%
+% \[ F_y = - \frac{\mu_y}{\mu_{y, n}} (F_{y, n}(\alpha_{eq}) + S_v) \]
+%
+% where \(\alpha_{eq}\) is the equivalent slip angle
+%
+% \[ \alpha_{eq} = \frac{\mu_{y0}}{\mu_y} \frac{F_{z0}}{F_z} (\alpha + S_h) \]
+%
+% and \(F_{y, n}\) is the reference function of the lateral force
+%
+% \[ F_{y, n} = D \sin(C \arctan(B \alpha - E (B \alpha - \arctan(B \alpha)))) \]
+%
+% The coefficients \(B\), \(C\), \(D\) and \(E\) can be written as
+%
+% \[ C = a_0 \]
+%
+% \[ D = \mu_{y, n} F_z = (a_1 F_z + a_2) F_z \]
+%
+% \[ B = \frac{B C D}{C D} = a_3 \sin \left\{ 2 \arctan \left( \frac{F_z}{a_4} \right) \right\} (1 - a_5 | \gamma |) \]
+%
+% \[ E = a_6 F_z + a_7 \]
+%
+% The horizontal and vertical shifts of the curve are calculated as
+%
+% \[ S_h = a_8 \gamma + a_9 F_z + a_{10} \]
+%
+% \[ S_v = a_{11} F_z \gamma + a_{12} F_z + a_{13} \]
+%
+% The model implemented here converts the slip angle using the following equation
+%
+% _ALPHA = asin(sin(alpha));_
+%
+% This equation alters the slip angle in such way that the characteristic equation becames symmetric in relation to the vertical line at 90 degrees and the lateral force becomes zero at 180 degrees. The same analogy can be made with negative values of the slip angle
+%
+% *Hypothesis*
+%
+% * Nonlinear tire model
+% * Covers the whole range of slip angles (-180 to 180 degrees)
+%
+%% References
+% [1] BAKKER, E.; PACEJKA, H. B.; LIDNER, L. A new tire model with an application in vehicle dynamics studies. [S.l.], 1989
+%
+%% See Also
+%
+% <../../../index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

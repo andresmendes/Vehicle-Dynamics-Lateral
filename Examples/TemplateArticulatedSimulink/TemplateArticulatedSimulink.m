@@ -43,7 +43,7 @@ g.Animation();
 
 %% See Also
 %
-% <../../../docs/index.html Home> |
+% <../../../index.html Home> |
 % <../../TemplateSimpleSimulink/html/TemplateSimpleSimulink.html
 % Template Simple Simulink>
 %
