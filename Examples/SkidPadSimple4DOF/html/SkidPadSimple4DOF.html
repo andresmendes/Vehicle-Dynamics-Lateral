@@ -1,0 +1,432 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Skid Pad Simple 4DOF</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="SkidPadSimple4DOF.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Skid Pad Simple 4DOF</h1><!--introduction--><p>Maneuver in circles of a nonlinear simple vehicle model with Pacejka tire model.</p><p>A control law (rear-wheel-drive) is used to maintain a CG speed of 8 m/s.</p><p><img vspace="5" hspace="5" src="SkidPadSimple4DOF.gif" alt=""> </p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Code start</a></li><li><a href="#2">Model and parameters</a></li><li><a href="#3">Results</a></li><li><a href="#9">See Also</a></li></ul></div><h2 id="1">Code start</h2><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
+
+import <span class="string">VehicleDynamicsLateral.*</span>
+</pre><h2 id="2">Model and parameters</h2><p>Simulation</p><pre class="codeinput"><span class="comment">% Choosing tire</span>
+TireModel   = TirePacejka();
+<span class="comment">% Choosing vehicle</span>
+System      = VehicleSimpleNonlinear4DOF();
+<span class="comment">% Defining vehicle parameters</span>
+System.mF0  = 700;
+System.mR0  = 600;
+System.lT   = 3.5;
+System.nF   = 1;
+System.nR   = 1;
+System.wT   = 2;
+System.muy  = 1;
+System.deltaf           = 10*pi/180;
+System.FXFRONTLEFT      = 0;
+System.FXFRONTRIGHT     = 0;
+System.FXREARLEFT       = @VelControl4DOF;
+System.FXREARRIGHT      = @VelControl4DOF;
+System.K                = 50000000; <span class="comment">% Rigidez torcional da massa suspensa</span>
+System.C                = 5000000;
+
+System.H    = 0.6;                       <span class="comment">% CG height                [m]</span>
+System.L    = 0.6;                       <span class="comment">% track                    [m]</span>
+System.IXX  = 12000;
+System.IYY  = 65000;
+System.IZZ  = 65000;
+System.IXY  = 1000;
+System.IXZ  = 1000;
+System.IYZ  = 1000;
+
+System.tire = TireModel;
+
+<span class="comment">% Choosing simulation</span>
+T = 30;                                 <span class="comment">% Total simulation time     [s]</span>
+resol = 200;                            <span class="comment">% Resolution</span>
+TSPAN = 0:T/resol:T;                    <span class="comment">% Time span                 [s]</span>
+simulator = Simulator(System, TSPAN);
+
+simulator.V0 = 8;
+
+<span class="comment">% Simulation</span>
+simulator.Simulate();
+</pre><h2 id="3">Results</h2><pre class="codeinput"><span class="comment">% Retrieving states</span>
+XT      = simulator.XT;
+YT      = simulator.YT;
+PSI     = simulator.PSI;
+THETA   = simulator.THETA;
+VEL     = simulator.VEL;
+ALPHAT  = simulator.ALPHAT;
+dPSI    = simulator.dPSI;
+dTHETA  = simulator.dTHETA;
+
+<span class="comment">% Retrieving data from vehicle (?)</span>
+m   = System.mT;
+a   = System.a;
+b   = System.b;
+K   = 50000000;                             <span class="comment">% Rigidez torcional da massa suspensa</span>
+CC  = 5000000;
+h   = 0.6;                                  <span class="comment">% CG height             [m]</span>
+l   = 0.6;                                  <span class="comment">% track                 [m]</span>
+g   = 9.81;
+
+FzRight = (m*g*l/2 + K*THETA + CC*dTHETA)/l;
+FzLeft = m*g - FzRight;
+
+FzFrontRight = FzRight*b/(a+b);
+FzFrontLeft = FzLeft*b/(a+b);
+FzRearRight = FzRight*a/(a+b);
+FzRearLeft = FzLeft*a/(a+b);
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,XT)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Distance in the x direction [m]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,YT)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Distance in the y direction [m]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,PSI)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Yaw angle [rad]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,THETA)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Roll angle [rad]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,VEL)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Velocity [m/s]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,ALPHAT)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Vehicle slip angle [rad/s]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,dPSI)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Yaw rate [rad/s]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,dTHETA)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Roll rate [rad/s]'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,FzFrontRight,<span class="string">'r'</span>)
+plot(TSPAN,FzRearRight,<span class="string">'g'</span>)
+plot(TSPAN,FzFrontLeft,<span class="string">'b'</span>)
+plot(TSPAN,FzRearLeft,<span class="string">'m'</span>)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Vertical force [N]'</span>)
+legend(<span class="string">'Front Right'</span>,<span class="string">'Rear Right'</span>,<span class="string">'Front Left'</span>,<span class="string">'Rear Left'</span>)
+
+figure
+hold <span class="string">on</span> ; grid <span class="string">on</span> ; box <span class="string">on</span>
+plot(TSPAN,FzFrontRight + FzFrontLeft,<span class="string">'r'</span>)
+plot(TSPAN,FzRearRight + FzRearLeft,<span class="string">'g'</span>)
+xlabel(<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'Vertical force [N]'</span>)
+legend(<span class="string">'Front axle'</span>,<span class="string">'Rear axle'</span>)
+</pre><img vspace="5" hspace="5" src="SkidPadSimple4DOF_01.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_02.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_03.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_04.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_05.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_06.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_07.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_08.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_09.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_10.png" alt=""> <p>mF0</p><pre class="codeinput">disp(num2str(System.mF0))
+</pre><pre class="codeoutput">700
+</pre><p>mR0</p><pre class="codeinput">disp(num2str(System.mR0))
+</pre><pre class="codeoutput">600
+</pre><p>Frame and animation</p><pre class="codeinput">g = Graphics(simulator);
+g.TractorColor = <span class="string">'r'</span>;
+
+g.Frame();
+</pre><img vspace="5" hspace="5" src="SkidPadSimple4DOF_11.png" alt=""> <pre class="codeinput">angulo = 0:0.01:2*pi;
+
+[R,XC,YC] = circfit(XT(40:end),YT(40:end));
+
+XX = XC + R*cos(angulo);
+YY = YC + R*sin(angulo);
+
+hold <span class="string">on</span>
+plot(XX,YY,<span class="string">'k'</span>)
+
+g.Animation();
+<span class="comment">% g.Animation('html/SkidPadSimple4DOF');       % Uncomment to save animation gif</span>
+</pre><img vspace="5" hspace="5" src="SkidPadSimple4DOF_12.png" alt=""> <img vspace="5" hspace="5" src="SkidPadSimple4DOF_13.png" alt=""> <p>Maneuver radius</p><pre class="codeinput">disp(num2str(R))
+</pre><pre class="codeoutput">20.0944
+</pre><h2 id="9">See Also</h2><p><a href="../../../docs/index.html">Home</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Skid Pad Simple 4DOF
+% Maneuver in circles of a nonlinear simple vehicle model with Pacejka tire
+% model.
+%
+% A control law (rear-wheel-drive) is used to maintain a CG speed of 8 m/s.
+%
+% <<SkidPadSimple4DOF.gif>>
+%
+%% Code start
+%
+
+clear ; close all ; clc
+
+import VehicleDynamicsLateral.*
+
+%% Model and parameters
+% Simulation
+%
+
+% Choosing tire
+TireModel   = TirePacejka();
+% Choosing vehicle
+System      = VehicleSimpleNonlinear4DOF();
+% Defining vehicle parameters
+System.mF0  = 700;
+System.mR0  = 600;
+System.lT   = 3.5;
+System.nF   = 1;
+System.nR   = 1;
+System.wT   = 2;
+System.muy  = 1;
+System.deltaf           = 10*pi/180;
+System.FXFRONTLEFT      = 0;
+System.FXFRONTRIGHT     = 0;
+System.FXREARLEFT       = @VelControl4DOF;
+System.FXREARRIGHT      = @VelControl4DOF;
+System.K                = 50000000; % Rigidez torcional da massa suspensa
+System.C                = 5000000;
+
+System.H    = 0.6;                       % CG height                [m]
+System.L    = 0.6;                       % track                    [m]
+System.IXX  = 12000;
+System.IYY  = 65000;
+System.IZZ  = 65000;
+System.IXY  = 1000;
+System.IXZ  = 1000;
+System.IYZ  = 1000;
+
+System.tire = TireModel;
+
+% Choosing simulation
+T = 30;                                 % Total simulation time     [s]
+resol = 200;                            % Resolution
+TSPAN = 0:T/resol:T;                    % Time span                 [s]
+simulator = Simulator(System, TSPAN);
+
+simulator.V0 = 8;
+
+% Simulation
+simulator.Simulate();
+
+%% Results
+
+% Retrieving states
+XT      = simulator.XT;
+YT      = simulator.YT;
+PSI     = simulator.PSI;
+THETA   = simulator.THETA;
+VEL     = simulator.VEL;
+ALPHAT  = simulator.ALPHAT;
+dPSI    = simulator.dPSI;
+dTHETA  = simulator.dTHETA;
+
+% Retrieving data from vehicle (?)
+m   = System.mT;
+a   = System.a;
+b   = System.b;
+K   = 50000000;                             % Rigidez torcional da massa suspensa
+CC  = 5000000;
+h   = 0.6;                                  % CG height             [m]
+l   = 0.6;                                  % track                 [m]
+g   = 9.81;
+
+FzRight = (m*g*l/2 + K*THETA + CC*dTHETA)/l;
+FzLeft = m*g - FzRight;
+
+FzFrontRight = FzRight*b/(a+b);
+FzFrontLeft = FzLeft*b/(a+b);
+FzRearRight = FzRight*a/(a+b);
+FzRearLeft = FzLeft*a/(a+b);
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,XT)
+xlabel('time [s]')
+ylabel('Distance in the x direction [m]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,YT)
+xlabel('time [s]')
+ylabel('Distance in the y direction [m]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,PSI)
+xlabel('time [s]')
+ylabel('Yaw angle [rad]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,THETA)
+xlabel('time [s]')
+ylabel('Roll angle [rad]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,VEL)
+xlabel('time [s]')
+ylabel('Velocity [m/s]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,ALPHAT)
+xlabel('time [s]')
+ylabel('Vehicle slip angle [rad/s]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,dPSI)
+xlabel('time [s]')
+ylabel('Yaw rate [rad/s]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,dTHETA)
+xlabel('time [s]')
+ylabel('Roll rate [rad/s]')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,FzFrontRight,'r')
+plot(TSPAN,FzRearRight,'g')
+plot(TSPAN,FzFrontLeft,'b')
+plot(TSPAN,FzRearLeft,'m')
+xlabel('time [s]')
+ylabel('Vertical force [N]')
+legend('Front Right','Rear Right','Front Left','Rear Left')
+
+figure
+hold on ; grid on ; box on
+plot(TSPAN,FzFrontRight + FzFrontLeft,'r')
+plot(TSPAN,FzRearRight + FzRearLeft,'g')
+xlabel('time [s]')
+ylabel('Vertical force [N]')
+legend('Front axle','Rear axle')
+
+%%
+% mF0
+
+disp(num2str(System.mF0))
+
+%%
+% mR0
+
+disp(num2str(System.mR0))
+
+%%
+% Frame and animation
+
+g = Graphics(simulator);
+g.TractorColor = 'r';
+
+g.Frame();
+
+%%
+%
+
+angulo = 0:0.01:2*pi;
+
+[R,XC,YC] = circfit(XT(40:end),YT(40:end));
+
+XX = XC + R*cos(angulo);
+YY = YC + R*sin(angulo);
+
+hold on
+plot(XX,YY,'k')
+
+g.Animation();
+% g.Animation('html/SkidPadSimple4DOF');       % Uncomment to save animation gif
+
+%%
+% Maneuver radius
+
+disp(num2str(R))
+
+%% See Also
+%
+% <../../../docs/index.html Home>
+%
+
+##### SOURCE END #####
+--></body></html>

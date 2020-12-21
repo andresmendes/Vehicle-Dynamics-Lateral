@@ -23,6 +23,7 @@ classdef (Abstract) VehicleArticulated  < VehicleDynamicsLateral.VehicleSimple
         d   % Distance from articulation to semitrailer center of mass (A-M) [m]
         e   % Distance from semitrailer center of mass to semitrailer axle (A-M) [m]
         Fxm % Longitudinal force at M [rad]
+        deltam 
     end
 
     methods

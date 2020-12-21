@@ -5,9 +5,10 @@ classdef Graphics
     methods
         % Constructor
         function self = Graphics(simulator)
-            self.Simulator = simulator;
-            self.TractorColor = 'r';
-            self.SemitrailerColor = 'g';
+            self.Simulator          = simulator;
+            self.TractorColor       = 'r';
+            self.SemitrailerColor   = 'g';
+            self.Scale              = 1;            % Scale of y in relation to x
         end
 
         function Animation(self, varargin)
@@ -16,26 +17,28 @@ classdef Graphics
             % col = 8 -> articulado
             articulated = isa(self.Simulator.Vehicle, 'VehicleDynamicsLateral.VehicleArticulated');
 
-            % States
-            TOUT = self.Simulator.TSpan;
-            XT = self.Simulator.XT;         % Horizontal position [m]
-            YT = self.Simulator.YT;         % Vertical position [m]
-            PSI = self.Simulator.PSI;       % Vehicle yaw angle [rad]
-            VEL = self.Simulator.VEL;         % Vehicle CG velocity [m/s]
-            ALPHAT = self.Simulator.ALPHAT; % Vehicle side slip angle [rad]
-            dPSI = self.Simulator.dPSI;     % Yaw rate [rad/s]
+            % States common to simple and articulated vehicles.
+            TOUT    = self.Simulator.TSpan;
+            XT      = self.Simulator.XT;            % X position                [m]
+            YT      = self.Simulator.YT;            % Y position                [m]
+            PSI     = self.Simulator.PSI;           % Vehicle yaw angle         [rad]
+            VEL     = self.Simulator.VEL;           % Vehicle CG velocity       [m/s]
+            ALPHAT  = self.Simulator.ALPHAT;        % Vehicle side slip angle   [rad]
+            dPSI    = self.Simulator.dPSI;          % Yaw rate                  [rad/s]
 
             % Distances
-            a = self.Simulator.Vehicle.a;        % Distance FT [m]
-            b = self.Simulator.Vehicle.b;        % Distance TR [m]
-            lT = self.Simulator.Vehicle.wT / 2;  % Half width of the vehicle [m]
+            a   = self.Simulator.Vehicle.a;         % Distance FT [m]
+            b   = self.Simulator.Vehicle.b;         % Distance TR [m]
+            lT  = self.Simulator.Vehicle.wT / 2;    % Half width of the vehicle [m]
 
             % Slip angle @ front axle [rad]
             ALPHAF = atan2((a * dPSI + VEL.*sin(ALPHAT)),(VEL.*cos(ALPHAT)));
-            % OBS: No steering angle because it measures the angle between velocity vector and longitudinal axle of the vehicle
-            % Slip angle @ rear axle [rad]
+            % OBS: No steering angle because it measures the angle between
+            % velocity vector and longitudinal axle of the vehicle Slip
+            % angle @ rear axle [rad]
             ALPHAR = atan2((-b * dPSI + VEL.*sin(ALPHAT)),(VEL.*cos(ALPHAT)));
-            % OBS: When using atan2 and the value reaches 180 degrees the vector becomes strange
+            % OBS: When using atan2 and the value reaches 180 degrees the
+            % vector becomes strange
 
             % Velocity @ front axle [m/s]
             VF = sqrt((VEL.*cos(ALPHAT)).^2 + (a * dPSI + VEL.*sin(ALPHAT)).^2);
@@ -151,22 +154,24 @@ classdef Graphics
                 velt(i, 1:2) = interp1(TOUT, VEL, TEMPO(i));
             end
 
-
-            figWidth = 20 ;                             % Defining the width of the figure [centimeters]
-            Scale = 1; % Adjust the scale of y in relation to x
-            % Margins added to Position to include text labels [left bottom right top] Property - TightInset (read only)
+            % Figure settings
+            figWidth    = 20 ;                          % Defining the width of the figure [centimeters]
+            ScaleXY     = self.Scale; 
+            % Margins added to Position to include text labels [left bottom
+            % right top] Property - TightInset (read only)
             tight = [1.3 1.3 0.2 0.2];
-            PosAxX = figWidth - tight(1) - tight(3);     % Width of the axes (axes position x)
-            XLim = [min(XT)-20 max(XT)+10];              % Limits of x
-            rangeX = XLim(2) - XLim(1);                  % Range of x
-            YLim = [min(YT)-5 max(YT)+5];              % Limits of y
-            % YLim = [min(YT)-10 max(YT)+10];              % Limits of y
-            rangeY = YLim(2) - YLim(1);                  % Range of y
-            PosAxY = Scale*PosAxX*rangeY/rangeX;         % Height of the axes (axes position y) - Equivalent to axis
+            PosAxX = figWidth - tight(1) - tight(3);    % Width of the axes (axes position x)
+            XLim = [min(XT)-20 max(XT)+10];             % Limits of x
+            rangeX = XLim(2) - XLim(1);                 % Range of x
+            YLim = [min(YT)-5 max(YT)+5];               % Limits of y
+            % YLim = [min(YT)-10 max(YT)+10];             % Limits of y
+            rangeY = YLim(2) - YLim(1);                     % Range of y
+            PosAxY = ScaleXY*PosAxX*rangeY/rangeX;          % Height of the axes (axes position y) - Equivalent to axis
+            
             % Defining figure
             f666 = figure(666);
             % Defining axes
-            ax666=gca;
+            ax666 = gca;
             set(ax666,'NextPlot','add')                 % hold on
 
             % Description
@@ -272,9 +277,9 @@ classdef Graphics
                 set(f666,'Units','centimeters')         % Changing units of the figure to centimeters
                 set(f666,'PaperUnits','centimeters')    % Changing units of the paper to centimeters
                 % Position and size of the figure window
-                set(f666,'Position',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+                set(f666,'Position',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 % Position and size of the figure on the printed page
-                set(f666,'PaperPosition',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+                set(f666,'PaperPosition',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 % % Size of the paper
                 set(f666,'PaperSize',[PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 set(ax666,'Units','centimeters')        % Changing units of the axes to centimeters
@@ -323,11 +328,11 @@ classdef Graphics
                 set(f666,'Units','centimeters')         % Changing units of the figure to centimeters
                 set(f666,'PaperUnits','centimeters')    % Changing units of the paper to centimeters
                 % Position and size of the figure window
-                set(f666,'Position',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+                set(f666,'Position',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 % Position and size of the figure on the printed page
-                set(f666,'PaperPosition',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+%                 set(f666,'PaperPosition',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 % % Size of the paper
-                set(f666,'PaperSize',[PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+%                 set(f666,'PaperSize',[PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
                 set(ax666,'Units','centimeters')        % Changing units of the axes to centimeters
 
                 % Setting axes
@@ -335,6 +340,7 @@ classdef Graphics
                 set(ax666,'YLim',YLim)
                 set(ax666,'Position',[tight(1:2) PosAxX PosAxY])
                 set(ax666,'Box','on','XGrid','on','YGrid','on','ZGrid','on')
+                
                 if nargin == 2
                     [pathstr, name, ext] = fileparts(varargin{1});
 
@@ -382,8 +388,8 @@ classdef Graphics
 
             % States
             TOUT = self.Simulator.TSpan;
-            XT = self.Simulator.XT;         % Horizontal position [m]
-            YT = self.Simulator.YT;         % Vertical position [m]
+            XT = self.Simulator.XT;         % X position            [m]
+            YT = self.Simulator.YT;         % Y position            [m]
             PSI = self.Simulator.PSI;       % Vehicle yaw angle [rad]
             VEL = self.Simulator.VEL;       % Vehicle CG velocity [m/s]
             ALPHAT = self.Simulator.ALPHAT; % Vehicle side slip angle [rad]
@@ -502,22 +508,23 @@ classdef Graphics
                 velt(i, 1:2) = interp1(TOUT, VEL, TEMPO(i));
             end
 
-            figWidth = 20 ;                             % Defining the width of the figure [centimeters]
-            Scale = 1; % Adjust the scale of y in relation to x
-            % Margins added to Position to include text labels [left bottom right top] Property - TightInset (read only)
+            figWidth    = 20 ; % Defining the width of the figure [centimeters]
+            ScaleXY     = self.Scale; % Adjust the scale of y in relation to x
+            % Margins added to Position to include text labels [left bottom
+            % right top] Property - TightInset (read only)
             tight = [1.3 1.3 0.2 0.2];
-            PosAxX = figWidth - tight(1) - tight(3);     % Width of the axes (axes position x)
-            XLim = [min(XT)-20 max(XT)+10];              % Limits of x
-            rangeX = XLim(2) - XLim(1);                  % Range of x
-            YLim = [min(YT)-10 max(YT)+10];              % Limits of y
-            rangeY = YLim(2) - YLim(1);                  % Range of y
-            PosAxY = Scale*PosAxX*rangeY/rangeX;         % Height of the axes (axes position y) - Equivalent to axis
+            PosAxX  = figWidth - tight(1) - tight(3);     % Width of the axes (axes position x)
+            XLim    = [min(XT)-20 max(XT)+10];              % Limits of x
+            rangeX  = XLim(2) - XLim(1);                  % Range of x
+            YLim    = [min(YT)-10 max(YT)+10];              % Limits of y
+            rangeY  = YLim(2) - YLim(1);                  % Range of y
+            PosAxY  = ScaleXY*PosAxX*rangeY/rangeX;         % Height of the axes (axes position y) - Equivalent to axis
 
             % Defining figure
-            f999 = figure(999);
+            f999    = figure(999);
             % Defining axes
-            ax999=gca;
-            set(ax999,'NextPlot','add')                 % hold on
+            ax999   = gca;
+            set(ax999,'NextPlot','add') % hold on
 
             xlabel('Distance [m]')
             ylabel('Distance [m]')
@@ -530,7 +537,6 @@ classdef Graphics
 
             plot(ef(:,1),ef(:,2),'r')
             plot(er(:,1),er(:,2),'g')
-
 
             for j = 1:length(TEMPO)
                 % Coordinates of the corners
@@ -627,9 +633,9 @@ classdef Graphics
             set(f999,'Units','centimeters')         % Changing units of the figure to centimeters
             set(f999,'PaperUnits','centimeters')    % Changing units of the paper to centimeters
             % Position and size of the figure window
-            set(f999,'Position',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+            set(f999,'Position',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
             % Position and size of the figure on the printed page
-            set(f999,'PaperPosition',[0 0 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
+            set(f999,'PaperPosition',[1 2 PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
             % % Size of the paper
             set(f999,'PaperSize',[PosAxX+tight(1)+tight(3) PosAxY+tight(2)+tight(4)])
 
@@ -772,10 +778,6 @@ classdef Graphics
         Simulator
         TractorColor
         SemitrailerColor
+        Scale % Adjust the scale of y in relation to x
     end
 end
-
-%% See Also
-%
-% <../../index.html Home>
-%

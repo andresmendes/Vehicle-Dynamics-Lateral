@@ -8,7 +8,7 @@
 %% Description
 % The typical relation between the lateral force and the slip angle can be observed in the figure below (Adapted from [1]). Besides, its possible to verify the definition of slip angle.
 %
-% <<../illustrations/CurvaCaracteristica.svg>>
+% <<../../../docs/illustrations/CurvaCaracteristica.svg>>
 %
 %% Equivalence
 % Given a reference Pacejka tire model it is possible to obtain an equivalent linear and polynomial model. The cornering stiffness of all models must be equal and the maximal lateral force of the Pacejka and Polynomial models must be the same.
@@ -31,6 +31,8 @@
 %
 
 % Code start
+
+clear ; close all ; clc
 
 deriva = (0:0.1:15)*pi/180;         % ngulo de deriva [rad]
 
@@ -156,5 +158,5 @@ set(l, 'Interpreter', 'Latex', 'Location', 'SouthEast')
 %
 %% See Also
 %
-% <../index.html Home>
+% <../../../docs/index.html Home>
 %

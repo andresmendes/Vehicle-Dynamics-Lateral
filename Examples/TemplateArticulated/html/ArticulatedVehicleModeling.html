@@ -1,0 +1,435 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Articulated Vehicle Modeling</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-18"><meta name="DC.source" content="ArticulatedVehicleModeling.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Articulated Vehicle Modeling</h1><!--introduction--><p>This scipt derives the equations of motion from the nonlinear articulated vehicle model.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initialization</a></li><li><a href="#2">Generalized coordinates as a function of time</a></li><li><a href="#3">Array of generalized coordinates and time derivatives</a></li><li><a href="#4">Alternative velocity related variables</a></li><li><a href="#5">Conversion variables</a></li><li><a href="#6">Position</a></li><li><a href="#7">Velocity</a></li><li><a href="#8">Forces</a></li><li><a href="#9">Energy</a></li><li><a href="#10">Euler-Lagrange</a></li><li><a href="#11">Equations</a></li></ul></div><h2 id="1">Initialization</h2><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
+</pre><h2 id="2">Generalized coordinates as a function of time</h2><p>Defining Symbols (sym) and Symbolic Functions (symfun). The subscript t indicates time symbolic functions.</p><p>See <a href="https://www.mathworks.com/help/symbolic/create-symbolic-functions.html">create-symbolic-functions</a>.</p><pre class="codeinput"><span class="comment">% Generalized coordinates (symfun)</span>
+syms <span class="string">x_t(t)</span> <span class="string">y_t(t)</span> <span class="string">PSI_t(t)</span> <span class="string">PHI_t(t)</span>
+<span class="comment">% Generalized coordinates and time derivatives (sym)</span>
+syms <span class="string">x</span> <span class="string">dx</span> <span class="string">ddx</span> <span class="string">y</span> <span class="string">dy</span> <span class="string">ddy</span> <span class="string">PSI</span> <span class="string">dPSI</span> <span class="string">ddPSI</span> <span class="string">PHI</span> <span class="string">dPHI</span> <span class="string">ddPHI</span>
+
+<span class="comment">% Alternative velocity related variables: Side slip angle and speed</span>
+<span class="comment">% Alternative variables (symfun)</span>
+syms <span class="string">ALPHAT_t(t)</span> <span class="string">VT_t(t)</span>
+<span class="comment">% Alternative variables and time derivatives (sym)</span>
+syms <span class="string">VT</span> <span class="string">ALPHAT</span> <span class="string">dVTA</span> <span class="string">dALPHAT</span>
+
+<span class="comment">% Inputs</span>
+syms <span class="string">deltaf</span> <span class="string">FxF</span> <span class="string">FxR</span> <span class="string">FxM</span>
+<span class="comment">% Tire lateral forces</span>
+syms <span class="string">FyF</span> <span class="string">FyR</span> <span class="string">FyM</span>
+<span class="comment">% Vehicle parameters</span>
+syms <span class="string">a</span> <span class="string">b</span> <span class="string">c</span> <span class="string">d</span> <span class="string">e</span> <span class="string">mT</span> <span class="string">mS</span> <span class="string">IT</span> <span class="string">IS</span>
+</pre><h2 id="3">Array of generalized coordinates and time derivatives</h2><p>symfun</p><pre class="codeinput">q_t     = [x_t y_t PSI_t PHI_t];
+dq_t    = diff(q_t,t);
+ddq_t   = diff(diff(q_t,t));
+<span class="comment">% sym</span>
+q       = [ x   y   PSI   PHI];
+dq      = [ dx  dy  dPSI  dPHI];
+ddq     = [ ddx ddy ddPSI ddPHI];
+</pre><h2 id="4">Alternative velocity related variables</h2><pre class="codeinput">altVar_t    = [ALPHAT_t(t) VT_t(t)];
+altVarD1_t  = diff(altVar_t,t);
+altVar      = [ALPHAT VT];
+altVarD1    = [dALPHAT dVTA];
+</pre><h2 id="5">Conversion variables</h2><p>Array to switch symfun <a href="-">-</a> sym</p><pre class="codeinput">symfunVariables = [q_t  dq_t    ddq_t   altVar_t    altVarD1_t  ];
+symVariables    = [q    dq      ddq     altVar      altVarD1    ];
+</pre><h2 id="6">Position</h2><pre class="codeinput"><span class="comment">% CG position</span>
+PTO_t = [x_t y_t 0];                                        <span class="comment">% P_{T/O}</span>
+PSO_t = [x_t-(b+c)*cos(PSI_t)-d*cos(PSI_t-PHI_t)<span class="keyword">...</span>
+         y_t-(b+c)*sin(PSI_t)-d*sin(PSI_t-PHI_t)<span class="keyword">...</span>
+         0                                      ];          <span class="comment">% P_{S/O}</span>
+
+<span class="comment">% Axles position</span>
+PFT_t = [ a*cos(PSI_t)  a*sin(PSI_t) 0];                    <span class="comment">% P_{F/T}</span>
+PRT_t = [-b*cos(PSI_t) -b*sin(PSI_t) 0];                    <span class="comment">% P_{R/T}</span>
+PFO_t = PFT_t + PTO_t;                                      <span class="comment">% P_{F/O}</span>
+PRO_t = PRT_t + PTO_t ;                                     <span class="comment">% P_{R/O}</span>
+
+PFO = subs(PFO_t,symfunVariables,symVariables);             <span class="comment">% P_{F/O}</span>
+PRO = subs(PRO_t,symfunVariables,symVariables);             <span class="comment">% P_{R/O}</span>
+PMO = [x-(b+c)*cos(PSI)-(d+e)*cos(PSI-PHI)<span class="keyword">...</span>
+       y-(b+c)*sin(PSI)-(d+e)*sin(PSI-PHI)<span class="keyword">...</span>
+       0                                        ];          <span class="comment">% P_{M/O}</span>
+</pre><h2 id="7">Velocity</h2><pre class="codeinput"><span class="comment">% Angular velocity</span>
+wT_t        = [0 0 diff(PSI_t,t)];
+wS_t        = [0 0 diff(PSI_t,t)-diff(PHI_t,t)];
+
+<span class="comment">% Velocity truck CG (T)</span>
+VTdiff_t    = diff(PTO_t,t);
+VTdiff      = subs(VTdiff_t,symfunVariables,symVariables);
+
+<span class="comment">% Velocity semitrailer CG (S)</span>
+vSdiff_t    = diff(PSO_t,t);
+vSdiff      = subs(vSdiff_t,symfunVariables,symVariables);
+
+<span class="comment">% Velocity truck - Alternative definition</span>
+dx_Alt_t    = VT_t*cos(PSI_t + ALPHAT_t);
+dy_Alt_t    = VT_t*sin(PSI_t + ALPHAT_t);
+dx_Alt      = subs(dx_Alt_t,symfunVariables,symVariables);
+dy_Alt      = subs(dy_Alt_t,symfunVariables,symVariables);
+
+<span class="comment">% Acceleration truck - Alternative definition</span>
+ddx_Alt_t   = simplify(diff(dx_Alt_t,t));
+ddy_Alt_t   = simplify(diff(dy_Alt_t,t));
+ddx_Alt     = subs(ddx_Alt_t,symfunVariables,symVariables);
+ddy_Alt     = subs(ddy_Alt_t,symfunVariables,symVariables);
+</pre><h2 id="8">Forces</h2><pre class="codeinput"><span class="comment">% Force vectors</span>
+FF = [FxF*cos(PSI+deltaf)-FyF*sin(PSI+deltaf) FxF*sin(PSI+deltaf)+FyF*cos(PSI+deltaf) 0];
+FR = [FxR*cos(PSI)-FyR*sin(PSI) FxR*sin(PSI)+FyR*cos(PSI) 0];
+FM = [FxM*cos(PSI-PHI)-FyM*sin(PSI-PHI) FxM*sin(PSI-PHI)+FyM*cos(PSI-PHI) 0];
+
+<span class="comment">% Generalized forces</span>
+Q1 = FF*diff(PFO,x)'    + FR*diff(PRO,x)'    + FM*diff(PMO,x)';
+Q2 = FF*diff(PFO,y)'    + FR*diff(PRO,y)'    + FM*diff(PMO,y)';
+Q3 = FF*diff(PFO,PSI).' + FR*diff(PRO,PSI).' + FM*diff(PMO,PSI).';
+Q4 = FF*diff(PFO,PHI).' + FR*diff(PRO,PHI).' + FM*diff(PMO,PHI).';
+
+<span class="comment">% Generalized forces array</span>
+Q = formula(simplify([Q1 ; Q2 ; Q3 ; Q4]));
+</pre><h2 id="9">Energy</h2><pre class="codeinput">T = 1/2*mT*(VTdiff*VTdiff.') + 1/2*mS*(vSdiff*vSdiff.') + 1/2*IT*dPSI^2 + 1/2*IS*(dPSI-dPHI)^2;
+</pre><h2 id="10">Euler-Lagrange</h2><p>\(\frac{\partial T}{\partial q_k}\)</p><pre class="codeinput">dTdq1 = diff(T,x);
+dTdq2 = diff(T,y);
+dTdq3 = diff(T,PSI);
+dTdq4 = diff(T,PHI);
+dTdq = [ dTdq1 ; dTdq2 ; dTdq3 ; dTdq4 ];
+dTdq = subs(dTdq,symVariables,symfunVariables);
+<span class="comment">% \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_k} \right)</span>
+dTddq1 = diff(T,dx);
+dTddq2 = diff(T,dy);
+dTddq3 = diff(T,dPSI);
+dTddq4 = diff(T,dPHI);
+dTddq  = [ dTddq1 ; dTddq2 ; dTddq3 ; dTddq4 ];
+dTddq  = subs(dTddq,symVariables,symfunVariables);
+ddTddq = diff(dTddq,t);
+</pre><h2 id="11">Equations</h2><p>Euler-Lagrante - Left side</p><pre class="codeinput">EQ = ddTddq-dTdq;
+EQ = subs(EQ,symfunVariables,symVariables);
+EQ = formula(simplify(subs(EQ,[dx dy ddx ddy],[dx_Alt dy_Alt ddx_Alt ddy_Alt])));
+
+<span class="comment">% Reference:</span>
+<span class="comment">% M =     [   1  0   0   0   0   0   0   0    ;...</span>
+<span class="comment">%             0  1   0   0   0   0   0   0    ;...</span>
+<span class="comment">%             0  0   1   0   0   0   0   0    ;...</span>
+<span class="comment">%             0  0   0   1   0   0   0   0    ;...</span>
+<span class="comment">%             0  0   0   0   M55 M56 M57 M58  ;...</span>
+<span class="comment">%             0  0   0   0   M65 M66 M67 M68  ;...</span>
+<span class="comment">%             0  0   0   0   M75 M76 M77 M78  ;...</span>
+<span class="comment">%             0  0   0   0   M85 M86 M87 M88  ];...</span>
+
+dvar = [dVTA dALPHAT ddPSI ddPHI];
+<span class="comment">% Prealocating</span>
+M = sym(eye(8));
+<span class="keyword">for</span> i=1:length(EQ)
+    <span class="keyword">for</span> j=1:length(dvar)
+        [C,~]       = coeffs(EQ(i),dvar(j));
+        M(i+4,j+4)    = C(1);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+M = simplify(M)
+
+<span class="comment">% Euler-Lagrante - Right side</span>
+
+dq_Alt = formula(subs(dq,[dx dy ddx ddy],[dx_Alt dy_Alt ddx_Alt ddy_Alt]));
+
+f1 = dq_Alt.';
+f2 = simplify(Q - (EQ - M(5:end,5:end)*dvar.'));
+f = [ f1 ; f2]
+
+<span class="comment">% inputs          = [deltaf FxF FxR FxM];</span>
+<span class="comment">% lateralforces   = [FyF FyR FyM];</span>
+<span class="comment">% parameters      = [a b c d e mT mS IT IS];</span>
+<span class="comment">% states          = [x y PSI PHI ALPHAT VT dPSI dPHI];</span>
+
+matlabFunction(f,<span class="string">'File'</span>,<span class="string">'f_function'</span>,<span class="string">'Comments'</span>,<span class="string">'Version: 1.1'</span>)
+matlabFunction(M,<span class="string">'File'</span>,<span class="string">'M_function'</span>,<span class="string">'Comments'</span>,<span class="string">'Version: 1.1'</span>)
+</pre><pre class="codeoutput"> 
+M =
+ 
+[ 1, 0, 0, 0,                                                         0,                                                            0,                                                                                     0,                                                 0]
+[ 0, 1, 0, 0,                                                         0,                                                            0,                                                                                     0,                                                 0]
+[ 0, 0, 1, 0,                                                         0,                                                            0,                                                                                     0,                                                 0]
+[ 0, 0, 0, 1,                                                         0,                                                            0,                                                                                     0,                                                 0]
+[ 0, 0, 0, 0,                               cos(ALPHAT + PSI)*(mS + mT),                              -VT*sin(ALPHAT + PSI)*(mS + mT),                                      (mS*(2*sin(PSI)*(b + c) - 2*d*sin(PHI - PSI)))/2,                               d*mS*sin(PHI - PSI)]
+[ 0, 0, 0, 0,                               sin(ALPHAT + PSI)*(mS + mT),                               VT*cos(ALPHAT + PSI)*(mS + mT),                                     -(mS*(2*cos(PSI)*(b + c) + 2*d*cos(PHI - PSI)))/2,                               d*mS*cos(PHI - PSI)]
+[ 0, 0, 0, 0, -mS*(d*sin(ALPHAT + PHI) + b*sin(ALPHAT) + c*sin(ALPHAT)), -VT*mS*(d*cos(ALPHAT + PHI) + b*cos(ALPHAT) + c*cos(ALPHAT)), mS*b^2 + 2*mS*b*c + 2*mS*cos(PHI)*b*d + mS*c^2 + 2*mS*cos(PHI)*c*d + mS*d^2 + IS + IT, - IS - d^2*mS - b*d*mS*cos(PHI) - c*d*mS*cos(PHI)]
+[ 0, 0, 0, 0,                                    d*mS*sin(ALPHAT + PHI),                                    VT*d*mS*cos(ALPHAT + PHI),                                     - IS - d^2*mS - b*d*mS*cos(PHI) - c*d*mS*cos(PHI),                                       mS*d^2 + IS]
+ 
+ 
+f =
+ 
+                                                                                                                                                                                                                                                                                                                   VT*cos(ALPHAT + PSI)
+                                                                                                                                                                                                                                                                                                                   VT*sin(ALPHAT + PSI)
+                                                                                                                                                                                                                                                                                                                                   dPSI
+                                                                                                                                                                                                                                                                                                                                   dPHI
+          FxF*cos(PSI + deltaf) - FyF*sin(PSI + deltaf) + FxR*cos(PSI) + FxM*cos(PHI - PSI) - FyR*sin(PSI) + FyM*sin(PHI - PSI) - b*dPSI^2*mS*cos(PSI) - c*dPSI^2*mS*cos(PSI) - d*dPHI^2*mS*cos(PHI - PSI) - d*dPSI^2*mS*cos(PHI - PSI) + VT*dPSI*mS*sin(ALPHAT + PSI) + VT*dPSI*mT*sin(ALPHAT + PSI) + 2*d*dPHI*dPSI*mS*cos(PHI - PSI)
+          FyF*cos(PSI + deltaf) + FxF*sin(PSI + deltaf) + FyR*cos(PSI) + FyM*cos(PHI - PSI) + FxR*sin(PSI) - FxM*sin(PHI - PSI) - b*dPSI^2*mS*sin(PSI) - c*dPSI^2*mS*sin(PSI) + d*dPHI^2*mS*sin(PHI - PSI) + d*dPSI^2*mS*sin(PHI - PSI) - VT*dPSI*mS*cos(ALPHAT + PSI) - VT*dPSI*mT*cos(ALPHAT + PSI) - 2*d*dPHI*dPSI*mS*sin(PHI - PSI)
+ FxM*b*sin(PHI) - FyM*d - FyM*e - FyM*b*cos(PHI) - FyM*c*cos(PHI) - FyR*b + FxM*c*sin(PHI) + FyF*a*cos(deltaf) + FxF*a*sin(deltaf) - b*d*dPHI^2*mS*sin(PHI) - c*d*dPHI^2*mS*sin(PHI) + VT*d*dPSI*mS*cos(ALPHAT + PHI) + VT*b*dPSI*mS*cos(ALPHAT) + VT*c*dPSI*mS*cos(ALPHAT) + 2*b*d*dPHI*dPSI*mS*sin(PHI) + 2*c*d*dPHI*dPSI*mS*sin(PHI)
+                                                                                                                                                                                                                                       FyM*d + FyM*e - b*d*dPSI^2*mS*sin(PHI) - c*d*dPSI^2*mS*sin(PHI) - VT*d*dPSI*mS*cos(ALPHAT + PHI)
+ 
+
+ans =
+
+  function_handle with value:
+
+    @f_function
+
+
+ans =
+
+  function_handle with value:
+
+    @M_function
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Articulated Vehicle Modeling
+% This scipt derives the equations of motion from the nonlinear articulated
+% vehicle model.
+%
+%% Initialization
+%
+
+clear ; close all ; clc
+
+%% Generalized coordinates as a function of time
+% Defining Symbols (sym) and Symbolic Functions (symfun). The subscript t
+% indicates time symbolic functions.
+%
+% See
+% <https://www.mathworks.com/help/symbolic/create-symbolic-functions.html create-symbolic-functions>.
+%
+
+% Generalized coordinates (symfun)
+syms x_t(t) y_t(t) PSI_t(t) PHI_t(t)
+% Generalized coordinates and time derivatives (sym)
+syms x dx ddx y dy ddy PSI dPSI ddPSI PHI dPHI ddPHI
+
+% Alternative velocity related variables: Side slip angle and speed
+% Alternative variables (symfun)
+syms ALPHAT_t(t) VT_t(t)
+% Alternative variables and time derivatives (sym)
+syms VT ALPHAT dVTA dALPHAT
+
+% Inputs 
+syms deltaf FxF FxR FxM
+% Tire lateral forces
+syms FyF FyR FyM
+% Vehicle parameters 
+syms a b c d e mT mS IT IS
+
+%% Array of generalized coordinates and time derivatives
+% symfun
+q_t     = [x_t y_t PSI_t PHI_t];
+dq_t    = diff(q_t,t);
+ddq_t   = diff(diff(q_t,t));
+% sym
+q       = [ x   y   PSI   PHI];
+dq      = [ dx  dy  dPSI  dPHI];
+ddq     = [ ddx ddy ddPSI ddPHI];
+
+%% Alternative velocity related variables 
+altVar_t    = [ALPHAT_t(t) VT_t(t)];
+altVarD1_t  = diff(altVar_t,t);
+altVar      = [ALPHAT VT];
+altVarD1    = [dALPHAT dVTA];
+
+%% Conversion variables
+% Array to switch symfun <-> sym
+symfunVariables = [q_t  dq_t    ddq_t   altVar_t    altVarD1_t  ];
+symVariables    = [q    dq      ddq     altVar      altVarD1    ];
+
+%% Position
+
+% CG position
+PTO_t = [x_t y_t 0];                                        % P_{T/O}
+PSO_t = [x_t-(b+c)*cos(PSI_t)-d*cos(PSI_t-PHI_t)...
+         y_t-(b+c)*sin(PSI_t)-d*sin(PSI_t-PHI_t)... 
+         0                                      ];          % P_{S/O}
+
+% Axles position
+PFT_t = [ a*cos(PSI_t)  a*sin(PSI_t) 0];                    % P_{F/T}
+PRT_t = [-b*cos(PSI_t) -b*sin(PSI_t) 0];                    % P_{R/T}
+PFO_t = PFT_t + PTO_t;                                      % P_{F/O}
+PRO_t = PRT_t + PTO_t ;                                     % P_{R/O}
+
+PFO = subs(PFO_t,symfunVariables,symVariables);             % P_{F/O}
+PRO = subs(PRO_t,symfunVariables,symVariables);             % P_{R/O}
+PMO = [x-(b+c)*cos(PSI)-(d+e)*cos(PSI-PHI)...
+       y-(b+c)*sin(PSI)-(d+e)*sin(PSI-PHI)... 
+       0                                        ];          % P_{M/O}
+
+%% Velocity 
+
+% Angular velocity
+wT_t        = [0 0 diff(PSI_t,t)];
+wS_t        = [0 0 diff(PSI_t,t)-diff(PHI_t,t)];
+
+% Velocity truck CG (T)
+VTdiff_t    = diff(PTO_t,t);
+VTdiff      = subs(VTdiff_t,symfunVariables,symVariables);
+
+% Velocity semitrailer CG (S)
+vSdiff_t    = diff(PSO_t,t);
+vSdiff      = subs(vSdiff_t,symfunVariables,symVariables);
+
+% Velocity truck - Alternative definition
+dx_Alt_t    = VT_t*cos(PSI_t + ALPHAT_t);
+dy_Alt_t    = VT_t*sin(PSI_t + ALPHAT_t);
+dx_Alt      = subs(dx_Alt_t,symfunVariables,symVariables);
+dy_Alt      = subs(dy_Alt_t,symfunVariables,symVariables);
+
+% Acceleration truck - Alternative definition
+ddx_Alt_t   = simplify(diff(dx_Alt_t,t));
+ddy_Alt_t   = simplify(diff(dy_Alt_t,t));
+ddx_Alt     = subs(ddx_Alt_t,symfunVariables,symVariables);
+ddy_Alt     = subs(ddy_Alt_t,symfunVariables,symVariables);
+
+%% Forces
+
+% Force vectors
+FF = [FxF*cos(PSI+deltaf)-FyF*sin(PSI+deltaf) FxF*sin(PSI+deltaf)+FyF*cos(PSI+deltaf) 0];
+FR = [FxR*cos(PSI)-FyR*sin(PSI) FxR*sin(PSI)+FyR*cos(PSI) 0];
+FM = [FxM*cos(PSI-PHI)-FyM*sin(PSI-PHI) FxM*sin(PSI-PHI)+FyM*cos(PSI-PHI) 0];
+
+% Generalized forces
+Q1 = FF*diff(PFO,x)'    + FR*diff(PRO,x)'    + FM*diff(PMO,x)';
+Q2 = FF*diff(PFO,y)'    + FR*diff(PRO,y)'    + FM*diff(PMO,y)';
+Q3 = FF*diff(PFO,PSI).' + FR*diff(PRO,PSI).' + FM*diff(PMO,PSI).';
+Q4 = FF*diff(PFO,PHI).' + FR*diff(PRO,PHI).' + FM*diff(PMO,PHI).';
+
+% Generalized forces array
+Q = formula(simplify([Q1 ; Q2 ; Q3 ; Q4]));
+
+%% Energy
+
+T = 1/2*mT*(VTdiff*VTdiff.') + 1/2*mS*(vSdiff*vSdiff.') + 1/2*IT*dPSI^2 + 1/2*IS*(dPSI-dPHI)^2;
+
+%% Euler-Lagrange
+%
+% \(\frac{\partial T}{\partial q_k}\)
+%
+
+dTdq1 = diff(T,x);
+dTdq2 = diff(T,y);
+dTdq3 = diff(T,PSI);
+dTdq4 = diff(T,PHI);
+dTdq = [ dTdq1 ; dTdq2 ; dTdq3 ; dTdq4 ];
+dTdq = subs(dTdq,symVariables,symfunVariables);
+% \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{q}_k} \right)
+dTddq1 = diff(T,dx);
+dTddq2 = diff(T,dy);
+dTddq3 = diff(T,dPSI);
+dTddq4 = diff(T,dPHI);
+dTddq  = [ dTddq1 ; dTddq2 ; dTddq3 ; dTddq4 ];
+dTddq  = subs(dTddq,symVariables,symfunVariables);
+ddTddq = diff(dTddq,t);
+
+%% Equations
+% Euler-Lagrante - Left side
+EQ = ddTddq-dTdq;
+EQ = subs(EQ,symfunVariables,symVariables);
+EQ = formula(simplify(subs(EQ,[dx dy ddx ddy],[dx_Alt dy_Alt ddx_Alt ddy_Alt])));
+
+% Reference:
+% M =     [   1  0   0   0   0   0   0   0    ;...
+%             0  1   0   0   0   0   0   0    ;...
+%             0  0   1   0   0   0   0   0    ;...
+%             0  0   0   1   0   0   0   0    ;...
+%             0  0   0   0   M55 M56 M57 M58  ;...
+%             0  0   0   0   M65 M66 M67 M68  ;...
+%             0  0   0   0   M75 M76 M77 M78  ;...
+%             0  0   0   0   M85 M86 M87 M88  ];...
+ 
+dvar = [dVTA dALPHAT ddPSI ddPHI];
+% Prealocating
+M = sym(eye(8));
+for i=1:length(EQ)
+    for j=1:length(dvar)
+        [C,~]       = coeffs(EQ(i),dvar(j));
+        M(i+4,j+4)    = C(1);
+    end
+end
+
+M = simplify(M)
+
+% Euler-Lagrante - Right side
+
+dq_Alt = formula(subs(dq,[dx dy ddx ddy],[dx_Alt dy_Alt ddx_Alt ddy_Alt]));
+
+f1 = dq_Alt.';
+f2 = simplify(Q - (EQ - M(5:end,5:end)*dvar.'));
+f = [ f1 ; f2]
+
+% inputs          = [deltaf FxF FxR FxM];
+% lateralforces   = [FyF FyR FyM];
+% parameters      = [a b c d e mT mS IT IS];
+% states          = [x y PSI PHI ALPHAT VT dPSI dPHI];
+
+matlabFunction(f,'File','f_function','Comments','Version: 1.1')
+matlabFunction(M,'File','M_function','Comments','Version: 1.1')
+##### SOURCE END #####
+--></body></html>

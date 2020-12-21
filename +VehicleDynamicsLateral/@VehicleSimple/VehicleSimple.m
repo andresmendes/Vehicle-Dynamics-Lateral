@@ -23,6 +23,7 @@ classdef (Abstract) VehicleSimple
         muy    % Operational friction coefficient
         tire   % Tire model
         deltaf % Steering angle [rad]
+        deltar % Steering angle [rad]
         Fxf    % Longitudinal force at F [rad]
         Fxr    % Longitudinal force at R [rad]
     end
