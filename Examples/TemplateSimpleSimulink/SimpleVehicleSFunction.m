@@ -92,7 +92,7 @@ sizes = simsizes;
 sizes.NumContStates  = 6;
 sizes.NumDiscStates  = 0;
 sizes.NumOutputs     = 6;
-sizes.NumInputs      = 3;
+sizes.NumInputs      = 4;
 sizes.DirFeedthrough = 1;
 sizes.NumSampleTimes = 1;
 
@@ -117,8 +117,9 @@ function sys = mdlDerivatives(t,x,u,vehicle)
 
 % Defining input
 vehicle.deltaf  = u(1);
-vehicle.Fxf     = u(2);
-vehicle.Fxr     = u(3);
+vehicle.deltar  = u(2);
+vehicle.Fxf     = u(3);
+vehicle.Fxr     = u(4);
 
 % Getting the vehicle model function (state equations)
 ModelFunction   = @vehicle.Model;

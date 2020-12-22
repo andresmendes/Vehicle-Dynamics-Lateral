@@ -1,4 +1,4 @@
-%% Vehicle Articulated Modeling
+%% Vehicle Articulated Nonlinear Modeling
 % This scipt derives the equations of motion from the nonlinear articulated
 % vehicle model.
 %
@@ -84,9 +84,9 @@ q_t     = [x_t y_t PSI_t PHI_t];
 dq_t    = diff(q_t,t);
 ddq_t   = diff(diff(q_t,t));
 % sym
-q       = [ x   y   PSI   PHI];
-dq      = [ dx  dy  dPSI  dPHI];
-ddq     = [ ddx ddy ddPSI ddPHI];
+q       = [ x   y   PSI   PHI   ];
+dq      = [ dx  dy  dPSI  dPHI  ];
+ddq     = [ ddx ddy ddPSI ddPHI ];
 
 %% Alternative velocity related variables 
 % <html>
@@ -134,8 +134,8 @@ symVariables    = [q    dq      ddq     altVar      altVarD1    ];
 % <p>Position of axles</p>
 % <p>
 % \begin{eqnarray}
-% \nonumber {\bf p}_{{\rm F}/{\rm O}} &=& {\bf p}_{{\rm F}/{\rm T}} + {\bf p}_{{\rm T}/{\rm O}} = \left( x + a \cos \psi \right) {\bf i} + \left( y + a \sin \psi \right) {\bf j}. \\
-% \nonumber {\bf p}_{{\rm R}/{\rm O}} &=& {\bf p}_{{\rm F}/{\rm T}} + {\bf p}_{{\rm T}/{\rm O}} = \left( x - b \cos \psi \right) {\bf i} + \left( y - b \sin \psi \right) {\bf j}. \\
+% \nonumber {\bf p}_{{\rm F}/{\rm O}} &=& {\bf p}_{{\rm F}/{\rm T}} + {\bf p}_{{\rm T}/{\rm O}} = \left( x + a \cos \psi \right) {\bf i} + \left( y + a \sin \psi \right) {\bf j} \\
+% \nonumber {\bf p}_{{\rm R}/{\rm O}} &=& {\bf p}_{{\rm F}/{\rm T}} + {\bf p}_{{\rm T}/{\rm O}} = \left( x - b \cos \psi \right) {\bf i} + \left( y - b \sin \psi \right) {\bf j} \\
 % \nonumber {\bf p}_{{\rm M}/{\rm O}} &=& {\bf p}_{{\rm M}/{\rm A}} + {\bf p}_{{\rm A}/{\rm T}} + {\bf p}_{{\rm T}/{\rm O}} = \left[ x - \left( b + c \right) \cos \psi - \left( d + e \right) \cos \left( \psi - \phi \right) \right] {\bf i} + \left[ y - \left( b + c \right) \sin \psi - \left( d + e \right) \sin \left( \psi - \phi \right) \right] {\bf j}.
 % \end{eqnarray}
 % </p>
@@ -233,8 +233,7 @@ ddy_Alt     = subs(ddy_Alt_t,symfunVariables,symVariables);
 % \alpha_{\rm M} &=& \arctan \left( \frac{ v_{\rm T} \sin \left( \psi + \alpha_{\rm T} \right) - \left( b + c \right) \dot{\psi} \cos \psi - \left( d + e \right) \left( \dot{\psi} - \dot{\phi} \right) \cos \left( \psi - \phi \right) }{ v_{\rm T} \cos \left( \psi + \alpha_{\rm T} \right) + \left( b + c \right) \dot{\psi} \sin \psi + \left( d + e \right) \left( \dot{\psi} - \dot{\phi} \right) \sin \left( \psi - \phi \right) } \right) - \left( \delta_{\rm M} + \psi - \phi \right) \label{eq:slipangleMfull}
 % \end{eqnarray}
 % </p>
-% <p>Since the definition of slip angle does not actually depend on the orientation, the orientation may be considered zero for simplification. For the tractor, orientation is \(\psi\). Thus, (\(\psi=0\)) in \ref{eq:slipangleFfull} and \ref{eq:slipangleRfull}. For the semitrailer, orientation is \(\psi-\phi\). Thus, \(\psi-\phi=0 \rightarrow  \psi=\phi\) in \ref{eq:slipangleMfull}. Then
-% </p>
+% <p>Since the definition of slip angle does not actually depend on the orientation, the orientation may be considered zero for simplification. For the tractor, orientation is \(\psi\). Thus, (\(\psi=0\)) in \ref{eq:slipangleFfull} and \ref{eq:slipangleRfull}. For the semitrailer, orientation is \(\psi-\phi\). Thus, \(\psi-\phi=0 \rightarrow  \psi=\phi\) in \ref{eq:slipangleMfull}. Then </p>
 % <p>
 % \begin{eqnarray}
 % \nonumber \alpha_{\rm F} &=& \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} + a \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) - \delta_{\rm F} \\
@@ -285,7 +284,7 @@ disp(ALPHAM)
 %     \begin{eqnarray}
 %     \nonumber {\bf F}_{\rm F} &=& F_{x,{\rm F}} \, {\bf e}_x + F_{y,{\rm F}} \, {\bf e}_y \\
 %     \nonumber {\bf F}_{\rm R} &=& F_{x,{\rm R}} {\bf t}_x + F_{y,{\rm R}} {\bf t}_y \\
-%     \nonumber {\bf F}_{\rm R} &=& F_{x,{\rm M}} {\bf s}_x + F_{y,{\rm M}} {\bf s}_y
+%     \nonumber {\bf F}_{\rm M} &=& F_{x,{\rm M}} {\bf s}_x + F_{y,{\rm M}} {\bf s}_y
 %     \end{eqnarray}
 % </p>
 % <p>or</p>
@@ -316,7 +315,7 @@ FM = [FxM*cos(PSI-PHI+deltam)-FyM*sin(PSI-PHI+deltam)   FxM*sin(PSI-PHI+deltam)+
 %     \begin{eqnarray}
 %     \nonumber Q_1 &=& {\bf F}_{\rm F} \cdot \frac{\partial {\bf p}_{{\rm F}/{\rm O}}}{\partial q_1} + {\bf F}_{\rm R} \cdot \frac{\partial {\bf p}_{{\rm R}/{\rm O}}}{\partial q_1} + {\bf F}_{\rm M} \cdot \frac{\partial {\bf p}_{{\rm M}/{\rm O}}}{\partial q_1} \\
 %     \nonumber Q_2 &=& {\bf F}_{\rm F} \cdot \frac{\partial {\bf p}_{{\rm F}/{\rm O}}}{\partial q_2} + {\bf F}_{\rm R} \cdot \frac{\partial {\bf p}_{{\rm R}/{\rm O}}}{\partial q_2} + {\bf F}_{\rm M} \cdot \frac{\partial {\bf p}_{{\rm M}/{\rm O}}}{\partial q_2} \\
-%     \nonumber Q_3 &=& {\bf F}_{\rm F} \cdot \frac{\partial {\bf p}_{{\rm F}/{\rm O}}}{\partial q_3} + {\bf F}_{\rm R} \cdot \frac{\partial {\bf p}_{{\rm R}/{\rm O}}}{\partial q_3} + {\bf F}_{\rm M} \cdot \frac{\partial {\bf p}_{{\rm M}/{\rm O}}}{\partial q_3}, \\
+%     \nonumber Q_3 &=& {\bf F}_{\rm F} \cdot \frac{\partial {\bf p}_{{\rm F}/{\rm O}}}{\partial q_3} + {\bf F}_{\rm R} \cdot \frac{\partial {\bf p}_{{\rm R}/{\rm O}}}{\partial q_3} + {\bf F}_{\rm M} \cdot \frac{\partial {\bf p}_{{\rm M}/{\rm O}}}{\partial q_3} \\
 %     Q_4 &=& {\bf F}_{\rm F} \cdot \frac{\partial {\bf p}_{{\rm F}/{\rm O}}}{\partial q_4} + {\bf F}_{\rm R} \cdot \frac{\partial {\bf p}_{{\rm R}/{\rm O}}}{\partial q_4} + {\bf F}_{\rm M} \cdot \frac{\partial {\bf p}_{{\rm M}/{\rm O}}}{\partial q_4}.\end{eqnarray}
 % </p>
 % <p>Thus</p>
@@ -378,9 +377,9 @@ disp(Q)
 % <p>
 %     \begin{equation} \label{eq:kineticenergy} T = \frac{1}{2} m_{\rm T} {\bf v}_{\rm T} \cdot {\bf v}_{\rm T} + \frac{1}{2} m_{S} {\bf v}_{\rm S} \cdot {\bf v}_{\rm S} + \frac{1}{2} \left\{ {\bf w}_{\rm T} \right\}^T \left[ {\bf J}_{\rm T} \right] \left\{ {\bf w}_{\rm T} \right\} + \frac{1}{2} \left\{ {\bf w}_{\rm S} \right\}^T \left[ {\bf J}_{\rm S} \right] \left\{ {\bf w}_{\rm S} \right\}.\end{equation}
 % </p>
-% <p>Substituting \ref{eq:tractorvelangular}, \ref{eq:semitrailervelangular}, \ref{eq:tractorveltranslation} and \ref{eq:semitrailerveltranslation}   in \ref{eq:kineticenergy} </p>
+% <p>Substituting \ref{eq:tractorvelangular}, \ref{eq:semitrailervelangular}, \ref{eq:tractorveltranslation} and \ref{eq:semitrailerveltranslation} in \ref{eq:kineticenergy} </p>
 % <p>
-%     \begin{equation}T = \frac{1}{2} m_{\rm T} \left( \dot{x}^2 + \dot{y}^2 \right) + \frac{1}{2} m_{S} \left( C_1^2 + C_2^2 \right) + \frac{1}{2} I_{T} \dot{\psi}^2 + \frac{1}{2} I_{S} \left( \dot{\psi} - \dot{\phi} \right)^2,\end{equation}
+%     \begin{equation}T = \frac{1}{2} m_{\rm T} \left( \dot{x}^2 + \dot{y}^2 \right) + \frac{1}{2} m_{\rm S} \left( C_1^2 + C_2^2 \right) + \frac{1}{2} I_{\rm T} \dot{\psi}^2 + \frac{1}{2} I_{\rm S} \left( \dot{\psi} - \dot{\phi} \right)^2,\end{equation}
 % </p>
 % <p>where</p>
 % <p>

@@ -15,22 +15,33 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             self.wT = 2;
             self.muy = .8;
             self.deltaf = 0;
+            self.deltar = 0;
             self.Fxf = 0;
             self.Fxr = 0;
         end
 
-        %% Model
-        % Função com as equações de estado do modelo
         function dx = Model(self, t, states,tspan)
+            % dx = VehicleModel.Model(t,states,tspan)
+            % dx = VehicleModel.MassMatrix(t,states,tspan)
+            %
+            % Sintax
+            % |dx = _VehicleModel_.Model(t,states,tspan)|
+            %
+            % Arguments
+            % The following table describes the input arguments:
+            %
+            % t - Time
+            % states - Model state variables: [XT YT PSI VT ALPHAT dPSI]
+            % tspan - Time span
+            
             % Data
-            m = self.mT;
-            I = self.IT;
-            a = self.a;
-            b = self.b;
-            nF = self.nF;
-            nR = self.nR;
+            mT  = self.mT;
+            IT  = self.IT;
+            a   = self.a;
+            b   = self.b;
+            nF  = self.nF;
+            nR  = self.nR;
             muy = self.muy;
-
 
             g = 9.81;                 % Gravity [m/s^2]
 
@@ -38,30 +49,37 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             FzR = self.mR0 * g;       % Vertical load @ R [N]
 
             % Estados
-            X = states(1);
-            Y = states(2);
-            PSI = states(3);
-            v = states(4);
-            ALPHAT = states(5);
-            dPSI = states(6);
+            X       = states(1);
+            Y       = states(2);
+            PSI     = states(3);
+            VT      = states(4);
+            ALPHAT  = states(5);
+            dPSI    = states(6);
 
-
+            % Steering input
             if isa(self.deltaf,'function_handle')
-                DELTA = self.deltaf([X;Y;PSI;v;ALPHAT;dPSI],t);
+                deltaf = self.deltaf([X;Y;PSI;VT;ALPHAT;dPSI],t);
             elseif length(self.deltaf)>1
-                DELTA = interp1(tspan,self.deltaf,t);
+                deltaf = interp1(tspan,self.deltaf,t);
             else
-                DELTA = self.deltaf;
+                deltaf = self.deltaf;
+            end
+            
+            if isa(self.deltar,'function_handle')
+                deltar = self.deltar([X;Y;PSI;VT;ALPHAT;dPSI],t);
+            elseif length(self.deltar)>1
+                deltar = interp1(tspan,self.deltar,t);
+            else
+                deltar = self.deltar;
             end
 
-
             % Slip angles
-            ALPHAF = atan2((v * sin(ALPHAT) + a * dPSI), (v * cos(ALPHAT))) - DELTA; % Dianteiro
-            ALPHAR = atan2((v * sin(ALPHAT) - b * dPSI), (v * cos(ALPHAT)));         % Traseiro
+            ALPHAF = - deltaf + atan2(a*dPSI + VT*sin(ALPHAT), VT*cos(ALPHAT)); % Dianteiro
+            ALPHAR = - deltar + atan2(VT*sin(ALPHAT) - b*dPSI, VT*cos(ALPHAT));         % Traseiro
 
             % Longitudinal forces
             if isa(self.Fxf,'function_handle')
-                FxF = self.Fxf([X;Y;PSI;v;ALPHAT;dPSI],t);
+                FxF = self.Fxf([X;Y;PSI;VT;ALPHAT;dPSI],t);
             elseif length(self.Fxf)>1
                 FxF = interp1(tspan,self.Fxf,t);
             else
@@ -69,7 +87,7 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             end
 
             if isa(self.Fxr,'function_handle')
-                FxR = self.Fxr([X;Y;PSI;v;ALPHAT;dPSI],t);
+                FxR = self.Fxr([X;Y;PSI;VT;ALPHAT;dPSI],t);
             elseif length(self.Fxr)>1
                 FxR = interp1(tspan,self.Fxr,t);
             else
@@ -81,12 +99,12 @@ classdef VehicleSimpleNonlinear < VehicleDynamicsLateral.VehicleSimple
             FyR = nR * self.tire.Characteristic(ALPHAR, FzR/nR, muy);
 
             % Equations of motion
-            dx(1,1) = v * cos(ALPHAT + PSI); % X
-            dx(2,1) = v * sin(ALPHAT + PSI); % Y
-            dx(3,1) = dPSI; % dPSI
-            dx(4,1) = (FxF * cos(ALPHAT - DELTA) + FxR * cos(ALPHAT) + FyF * sin(ALPHAT - DELTA) + FyR * sin(ALPHAT))/(m);
-            dx(5,1) = ( - FxF * sin(ALPHAT - DELTA) - FxR * sin(ALPHAT) + FyF * cos(ALPHAT - DELTA) + FyR * cos(ALPHAT) - m * v * dPSI) / (m * v);
-            dx(6,1) = (FxF * a * sin(DELTA) + FyF * a * cos(DELTA) - FyR * b) / I;
+            dx(1,1) = VT * cos(ALPHAT + PSI);
+            dx(2,1) = VT*sin(ALPHAT + PSI);
+            dx(3,1) = dPSI;
+            dx(4,1) = (FxF*cos(ALPHAT - deltaf) + FxR*cos(ALPHAT - deltar) + FyF*sin(ALPHAT - deltaf) + FyR*sin(ALPHAT - deltar))/mT;
+            dx(5,1) = -(FxF*sin(ALPHAT - deltaf) - FyR*cos(ALPHAT - deltar) - FyF*cos(ALPHAT - deltaf) + FxR*sin(ALPHAT - deltar) + VT*dPSI*mT)/(VT*mT);
+            dx(6,1) = (FyF*a*cos(deltaf) - FyR*b*cos(deltar) + FxF*a*sin(deltaf) - FxR*b*sin(deltar))/IT;
 
         end
     end
