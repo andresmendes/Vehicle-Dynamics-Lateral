@@ -4,7 +4,7 @@
 
 Vehicle Dynamics - Lateral is part of the [OpenVD Project](https://github.com/andresmendes/openvd).
 
-![](http://andresmendes.github.io/Vehicle-Dynamics-Lateral/illustrations/AnimationTemplateArticulated.gif)
+![](http://andresmendes.github.io/Vehicle-Dynamics-Lateral/Examples/TemplateArticulated/html/TemplateArticulated.gif)
 
 ## Documentation
 
