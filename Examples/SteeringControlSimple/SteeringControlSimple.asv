@@ -8,6 +8,10 @@
 % </html>
 %
 %% Vehicle model
+% *Bicycle model*
+%
+% <<../../../docs/illustrations/modelSimple.svg>>
+%
 % *Nonlinear model*
 %
 % State vector
@@ -169,7 +173,7 @@ VehiclePlant.deltaf = @ControlLaw;
 disp(VehiclePlant)
 
 % Choosing simulation
-T       = 9;                     % Total simulation time             [s]
+T       = 12;                     % Total simulation time             [s]
 resol   = 500;                    % Resolution
 TSPAN   = 0:T/resol:T;            % Time span                         [s]
 
@@ -304,8 +308,6 @@ g.Frame();
     plot([95 130],[0 0],'k--')
 
 g.Animation();
-g.Animation();
-% g.Animation('html/SteeringControlSimple');       % Uncomment to save animation gif
 
 % Retrieving states
 XT      = simulator.XT;
@@ -335,7 +337,7 @@ for ii = 1:length(TSPAN)
 
     u(ii) = - Kplace*x(ii,:)' + Kplace(1)*r;
 
-    % Saturation
+    % Saturation at 42 deg
     if abs(u(ii)) < 42*pi/180
         output(ii) = u(ii);
     else

@@ -4,7 +4,7 @@
 %
 % For class documentation, run:
 %
-% |doc VehicleDynamicsLateral.VehicleArticulatedNonlinear|
+% |doc VehicleDynamicsLateral.VehicleSimpleNonlinear|
 %
 % <html>
 % <!--
@@ -414,7 +414,7 @@ ddTddq = diff(dTddq,t);
 %     \begin{eqnarray}
 %     \nonumber {\rm x}_1 &=& x 				\\
 %     \nonumber {\rm x}_2 &=& y 				\\
-%     \nonumber {\rm x}_3 &=& \psi 			\\
+%     \nonumber {\rm x}_3 &=& \psi              \\
 %     \nonumber {\rm x}_4 &=& v_{\rm T} 		\\
 %     \nonumber {\rm x}_5 &=& \alpha_{\rm T} 	\\
 %     \nonumber {\rm x}_6 &=& \dot{\psi}
@@ -428,7 +428,7 @@ ddTddq = diff(dTddq,t);
 %     \nonumber \dot{{\rm x}}_3 &=& \dot{\psi} \\
 %     \nonumber \dot{{\rm x}}_4 &=& \frac{F_{x,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{x,{\rm R}} \cos \left( \alpha_{\rm T} -\delta_{\rm R} \right) + F_{y,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \sin \left( \alpha_{\rm T} - delta_{\rm R} \right) }{m_{\rm T}} \\
 %     \nonumber \dot{{\rm x}}_5 &=&  \frac{- F_{x,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) - F_{x,{\rm R}} \sin \left( \alpha_{\rm T} - \delta_{\rm R} \right) + F_{y,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \cos \left( \alpha_{\rm T} - \delta_{\rm R} \right) - m_{\rm T} v \dot{\psi}}{m_{\rm T} v_{\rm T}} \\
-%     \nonumber \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}.
+%     \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}. \label{eq:stateequationnonlinear3dof}
 %     \end{eqnarray}
 % </p>
 % <p>The nonlinear model of the package uses equations in \ref{eq:stateequationnonlinear3dof} with slip angles defined in \ref{eq:slipanglesnewvariables}</p>

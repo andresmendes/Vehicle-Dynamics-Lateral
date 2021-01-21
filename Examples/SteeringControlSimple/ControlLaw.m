@@ -19,11 +19,11 @@ function output = ControlLaw(input,~)
         r = 0;
     end
 
-    % Control gain
-    K = [0.7936    6.6882    1.6107    0.5090];
+    % Control gain LQR
+    K = [0.5477    4.4651    1.0744    0.8169];
     u = - K*x + K(1)*r;
 
-    % Saturation at 70 deg
+    % Saturation
     if abs(u) < 42*pi/180
         output = u;
     else

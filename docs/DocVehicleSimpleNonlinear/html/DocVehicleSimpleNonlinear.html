@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Vehicle Simple Nonlinear Modeling</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="DocVehicleSimpleNonlinear.m"><style type="text/css">
+      --><title>Vehicle Simple Nonlinear Modeling</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-22"><meta name="DC.source" content="DocVehicleSimpleNonlinear.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Vehicle Simple Nonlinear Modeling</h1><!--introduction--><p>This scipt derives the equations of motion from the nonlinear simple vehicle model.</p><p>For class documentation, run:</p><p><tt>doc VehicleDynamicsLateral.VehicleArticulatedNonlinear</tt></p><p>
+  </style></head><body><div class="content"><h1>Vehicle Simple Nonlinear Modeling</h1><!--introduction--><p>This scipt derives the equations of motion from the nonlinear simple vehicle model.</p><p>For class documentation, run:</p><p><tt>doc VehicleDynamicsLateral.VehicleSimpleNonlinear</tt></p><p>
 <!--
 MathJax
 Source: http://docs.mathjax.org/en/latest/start.html
@@ -410,7 +410,7 @@ ddTddq = diff(dTddq,t);
     \begin{eqnarray}
     \nonumber {\rm x}_1 &=& x 				\\
     \nonumber {\rm x}_2 &=& y 				\\
-    \nonumber {\rm x}_3 &=& \psi 			\\
+    \nonumber {\rm x}_3 &=& \psi              \\
     \nonumber {\rm x}_4 &=& v_{\rm T} 		\\
     \nonumber {\rm x}_5 &=& \alpha_{\rm T} 	\\
     \nonumber {\rm x}_6 &=& \dot{\psi}
@@ -424,7 +424,7 @@ ddTddq = diff(dTddq,t);
     \nonumber \dot{{\rm x}}_3 &=& \dot{\psi} \\
     \nonumber \dot{{\rm x}}_4 &=& \frac{F_{x,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{x,{\rm R}} \cos \left( \alpha_{\rm T} -\delta_{\rm R} \right) + F_{y,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \sin \left( \alpha_{\rm T} - delta_{\rm R} \right) }{m_{\rm T}} \\
     \nonumber \dot{{\rm x}}_5 &=&  \frac{- F_{x,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) - F_{x,{\rm R}} \sin \left( \alpha_{\rm T} - \delta_{\rm R} \right) + F_{y,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \cos \left( \alpha_{\rm T} - \delta_{\rm R} \right) - m_{\rm T} v \dot{\psi}}{m_{\rm T} v_{\rm T}} \\
-    \nonumber \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}.
+    \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}. \label{eq:stateequationnonlinear3dof}
     \end{eqnarray}
 </p>
 <p>The nonlinear model of the package uses equations in \ref{eq:stateequationnonlinear3dof} with slip angles defined in \ref{eq:slipanglesnewvariables}</p>
@@ -457,7 +457,7 @@ disp(f)
 %
 % For class documentation, run:
 %
-% |doc VehicleDynamicsLateral.VehicleArticulatedNonlinear|
+% |doc VehicleDynamicsLateral.VehicleSimpleNonlinear|
 %
 % <html>
 % <!REPLACE_WITH_DASH_DASH
@@ -867,7 +867,7 @@ ddTddq = diff(dTddq,t);
 %     \begin{eqnarray}
 %     \nonumber {\rm x}_1 &=& x 				\\
 %     \nonumber {\rm x}_2 &=& y 				\\
-%     \nonumber {\rm x}_3 &=& \psi 			\\
+%     \nonumber {\rm x}_3 &=& \psi              \\
 %     \nonumber {\rm x}_4 &=& v_{\rm T} 		\\
 %     \nonumber {\rm x}_5 &=& \alpha_{\rm T} 	\\
 %     \nonumber {\rm x}_6 &=& \dot{\psi}
@@ -881,7 +881,7 @@ ddTddq = diff(dTddq,t);
 %     \nonumber \dot{{\rm x}}_3 &=& \dot{\psi} \\
 %     \nonumber \dot{{\rm x}}_4 &=& \frac{F_{x,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{x,{\rm R}} \cos \left( \alpha_{\rm T} -\delta_{\rm R} \right) + F_{y,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \sin \left( \alpha_{\rm T} - delta_{\rm R} \right) }{m_{\rm T}} \\
 %     \nonumber \dot{{\rm x}}_5 &=&  \frac{- F_{x,{\rm F}} \sin \left( \alpha_{\rm T} - \delta_{\rm F} \right) - F_{x,{\rm R}} \sin \left( \alpha_{\rm T} - \delta_{\rm R} \right) + F_{y,{\rm F}} \cos \left( \alpha_{\rm T} - \delta_{\rm F} \right) + F_{y,{\rm R}} \cos \left( \alpha_{\rm T} - \delta_{\rm R} \right) - m_{\rm T} v \dot{\psi}}{m_{\rm T} v_{\rm T}} \\
-%     \nonumber \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}.
+%     \dot{{\rm x}}_6 &=& \frac{F_{x,{\rm F}} a \sin \delta  + F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{\rm T}}. \label{eq:stateequationnonlinear3dof}
 %     \end{eqnarray}
 % </p>
 % <p>The nonlinear model of the package uses equations in \ref{eq:stateequationnonlinear3dof} with slip angles defined in \ref{eq:slipanglesnewvariables}</p>

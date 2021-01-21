@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Steering Control Simple</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-21"><meta name="DC.source" content="SteeringControlSimple.m"><style type="text/css">
+      --><title>Steering Control Simple</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-01-21"><meta name="DC.source" content="SteeringControlSimple.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -68,7 +68,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
   </style></head><body><div class="content"><h1>Steering Control Simple</h1><!--introduction--><p>Steering Control of Autonomous Vehicles in Obstacle Avoidance Maneuvers.</p><p><img vspace="5" hspace="5" src="SteeringControlSimple.gif" alt=""> </p><p>
 <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
-</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Vehicle model</a></li><li><a href="#2">Tire model</a></li><li><a href="#4">Plant model</a></li><li><a href="#5">Controller design</a></li><li><a href="#17">Double Lane Change Maneuver</a></li><li><a href="#18">See Also</a></li></ul></div><h2 id="1">Vehicle model</h2><p><b>Bicycle model</b></p><p><img vspace="5" hspace="5" src="../../../docs/illustrations/modelSimple.svg" alt=""> </p><p><b>Nonlinear model</b></p><p>State vector</p><p>\[ {\bf x} = \left[ \begin{array}{c} {\rm x}_1 \\ {\rm x}_2 \\ {\rm x}_3 \\ {\rm x}_4 \\ {\rm x}_5 \\ {\rm x}_6 \end{array} \right] = \left[ \begin{array}{c} x \\ y \\ \psi \\ v_{\rm T} \\ \alpha_{\rm T} \\ \dot{\psi} \end{array} \right] \]</p><p>State equations</p><p>\[ \dot{{\rm x}}_1 = {\rm x}_4 \cos \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_2 = {\rm x}_4 \sin \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_3 = {\rm x}_6 \]</p><p>\[ \dot{{\rm x}}_4 = \frac{F_{y,{\rm F}} \sin \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \sin {\rm x}_5}{m_{T}} \]</p><p>\[ \dot{{\rm x}}_5 = \frac{F_{y,{\rm F}} \cos \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \cos \alpha_{\rm T} - m_{T} {\rm x}_4 {\rm x}_6}{m_{T} {\rm x}_4} \]</p><p>\[ \dot{{\rm x}}_6 = \frac{F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{T}} \]</p><p>Slip angles</p><p>\[ \alpha_{\rm F} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} + a \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) - \delta \]</p><p>\[ \alpha_{\rm R} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} - b \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) \]</p><p><b>Linear model</b></p><p>\[ \dot{x} = v_{\rm T} \]</p><p>\[ \dot{y} = v_{{\rm T},0} \left( \psi + \alpha_{{\rm T}}\right) \]</p><p>\[ \dot{\psi} = \dot{\psi} \]</p><p>\[ \dot{v}_{\rm T} = 0 \]</p><p>\[ \dot{\alpha}_{\rm T} = \frac{F_{y,{\rm F}} + F_{y,{\rm R}}}{m_{T} v_{{\rm T},0}} - \dot{\psi} \]</p><p>\[ \ddot{\psi} = \frac{a F_{y,{\rm F}} -  b F_{y,{\rm R}}}{I_{T}} \]</p><p>Neglecting equations of \(x\) and \(v_T\)</p><p>\[ \left[ \begin{array}{c} \dot{y} \\ \dot{\psi} \\ \dot{\alpha}_T \\ \ddot{\psi} \end{array} \right] = \left[ \begin{array}{cccc} 0 &amp; v_{T,0} &amp; v_{T,0} &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; -\frac{K_F+K_R}{m_T v_{T,0}} &amp; - \frac{m_T v_{T,0} + \frac{a K_F - b K_R}{v_{T,0}}}{m_T v_{T,0}} \\ 0 &amp; 0 &amp; - \frac{a K_F - b K_R}{I_T} &amp; - \frac{a^2 K_F + b^2 K_R}{I_T v_{T,0}} \end{array} \right] \left[ \begin{array}{c} y \\ \psi \\ \alpha_T \\ \dot{\psi} \end{array} \right] + \left[ \begin{array}{c} 0 \\ 0 \\ \frac{K_F}{m_T v_{T,0}} \\ \frac{a K_F}{I_T}  \end{array} \right] \delta \]</p><p>Slip angles</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} + \frac{a}{v_{{\rm T},0}} \dot{\psi} - \delta \]</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} - \frac{b}{v_{{\rm T},0}} \dot{\psi} \]</p><h2 id="2">Tire model</h2><p>Typical characteristic curve and slip angle definition</p><p><img vspace="5" hspace="5" src="../../../docs/illustrations/CurvaCaracteristica.svg" alt=""> </p><p><b>Pacejka</b></p><p>\[ F_{y} = D \sin \left[ C \arctan{B \alpha - E( B \alpha -\arctan(B \alpha))} \right] \]</p><p><b>Linear</b></p><p>\[ F_ y = K \alpha \]</p><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Vehicle model</a></li><li><a href="#2">Tire model</a></li><li><a href="#4">Plant model</a></li><li><a href="#5">Controller design</a></li><li><a href="#17">Double Lane Change Maneuver</a></li><li><a href="#18">See Also</a></li></ul></div><h2 id="1">Vehicle model</h2><p><b>Nonlinear model</b></p><p>State vector</p><p>\[ {\bf x} = \left[ \begin{array}{c} {\rm x}_1 \\ {\rm x}_2 \\ {\rm x}_3 \\ {\rm x}_4 \\ {\rm x}_5 \\ {\rm x}_6 \end{array} \right] = \left[ \begin{array}{c} x \\ y \\ \psi \\ v_{\rm T} \\ \alpha_{\rm T} \\ \dot{\psi} \end{array} \right] \]</p><p>State equations</p><p>\[ \dot{{\rm x}}_1 = {\rm x}_4 \cos \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_2 = {\rm x}_4 \sin \left( {\rm x}_3 + {\rm x}_5 \right) \]</p><p>\[ \dot{{\rm x}}_3 = {\rm x}_6 \]</p><p>\[ \dot{{\rm x}}_4 = \frac{F_{y,{\rm F}} \sin \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \sin {\rm x}_5}{m_{T}} \]</p><p>\[ \dot{{\rm x}}_5 = \frac{F_{y,{\rm F}} \cos \left( {\rm x}_5 - \delta \right) + F_{y,{\rm R}} \cos \alpha_{\rm T} - m_{T} {\rm x}_4 {\rm x}_6}{m_{T} {\rm x}_4} \]</p><p>\[ \dot{{\rm x}}_6 = \frac{F_{y,{\rm F}} a \cos \delta - F_{y,{\rm R}} b}{I_{T}} \]</p><p>Slip angles</p><p>\[ \alpha_{\rm F} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} + a \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) - \delta \]</p><p>\[ \alpha_{\rm R} = \arctan \left( \frac{v_{\rm T} \sin \alpha_{\rm T} - b \dot{\psi}}{ v_{\rm T} \cos \alpha_{\rm T}} \right) \]</p><p><b>Linear model</b></p><p>\[ \dot{x} = v_{\rm T} \]</p><p>\[ \dot{y} = v_{{\rm T},0} \left( \psi + \alpha_{{\rm T}}\right) \]</p><p>\[ \dot{\psi} = \dot{\psi} \]</p><p>\[ \dot{v}_{\rm T} = 0 \]</p><p>\[ \dot{\alpha}_{\rm T} = \frac{F_{y,{\rm F}} + F_{y,{\rm R}}}{m_{T} v_{{\rm T},0}} - \dot{\psi} \]</p><p>\[ \ddot{\psi} = \frac{a F_{y,{\rm F}} -  b F_{y,{\rm R}}}{I_{T}} \]</p><p>Neglecting equations of \(x\) and \(v_T\)</p><p>\[ \left[ \begin{array}{c} \dot{y} \\ \dot{\psi} \\ \dot{\alpha}_T \\ \ddot{\psi} \end{array} \right] = \left[ \begin{array}{cccc} 0 &amp; v_{T,0} &amp; v_{T,0} &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; -\frac{K_F+K_R}{m_T v_{T,0}} &amp; - \frac{m_T v_{T,0} + \frac{a K_F - b K_R}{v_{T,0}}}{m_T v_{T,0}} \\ 0 &amp; 0 &amp; - \frac{a K_F - b K_R}{I_T} &amp; - \frac{a^2 K_F + b^2 K_R}{I_T v_{T,0}} \end{array} \right] \left[ \begin{array}{c} y \\ \psi \\ \alpha_T \\ \dot{\psi} \end{array} \right] + \left[ \begin{array}{c} 0 \\ 0 \\ \frac{K_F}{m_T v_{T,0}} \\ \frac{a K_F}{I_T}  \end{array} \right] \delta \]</p><p>Slip angles</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} + \frac{a}{v_{{\rm T},0}} \dot{\psi} - \delta \]</p><p>\[ \alpha_{{\rm F},lin} = \alpha_{{\rm T}} - \frac{b}{v_{{\rm T},0}} \dot{\psi} \]</p><h2 id="2">Tire model</h2><p>Typical characteristic curve and slip angle definition</p><p><img vspace="5" hspace="5" src="../../../docs/illustrations/CurvaCaracteristica.svg" alt=""> </p><p><b>Pacejka</b></p><p>\[ F_{y} = D \sin \left[ C \arctan{B \alpha - E( B \alpha -\arctan(B \alpha))} \right] \]</p><p><b>Linear</b></p><p>\[ F_ y = K \alpha \]</p><pre class="codeinput">clear ; close <span class="string">all</span> ; clc
 
 slipAngle = (0:0.1:15)*pi/180;         <span class="comment">% Slip angle [rad]</span>
 
@@ -113,10 +113,10 @@ BCD     = TirePac.a3 * sin(2 * atan(Fz/1000/TirePac.a4))*(1-TirePac.a5 * abs(cam
 
 <span class="comment">% Pneu linear equivalente</span>
 
-Ktire = BCD * 180/pi;
+Ktire   = BCD * 180/pi;
 
-TireLin = VehicleDynamicsLateral.TireLinear();
-TireLin.k = Ktire;
+TireLin     = VehicleDynamicsLateral.TireLinear();
+TireLin.k   = Ktire;
 
 <span class="comment">% Lateral force</span>
 FyPac = TirePac.Characteristic(slipAngle, Fz, muy0/1000);
@@ -155,7 +155,7 @@ VehiclePlant.deltaf = @ControlLaw;
 disp(VehiclePlant)
 
 <span class="comment">% Choosing simulation</span>
-T       = 12;                     <span class="comment">% Total simulation time             [s]</span>
+T       = 9;                     <span class="comment">% Total simulation time             [s]</span>
 resol   = 500;                    <span class="comment">% Resolution</span>
 TSPAN   = 0:T/resol:T;            <span class="comment">% Time span                         [s]</span>
 
@@ -176,7 +176,7 @@ simulator.V0 = 16.7;
        muy: 1
       tire: [1&times;1 VehicleDynamicsLateral.TirePacejka]
     deltaf: @ControlLaw
-    deltar: []
+    deltar: 0
        Fxf: 0
        Fxr: 0
 
@@ -214,17 +214,17 @@ C = [1 0 0 0];
 </pre><p>C</p><pre class="codeinput">disp(C)
 </pre><pre class="codeoutput">     1     0     0     0
 
-</pre><p><b>LQR design</b></p><pre class="codeinput">Q = [   3 0 0 0 ;<span class="keyword">...</span>
-        0 1 0 0 ;<span class="keyword">...</span>
-        0 0 1 0 ;<span class="keyword">...</span>
-        0 0 0 1 ];
+</pre><p><b>LQR design</b></p><pre class="codeinput">Q = [   0.3 0 0 0 ;<span class="keyword">...</span>
+        0   1 0 0 ;<span class="keyword">...</span>
+        0   0 1 0 ;<span class="keyword">...</span>
+        0   0 0 1 ];
 </pre><p>Q</p><pre class="codeinput">disp(Q)
 
 R = 1;
-</pre><pre class="codeoutput">     3     0     0     0
-     0     1     0     0
-     0     0     1     0
-     0     0     0     1
+</pre><pre class="codeoutput">    0.3000         0         0         0
+         0    1.0000         0         0
+         0         0    1.0000         0
+         0         0         0    1.0000
 
 </pre><p>R</p><pre class="codeinput">disp(R)
 
@@ -232,7 +232,7 @@ Klqr = lqr(A,B,Q,R);
 </pre><pre class="codeoutput">     1
 
 </pre><p>Klqr</p><pre class="codeinput">disp(Klqr)
-</pre><pre class="codeoutput">    1.7321    6.8987    2.5832    0.5898
+</pre><pre class="codeoutput">    0.5477    4.4651    1.0744    0.8169
 
 </pre><p><b>Pole placement design</b></p><pre class="codeinput">polos = [-6 -6.3 -6.7 -7];
 
@@ -240,7 +240,7 @@ Kplace = place(A,B,polos);
 </pre><p>Kplace</p><pre class="codeinput">disp(Kplace)
 </pre><pre class="codeoutput">    0.7936    6.6882    1.6107    0.5090
 
-</pre><p>Control law</p><p>\[\delta = - {\bf K} {\bf z} + K_1 r \]</p><h2 id="17">Double Lane Change Maneuver</h2><p><b>Control - Step y</b></p><p>Reference - r = 2 m</p><p>\[ \delta_{max} = \pm 70 deg \]</p><pre class="codeinput"><span class="comment">% Simulation</span>
+</pre><p>Control law</p><p>\[\delta = - {\bf K} {\bf z} + K_1 r \]</p><h2 id="17">Double Lane Change Maneuver</h2><pre class="codeinput"><span class="comment">% Simulation</span>
 simulator.Simulate();
 
 g = VehicleDynamicsLateral.Graphics(simulator);
@@ -282,14 +282,16 @@ g.Frame();
     plot([95 130],[0 0],<span class="string">'k--'</span>)
 
 g.Animation();
+g.Animation();
+<span class="comment">% g.Animation('html/SteeringControlSimple');       % Uncomment to save animation gif</span>
 
 <span class="comment">% Retrieving states</span>
-XT = simulator.XT;
-YT = simulator.YT;
-PSI = simulator.PSI;
-VEL = simulator.VEL;
-ALPHAT = simulator.ALPHAT;
-dPSI = simulator.dPSI;
+XT      = simulator.XT;
+YT      = simulator.YT;
+PSI     = simulator.PSI;
+VEL     = simulator.VEL;
+ALPHAT  = simulator.ALPHAT;
+dPSI    = simulator.dPSI;
 
 x = [YT PSI ALPHAT dPSI];
 
@@ -311,7 +313,7 @@ LateralDisp = 3.6;
 
     u(ii) = - Kplace*x(ii,:)' + Kplace(1)*r;
 
-    <span class="comment">% Saturation at 42 deg</span>
+    <span class="comment">% Saturation</span>
     <span class="keyword">if</span> abs(u(ii)) &lt; 42*pi/180
         output(ii) = u(ii);
     <span class="keyword">else</span>
@@ -358,10 +360,6 @@ set(y,<span class="string">'Interpreter'</span>,<span class="string">'Latex'</sp
 % </html>
 %
 %% Vehicle model
-% *Bicycle model*
-%
-% <<../../../docs/illustrations/modelSimple.svg>>
-%
 % *Nonlinear model*
 %
 % State vector
@@ -474,10 +472,10 @@ BCD     = TirePac.a3 * sin(2 * atan(Fz/1000/TirePac.a4))*(1-TirePac.a5 * abs(cam
 
 % Pneu linear equivalente
 
-Ktire = BCD * 180/pi;
+Ktire   = BCD * 180/pi;
 
-TireLin = VehicleDynamicsLateral.TireLinear();
-TireLin.k = Ktire;
+TireLin     = VehicleDynamicsLateral.TireLinear();
+TireLin.k   = Ktire;
 
 % Lateral force
 FyPac = TirePac.Characteristic(slipAngle, Fz, muy0/1000);
@@ -523,7 +521,7 @@ VehiclePlant.deltaf = @ControlLaw;
 disp(VehiclePlant)
 
 % Choosing simulation
-T       = 12;                     % Total simulation time             [s]
+T       = 9;                     % Total simulation time             [s]
 resol   = 500;                    % Resolution
 TSPAN   = 0:T/resol:T;            % Time span                         [s]
 
@@ -572,10 +570,10 @@ disp(C)
 % *LQR design*
 %
 
-Q = [   3 0 0 0 ;...
-        0 1 0 0 ;...
-        0 0 1 0 ;...
-        0 0 0 1 ];
+Q = [   0.3 0 0 0 ;...
+        0   1 0 0 ;...
+        0   0 1 0 ;...
+        0   0 0 1 ];
 
 %%
 % Q
@@ -615,11 +613,6 @@ disp(Kplace)
 % \[\delta = - {\bf K} {\bf z} + K_1 r \]
 %
 %% Double Lane Change Maneuver
-% *Control - Step y*
-%
-% Reference - r = 2 m
-%
-% \[ \delta_{max} = \pm 70 deg \]
 
 % Simulation
 simulator.Simulate();
@@ -663,14 +656,16 @@ g.Frame();
     plot([95 130],[0 0],'kREPLACE_WITH_DASH_DASH')
 
 g.Animation();
+g.Animation();
+% g.Animation('html/SteeringControlSimple');       % Uncomment to save animation gif
 
 % Retrieving states
-XT = simulator.XT;
-YT = simulator.YT;
-PSI = simulator.PSI;
-VEL = simulator.VEL;
-ALPHAT = simulator.ALPHAT;
-dPSI = simulator.dPSI;
+XT      = simulator.XT;
+YT      = simulator.YT;
+PSI     = simulator.PSI;
+VEL     = simulator.VEL;
+ALPHAT  = simulator.ALPHAT;
+dPSI    = simulator.dPSI;
 
 x = [YT PSI ALPHAT dPSI];
 
@@ -692,7 +687,7 @@ for ii = 1:length(TSPAN)
 
     u(ii) = - Kplace*x(ii,:)' + Kplace(1)*r;
 
-    % Saturation at 42 deg
+    % Saturation
     if abs(u(ii)) < 42*pi/180
         output(ii) = u(ii);
     else
