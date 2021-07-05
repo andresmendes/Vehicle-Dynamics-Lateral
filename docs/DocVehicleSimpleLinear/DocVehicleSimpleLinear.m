@@ -19,5 +19,5 @@
 %
 %% See Also
 %
-% <../../../index.html Home>
+% <https://www.mathworks.com/matlabcentral/fileexchange/58683-vehicle-dynamics-lateral Home>
 %
