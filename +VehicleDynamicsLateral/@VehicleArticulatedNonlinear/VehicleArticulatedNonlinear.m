@@ -6,28 +6,28 @@ classdef VehicleArticulatedNonlinear < VehicleDynamicsLateral.VehicleArticulated
     methods
         % Constructor
         function self = VehicleArticulatedNonlinear()
-            self.mF0    = 5200;
-            self.mR0    = 2400;
-            self.mF     = 6000;
-            self.mR     = 10000;
-            self.mM     = 17000;
-            self.IT     = 46000;
-            self.IS     = 450000;
-            self.lT     = 3.5;
-            self.lS     = 7.7;
-            self.c      = -0.3;
-            self.nF     = 2;
-            self.nR     = 4;
-            self.nM     = 8;
-            self.wT     = 2.6;
-            self.wS     = 2.4;
-            self.muy    = 0.3;
-            self.deltaf = 0;
-            self.deltar = 0;
-            self.deltam = 0;
-            self.Fxf    = 0;
-            self.Fxr    = 0;
-            self.Fxm    = 0;
+            self.mF0    = 5200;    % Mass at front axle of the tractor without semi-trailer [kg]
+            self.mR0    = 2400;    % Mass at rear axle of the tractor without semi-trailer [kg]
+            self.mF     = 6000;    % Mass at front axle of the tractor with semi-trailer [kg]
+            self.mR     = 10000;   % Mass at rear axle of the tractor with semi-trailer [kg]
+            self.mM     = 17000;   % Mass at the axle of the semi-trailer [kg]
+            self.IT     = 46000;   % Moment of inertia of the tractor [kg.m2]
+            self.IS     = 450000;  % Moment of inertia of the semi-trailer [kg.m2]
+            self.lT     = 3.5;     % Wheelbase of the tractor [m]
+            self.lS     = 7.7;     % Distance from articulation (fifth wheel) to semi-trailer axle [m]
+            self.c      = -0.3;    % Position of articulation (fifth wheel) to semi-trailer axle [m]
+            self.nF     = 2;       % Number of wheels at front axle
+            self.nR     = 4;       % Number of wheels at rear axle
+            self.nM     = 8;       % Number of wheels at semi-trailer axle
+            self.wT     = 2.6;     % Tractor width [m]
+            self.wS     = 2.4;     % Semi-trailer width [m]
+            self.muy    = 0.3;     % Friction
+            self.deltaf = 0;       % Steering angle front [rad]
+            self.deltar = 0;       % Steering angle rear [rad]
+            self.deltam = 0;       % Steering angle semi-trailer [rad]
+            self.Fxf    = 0;       % Longitudinal force at front axle [N]
+            self.Fxr    = 0;       % Longitudinal force at rear axle [N]
+            self.Fxm    = 0;       % Longitudinal force at semi-trailer axle [N]
         end
 
         function dx = Model(self,t, states,tspan)
